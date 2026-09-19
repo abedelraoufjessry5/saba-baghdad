@@ -30,10 +30,33 @@ export default async function handler(req, res) {
       ]);
     }
 
+    // The app browses product.template ids, but sale.order.line.product_id
+    // needs a product.product (variant) id - they are NOT the same number.
+    // Resolve each template to its first variant before building the lines.
+    const tmplIds = items.map((i) => Number(i.productId));
+    const variants = await execute(
+      "product.product",
+      "search_read",
+      [[["product_tmpl_id", "in", tmplIds]]],
+      { fields: ["id", "product_tmpl_id"] }
+    );
+
+    const variantByTmpl = {};
+    variants.forEach((v) => {
+      const tid = Array.isArray(v.product_tmpl_id) ? v.product_tmpl_id[0] : v.product_tmpl_id;
+      if (!variantByTmpl[tid]) variantByTmpl[tid] = v.id;
+    });
+
+    const missing = tmplIds.filter((id) => !variantByTmpl[id]);
+    if (missing.length) {
+      res.status(400).json({ error: "منتج غير موجود بأودو: " + missing.join(", ") });
+      return;
+    }
+
     const orderLines = items.map((it) => [
       0,
       0,
-      { product_id: it.productId, product_uom_qty: it.qty }
+      { product_id: variantByTmpl[Number(it.productId)], product_uom_qty: it.qty }
     ]);
 
     const orderId = await execute("sale.order", "create", [
