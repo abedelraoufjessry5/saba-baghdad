@@ -35,24 +35,40 @@ export default async function handler(req, res) {
       ...descFields
     ];
 
-    let rows;
+    const lim = Math.min(Number(limit) || 24, 100);
+    const off = Math.max(Number(offset) || 0, 0);
+
+    // Offers compare two fields, which an Odoo domain can't do - narrow to the
+    // discounted ones first, then finish the comparison here.
+    const saleMode = on_sale === "1";
+    if (saleMode) domain.push(["compare_list_price", ">", 0]);
+
+    let rows, total;
     try {
-      rows = await execute("product.template", "search_read", [domain], {
-        fields,
-        order: "name"
-      });
+      // Ask Odoo for ONE page, not the whole catalogue. Count runs alongside.
+      const [page, count] = await Promise.all([
+        execute("product.template", "search_read", [domain], {
+          fields,
+          order: "name",
+          limit: saleMode ? 300 : lim,
+          offset: saleMode ? 0 : off
+        }),
+        execute("product.template", "search_count", [domain])
+      ]);
+      rows = page;
+      total = count;
     } catch {
-      // a field the database doesn't have - fall back to the safe minimum
-      rows = await execute(
-        "product.template",
-        "search_read",
-        [
-          q
-            ? [["website_published", "=", true], ["name", "ilike", q]]
-            : domain.filter((d) => d !== "|")
-        ],
-        { fields: ["id", "name", "list_price", "public_categ_ids"], order: "name" }
-      );
+      // a field this database doesn't have - fall back to the safe minimum
+      const safeDomain = q
+        ? [["website_published", "=", true], ["name", "ilike", q]]
+        : [["website_published", "=", true]];
+      rows = await execute("product.template", "search_read", [safeDomain], {
+        fields: ["id", "name", "list_price", "public_categ_ids"],
+        order: "name",
+        limit: lim,
+        offset: off
+      });
+      total = await execute("product.template", "search_count", [safeDomain]);
     }
 
     let mapped = rows.map((p) => ({
@@ -68,10 +84,12 @@ export default async function handler(req, res) {
       image: imageUrl("product.template", p.id, "image_512")
     }));
 
-    if (on_sale === "1") mapped = mapped.filter((p) => p.onSale);
+    if (saleMode) {
+      mapped = mapped.filter((p) => p.onSale);
+      total = mapped.length;
+      mapped = mapped.slice(off, off + lim);
+    }
 
-    const off = Number(offset);
-    const lim = Number(limit);
-    ok(res, { products: mapped.slice(off, off + lim), total: mapped.length });
+    ok(res, { products: mapped, total }, 120);
   });
 }

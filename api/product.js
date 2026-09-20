@@ -40,6 +40,6 @@ export default async function handler(req, res) {
       inStock: true, // stock isn't tracked in Odoo - never block a sale
       categoryIds: p.public_categ_ids || [],
       image: imageUrl("product.template", p.id, "image_1024")
-    });
+    }, 300);
   });
 }

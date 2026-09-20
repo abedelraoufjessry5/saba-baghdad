@@ -1,5 +1,8 @@
-export function ok(res, data) {
-  res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
+// Vercel's edge caches the response, so repeat visitors don't wait for Odoo
+// at all. `seconds` is how long the edge serves it before asking again.
+export function ok(res, data, seconds) {
+  var s = seconds || 60;
+  res.setHeader("Cache-Control", "s-maxage=" + s + ", stale-while-revalidate=" + s * 10);
   res.status(200).json(data);
 }
 

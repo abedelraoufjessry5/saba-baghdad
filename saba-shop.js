@@ -34,6 +34,7 @@
       st_new: "وصلنا طلبك", st_prep: "قيد التجهيز", st_way: { m: "بالطريق إلك", f: "بالطريق إلچ" },
       st_done: { m: "تسلّمته", f: "تسلّمتيه" }, st_cancel: "ملغي",
       showAll: "عرض الكل", showLess: "عرض أقل", seeAllResults: "شوف كل النتائج",
+      consult: "استشارة",
       addrTitle: "شلون نحچيك؟", addrM: "أهلاً بيك", addrF: "أهلاً بيچ",
       addrHint: "حتى نخاطبك بالشكل يريحك — تگدر تغيّرها بعدين من حسابك",
       changeAddr: "غيّر صيغة المخاطبة"
@@ -58,6 +59,7 @@
       st_new: "Order received", st_prep: "Being prepared", st_way: "On its way",
       st_done: "Delivered", st_cancel: "Cancelled",
       showAll: "Show all", showLess: "Show less", seeAllResults: "See all results",
+      consult: "Ask us",
       addrTitle: "How should we address you?", addrM: "Welcome (m)", addrF: "Welcome (f)",
       addrHint: "You can change this later from your account",
       changeAddr: "Change how we address you"
@@ -246,7 +248,25 @@
     "#sbx-suggest .sbx-sg-p{font-size:.74rem;font-weight:700;color:#8E2D46;white-space:nowrap}",
     "#sbx-suggest .sbx-sg-all{width:100%;background:#FCF4F9;border:none;padding:.65rem;color:#8E2D46;",
     "font-weight:700;font-size:.8rem;font-family:inherit}",
-    "#sbx-suggest .sbx-sg-msg{padding:.9rem;text-align:center;color:#8a6b76;font-size:.82rem}"
+    "#sbx-suggest .sbx-sg-msg{padding:.9rem;text-align:center;color:#8a6b76;font-size:.82rem}",
+    /* in-app article pages */
+    "#sbx .sbx-article{line-height:1.85;font-size:.9rem;color:#3b2630}",
+    "#sbx .sbx-article h3{margin:1.4rem 0 .5rem;font-size:1rem;color:#8E2D46;font-weight:700}",
+    "#sbx .sbx-article h3:first-child{margin-top:.2rem}",
+    "#sbx .sbx-article p{margin:0 0 .7rem}",
+    "#sbx .sbx-article ul{margin:0 0 .9rem;padding-inline-start:1.1rem}",
+    "#sbx .sbx-article li{margin-bottom:.35rem}",
+    "#sbx .sbx-article blockquote{margin:0 0 1rem;padding:.85rem 1rem;background:#fff;border:1px solid #F2DDE6;",
+    "border-radius:1rem;font-size:.86rem;color:#5b3f4a}",
+    "#sbx .sbx-article cite{display:block;margin-top:.5rem;font-style:normal;font-weight:700;color:#8E2D46;font-size:.8rem}",
+    /* consultation button */
+    "#sbx-chat-btn{position:fixed;z-index:9997;inset-inline-start:1rem;",
+    "bottom:calc(var(--sb-nav-h,3.6rem) + env(safe-area-inset-bottom) + .8rem);",
+    "display:none;align-items:center;gap:.4rem;background:#8E2D46;color:#fff;border:none;",
+    "border-radius:999px;padding:.6rem .95rem;font-family:inherit;font-size:.82rem;font-weight:700;",
+    "box-shadow:0 8px 20px rgba(142,45,70,.32)}",
+    "#sbx.on ~ #sbx-chat-btn{display:flex}",
+    "#sbx-chat-btn.sbx-chat-loading{opacity:.6}"
   ].join("");
 
   var styleEl = document.createElement("style");
@@ -885,6 +905,18 @@
     // Brand tiles: resolve the category by the brand NAME rather than trusting
     // the id baked into the old build - so a tile can never open another brand,
     // and brands without a category yet start working the moment you add one.
+    // the two website pages now live inside the app
+    if (/\/about-us\/?$/.test(u.pathname)) {
+      e.preventDefault(); e.stopPropagation();
+      screenPage("about");
+      return;
+    }
+    if (/\/our-services\/?$/.test(u.pathname)) {
+      e.preventDefault(); e.stopPropagation();
+      screenPage("services");
+      return;
+    }
+
     var inBrands = a.closest && a.closest("[data-sbx-brands]");
     if (inBrands) {
       var img = a.querySelector("img");
@@ -1226,6 +1258,146 @@
       .catch(function () { hideHomeResults(); });
   }
 
+  /* ------------------ "من نحن" and "الخدمات" as screens inside the app */
+  // Content mirrored from saba-baghdad.odoo.com/about-us and /our-services.
+  // If those pages change on the website, tell me and I'll refresh this.
+  var PAGES = {
+    about: {
+      title: "من نحن",
+      html:
+        "<h3>منو إحنا؟</h3>" +
+        "<p>إحنا «صبا بغداد»، موقع عراقي متخصص ببيع الأدوية والمستلزمات الطبية وأدوات العناية بالبشرة. " +
+        "نوفرلك كل شي تحتاجه من علاجات وفيتامينات وأعشاب طبية ومنتجات العناية بالصحة، ويوصلك لباب بيتك بأمان وبأسرع وقت.</p>" +
+        "<h3>شنو نوفّر؟</h3>" +
+        "<ul><li>أدوية موثوقة من أفضل الشركات</li><li>توصيل سريع لكل محافظات العراق</li>" +
+        "<li>استشارات مجانية من صيادلة مختصين</li><li>عروض وخصومات بشكل مستمر</li></ul>" +
+        "<h3>ليش تختارنا؟</h3>" +
+        "<p>لأننا نهتم بصحتك مثل ما نهتم بأهلنا. نتعامل بأمانة، ونتأكد إن كل دوا يوصلك أصلي ومخزون بطريقة صحيحة.</p>" +
+        "<h3>🚚 سياسة التوصيل</h3>" +
+        "<ul><li><b>رمزي:</b> ٣,٠٠٠ د.ع ضمن بغداد و٥,٠٠٠ د.ع لباقي المحافظات</li>" +
+        "<li><b>سريع:</b> أغلب الطلبات توصل خلال ٢٤ إلى ٤٨ ساعة حسب موقعك</li>" +
+        "<li><b>آمن:</b> نغلّف طلبك بعناية، خصوصاً الأدوية الحساسة</li></ul>" +
+        "<h3>📍 موقعنا</h3>" +
+        "<p>تريد تزورنا؟ حيّاك الله بأي وقت.</p>" +
+        '<a class="sbx-btn ghost" style="display:block;text-align:center;text-decoration:none" ' +
+        'href="https://maps.app.goo.gl/cm1amRPGhojmVsat5" target="_blank" rel="noreferrer">شوف الموقع عالخريطة</a>'
+    },
+    services: {
+      title: "الخدمات والآراء",
+      html:
+        "<h3>💊 تأمين وبيع الأدوية</h3>" +
+        "<p>تدوّر على دوا وما تلاگيه؟ صيدلية صبا تأمّنلك كل أنواع الأدوية الأصلية، وحتى المستعصية نوفرها حسب الطلب. " +
+        "بس بلّغنا باسم الدوا وإحنا نرتّبها إلك بسرعة.</p>" +
+        "<h3>💬 استشارة طبية مجانية</h3>" +
+        "<p>مو متأكد شنو يناسب حالتك؟ دزّلنا سؤالك وفريق الصيادلة يجاوبك مجاناً.</p>" +
+        "<h3>🧴 عناية ببشرتك</h3>" +
+        "<p>بشرتك تهمنا — تلگى عندنا منتجات العناية من ماركات طبية وآمنة، مناسبة لكل أنواع البشرة.</p>" +
+        "<h3>آراء زباين</h3>" +
+        '<blockquote>«تجربة رائعة وتتكرر بإذن الله، من ناحية الأسعار والعروض والمنتجات غير المتوفرة بباقي الصيدليات. ' +
+        "والمنتجات وصلت سليمة وبشكل أنيق. أتمنى الاستمرار والله يوفقكم.»<cite>رقية عباس</cite></blockquote>" +
+        "<h3>الشركاء والثقة</h3>" +
+        "<ul><li>أكثر من ٥,٠٠٠ زبون وثقوا بمنتجاتنا</li>" +
+        "<li>أطباء جلدية وخبراء تجميل يوصون بينا</li>" +
+        "<li>بضاعتنا أصلية ومرخّصة من نقابة صيادلة العراق</li></ul>"
+    }
+  };
+
+  function screenPage(key) {
+    var pg = PAGES[key];
+    if (!pg) return;
+    goTo({
+      title: pg.title,
+      tab: "keep",
+      render: function () { html('<div class="sbx-pad sbx-article">' + pg.html + "</div>"); }
+    }, false);
+  }
+
+  /* ------------------------------------------- consultation chat (Odoo) */
+  var CHAT_CHANNEL = 2;
+  var chatLoading = false, chatReady = false;
+
+  function loadChat(btn) {
+    if (chatReady) { openOdooChat(); return; }
+    if (chatLoading) return;
+    chatLoading = true;
+    if (btn) btn.classList.add("sbx-chat-loading");
+
+    var base = "https://" + ODOO_HOST;
+    var s1 = document.createElement("script");
+    s1.defer = true;
+    s1.src = base + "/im_livechat/loader/" + CHAT_CHANNEL;
+    var s2 = document.createElement("script");
+    s2.defer = true;
+    s2.src = base + "/im_livechat/assets_embed.js";
+    s2.onload = function () {
+      chatReady = true;
+      chatLoading = false;
+      if (btn) btn.classList.remove("sbx-chat-loading");
+      setTimeout(openOdooChat, 900);
+    };
+    s2.onerror = function () {
+      chatLoading = false;
+      if (btn) btn.classList.remove("sbx-chat-loading");
+      // if the widget can't load, fall back to the standalone chat page
+      window.open(base + "/im_livechat/support/" + CHAT_CHANNEL, "_blank");
+    };
+    document.head.appendChild(s1);
+    document.head.appendChild(s2);
+  }
+
+  // Odoo renders its own bubble; click it so one tap is enough for the customer
+  function openOdooChat() {
+    var bubble = document.querySelector(
+      ".o-livechat-LivechatButton, .o_livechat_button, [class*='LivechatButton']"
+    );
+    if (bubble) bubble.click();
+  }
+
+  function mountChatButton() {
+    if (document.getElementById("sbx-chat-btn")) return;
+    var b = document.createElement("button");
+    b.id = "sbx-chat-btn";
+    b.type = "button";
+    b.className = "sbx-scope";
+    b.dir = isRTL() ? "rtl" : "ltr";
+    b.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" ' +
+      'stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><span>' + esc(t("consult")) + "</span>";
+    b.addEventListener("click", function () { loadChat(b); });
+    document.body.appendChild(b);
+  }
+
+  /* ------------------------- keep home prices in step with Odoo */
+  function refreshHomePrices() {
+    var byId = {};
+    Array.prototype.forEach.call(document.querySelectorAll('a[href*="/shop/"]'), function (a) {
+      var path;
+      try { path = new URL(a.href, location.href).pathname; } catch (e) { return; }
+      if (path.indexOf("/shop/category/") !== -1) return;
+      var m = path.match(/-(\d+)\/?$/);
+      if (!m) return;
+      var el = Array.prototype.filter.call(a.querySelectorAll("*"), function (e) {
+        return e.children.length === 0 && /ع\.د|د\.ع/.test(e.textContent || "");
+      })[0];
+      if (el) (byId[m[1]] = byId[m[1]] || []).push(el);
+    });
+
+    var ids = Object.keys(byId);
+    if (!ids.length) return;
+
+    api("/prices?ids=" + ids.join(","))
+      .then(function (d) {
+        (d.prices || []).forEach(function (p) {
+          (byId[p.id] || []).forEach(function (el) {
+            var next = money(p.price);
+            if (el.textContent.trim() !== next) el.textContent = next;
+          });
+        });
+      })
+      .catch(function () {});
+  }
+
   /* ------------------------------- remove the "our website" link (asked) */
   function removeWebsiteLink() {
     var links = Array.prototype.filter.call(document.querySelectorAll("a"), function (a) {
@@ -1244,6 +1416,8 @@
     mountAccountPanel();
     hookHomeSearch();
     removeWebsiteLink();
+    refreshHomePrices();
+    mountChatButton();
     applyAddressText();
     if (langChosen() && isRTL() && !hasAddr()) askAddress(false);
   }

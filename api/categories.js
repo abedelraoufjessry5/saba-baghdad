@@ -15,6 +15,6 @@ export default async function handler(req, res) {
         name: c.name,
         parentId: c.parent_id ? c.parent_id[0] : null
       }))
-    });
+    }, 900);
   });
 }
