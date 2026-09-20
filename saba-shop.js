@@ -965,19 +965,11 @@
     box.setAttribute("data-sbx-brands", "1");
     var cols = window.innerWidth < 430 ? 3 : 4;
 
-    // two rows that scroll sideways by default, so the section stays short
-    function compact() {
-      box.style.display = "grid";
-      box.style.gridAutoFlow = "column";
-      box.style.gridTemplateColumns = "";
-      box.style.gridTemplateRows = "repeat(2, auto)";
-      box.style.gridAutoColumns = "5.6rem";
-      box.style.overflowX = "auto";
-      box.style.scrollbarWidth = "none";
-      box.style.gap = ".6rem";
-      box.style.scrollSnapType = "x proximity";
-    }
-    function expanded() {
+    // A sideways-scrolling strip made taps land on the wrong tile on phones
+    // (the strip snaps under your finger). Plain grid instead: the first 9
+    // brands, and "عرض الكل" reveals the rest. Nothing moves, nothing slips.
+    var FIRST_BATCH = 9;
+    function grid() {
       box.style.display = "grid";
       box.style.gridAutoFlow = "row";
       box.style.gridTemplateRows = "auto";
@@ -985,16 +977,26 @@
       box.style.gridTemplateColumns = "repeat(" + cols + ", minmax(0,1fr))";
       box.style.overflowX = "visible";
       box.style.gap = ".6rem";
+      box.style.scrollSnapType = "none";
     }
-    compact();
+    // only the tiles inside this grid - `links` also holds brand links from
+    // other sections of the page
+    function tiles() { return Array.prototype.slice.call(box.children); }
+    function compact() {
+      grid();
+      tiles().forEach(function (a, i) { a.style.display = i < FIRST_BATCH ? "grid" : "none"; });
+    }
+    function expanded() {
+      grid();
+      tiles().forEach(function (a) { a.style.display = "grid"; });
+    }
 
     links.forEach(function (a) {
       if (a.parentElement !== box) return;
-      a.style.height = "4.6rem";
+      a.style.height = "4.8rem";
       a.style.padding = ".55rem";
-      a.style.display = "grid";
       a.style.placeItems = "center";
-      a.style.scrollSnapAlign = "start";
+      a.style.touchAction = "manipulation";
       var span = a.querySelector("span");
       if (span) { span.style.width = "100%"; span.style.height = "100%"; span.style.display = "grid"; span.style.placeItems = "center"; }
       var img = a.querySelector("img");
@@ -1006,6 +1008,8 @@
         img.style.objectFit = "contain";
       }
     });
+
+    compact();
 
     // "عرض الكل" - opens the whole wall of brands, and folds it back
     if (!document.getElementById("sbx-brands-toggle")) {
