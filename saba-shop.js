@@ -1348,6 +1348,7 @@
     if (chatLoading) return;
     chatLoading = true;
     if (btn) btn.classList.add("sbx-chat-loading");
+    hideOdooBubble();
 
     var base = "https://" + ODOO_HOST;
     var s1 = document.createElement("script");
@@ -1360,7 +1361,8 @@
       chatReady = true;
       chatLoading = false;
       if (btn) btn.classList.remove("sbx-chat-loading");
-      setTimeout(openOdooChat, 900);
+      hideOdooBubble();
+      openOdooChat(0);
     };
     s2.onerror = function () {
       chatLoading = false;
@@ -1372,12 +1374,32 @@
     document.head.appendChild(s2);
   }
 
-  // Odoo renders its own bubble; click it so one tap is enough for the customer
-  function openOdooChat() {
+  // Odoo ships its own purple bubble. We keep ours (brand colours, Arabic
+  // label) and drive Odoo's invisibly, so the customer sees one button.
+  var CHAT_HIDE_CSS =
+    ".o-livechat-LivechatButton,.o_livechat_button,[class*='LivechatButton']{" +
+    "opacity:0 !important;pointer-events:none !important;position:fixed !important;" +
+    "inset-inline-end:0 !important;bottom:0 !important;width:1px !important;height:1px !important;" +
+    "z-index:-1 !important}" +
+    ".o-livechat-LivechatWindow,[class*='LivechatWindow'],.o_livechat_chat_window{" +
+    "z-index:10060 !important}";
+
+  function hideOdooBubble() {
+    if (document.getElementById("sbx-chat-css")) return;
+    var st = document.createElement("style");
+    st.id = "sbx-chat-css";
+    st.textContent = CHAT_HIDE_CSS;
+    document.head.appendChild(st);
+  }
+
+  // the bubble appears a moment after the scripts load - wait for it, then tap it
+  function openOdooChat(tries) {
+    tries = tries || 0;
     var bubble = document.querySelector(
       ".o-livechat-LivechatButton, .o_livechat_button, [class*='LivechatButton']"
     );
-    if (bubble) bubble.click();
+    if (bubble) { bubble.click(); return; }
+    if (tries < 25) setTimeout(function () { openOdooChat(tries + 1); }, 300);
   }
 
   function mountChatButton() {
