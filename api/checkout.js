@@ -59,15 +59,38 @@ export default async function handler(req, res) {
       { product_id: variantByTmpl[Number(it.productId)], product_uom_qty: it.qty }
     ]);
 
-    const orderId = await execute("sale.order", "create", [
-      {
-        partner_id: partnerId,
-        order_line: orderLines,
-        note: `دفع عند التوصيل - عنوان: ${address || "-"}\n${notes || ""}`.trim(),
-        origin: "Saba Baghdad App"
-      }
-    ]);
+    // Tie the order to the website so it shows up under
+    // Website > eCommerce > Orders, same place the shop's own orders land -
+    // without this it only appears under Sales > Orders.
+    let websiteId = null;
+    try {
+      const sites = await execute("website", "search_read", [[]], { fields: ["id"], limit: 1 });
+      if (sites.length) websiteId = sites[0].id;
+    } catch (err) {
+      console.error("could not read website id", err);
+    }
 
-    ok(res, { orderId, partnerId, status: "draft" });
+    const orderVals = {
+      partner_id: partnerId,
+      order_line: orderLines,
+      note: `دفع عند التوصيل - عنوان: ${address || "-"}\n${notes || ""}`.trim(),
+      origin: "Saba Baghdad App"
+    };
+    if (websiteId) orderVals.website_id = websiteId;
+
+    const orderId = await execute("sale.order", "create", [orderVals]);
+
+    // Confirm it so it lands in Sales Orders directly instead of sitting in
+    // Quotations. If confirmation fails for any reason the order still
+    // exists as a quotation - we never lose the customer's order.
+    let status = "draft";
+    try {
+      await execute("sale.order", "action_confirm", [[orderId]]);
+      status = "sale";
+    } catch (err) {
+      console.error("action_confirm failed for order " + orderId, err);
+    }
+
+    ok(res, { orderId, partnerId, status });
   });
 }
