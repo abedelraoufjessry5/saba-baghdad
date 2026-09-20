@@ -258,15 +258,7 @@
     "#sbx .sbx-article li{margin-bottom:.35rem}",
     "#sbx .sbx-article blockquote{margin:0 0 1rem;padding:.85rem 1rem;background:#fff;border:1px solid #F2DDE6;",
     "border-radius:1rem;font-size:.86rem;color:#5b3f4a}",
-    "#sbx .sbx-article cite{display:block;margin-top:.5rem;font-style:normal;font-weight:700;color:#8E2D46;font-size:.8rem}",
-    /* consultation button */
-    "#sbx-chat-btn{position:fixed;z-index:9997;inset-inline-start:1rem;",
-    "bottom:calc(var(--sb-nav-h,3.6rem) + env(safe-area-inset-bottom) + .8rem);",
-    "display:flex;align-items:center;gap:.4rem;background:#8E2D46;color:#fff;border:none;",
-    "border-radius:999px;padding:.6rem .95rem;font-family:inherit;font-size:.82rem;font-weight:700;",
-    "box-shadow:0 8px 20px rgba(142,45,70,.32)}",
-    "#sbx-chat-btn[hidden]{display:none}",
-    "#sbx-chat-btn.sbx-chat-loading{opacity:.6}"
+    "#sbx .sbx-article cite{display:block;margin-top:.5rem;font-style:normal;font-weight:700;color:#8E2D46;font-size:.8rem}"
   ].join("");
 
   var styleEl = document.createElement("style");
@@ -1341,14 +1333,26 @@
 
   /* ------------------------------------------- consultation chat (Odoo) */
   var CHAT_CHANNEL = 2;
-  var chatLoading = false, chatReady = false;
+  var chatStarted = false;
 
-  function loadChat(btn) {
-    if (chatReady) { openOdooChat(); return; }
-    if (chatLoading) return;
-    chatLoading = true;
-    if (btn) btn.classList.add("sbx-chat-loading");
-    hideOdooBubble();
+  // lift Odoo's chat window above the app's screens, and sit its launcher
+  // just above the bottom bar instead of on top of it
+  function chatCss() {
+    if (document.getElementById("sbx-chat-css")) return;
+    var st = document.createElement("style");
+    st.id = "sbx-chat-css";
+    st.textContent =
+      ".o-livechat-LivechatWindow,[class*='LivechatWindow'],.o_livechat_chat_window{z-index:10060 !important}" +
+      ".o-livechat-LivechatButton,.o_livechat_button,[class*='LivechatButton']{z-index:10055 !important;" +
+      "bottom:calc(var(--sb-nav-h,3.6rem) + env(safe-area-inset-bottom) + .6rem) !important}";
+    document.head.appendChild(st);
+  }
+
+  // Loaded a moment after the page settles, so it never slows the first paint.
+  function startChat() {
+    if (chatStarted) return;
+    chatStarted = true;
+    chatCss();
 
     var base = "https://" + ODOO_HOST;
     var s1 = document.createElement("script");
@@ -1357,64 +1361,9 @@
     var s2 = document.createElement("script");
     s2.defer = true;
     s2.src = base + "/im_livechat/assets_embed.js";
-    s2.onload = function () {
-      chatReady = true;
-      chatLoading = false;
-      if (btn) btn.classList.remove("sbx-chat-loading");
-      hideOdooBubble();
-      openOdooChat(0);
-    };
-    s2.onerror = function () {
-      chatLoading = false;
-      if (btn) btn.classList.remove("sbx-chat-loading");
-      // if the widget can't load, fall back to the standalone chat page
-      window.open(base + "/im_livechat/support/" + CHAT_CHANNEL, "_blank");
-    };
+    s2.onload = chatCss;
     document.head.appendChild(s1);
     document.head.appendChild(s2);
-  }
-
-  // Odoo ships its own purple bubble. We keep ours (brand colours, Arabic
-  // label) and drive Odoo's invisibly, so the customer sees one button.
-  var CHAT_HIDE_CSS =
-    ".o-livechat-LivechatButton,.o_livechat_button,[class*='LivechatButton']{" +
-    "opacity:0 !important;pointer-events:none !important;position:fixed !important;" +
-    "inset-inline-end:0 !important;bottom:0 !important;width:1px !important;height:1px !important;" +
-    "z-index:-1 !important}" +
-    ".o-livechat-LivechatWindow,[class*='LivechatWindow'],.o_livechat_chat_window{" +
-    "z-index:10060 !important}";
-
-  function hideOdooBubble() {
-    if (document.getElementById("sbx-chat-css")) return;
-    var st = document.createElement("style");
-    st.id = "sbx-chat-css";
-    st.textContent = CHAT_HIDE_CSS;
-    document.head.appendChild(st);
-  }
-
-  // the bubble appears a moment after the scripts load - wait for it, then tap it
-  function openOdooChat(tries) {
-    tries = tries || 0;
-    var bubble = document.querySelector(
-      ".o-livechat-LivechatButton, .o_livechat_button, [class*='LivechatButton']"
-    );
-    if (bubble) { bubble.click(); return; }
-    if (tries < 25) setTimeout(function () { openOdooChat(tries + 1); }, 300);
-  }
-
-  function mountChatButton() {
-    if (document.getElementById("sbx-chat-btn")) return;
-    var b = document.createElement("button");
-    b.id = "sbx-chat-btn";
-    b.type = "button";
-    b.className = "sbx-scope";
-    b.dir = isRTL() ? "rtl" : "ltr";
-    b.innerHTML =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" ' +
-      'stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">' +
-      '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><span>' + esc(t("consult")) + "</span>";
-    b.addEventListener("click", function () { loadChat(b); });
-    document.body.appendChild(b);
   }
 
   /* ------------------------- keep home prices in step with Odoo */
@@ -1466,7 +1415,7 @@
     hookHomeSearch();
     removeWebsiteLink();
     refreshHomePrices();
-    mountChatButton();
+    setTimeout(startChat, 2500);
     applyAddressText();
     if (langChosen() && isRTL() && !hasAddr()) askAddress(false);
   }
