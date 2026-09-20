@@ -112,8 +112,10 @@
     "display:flex;flex-direction:column;height:100%}",
     "#sbx .sbx-card img{width:100%;aspect-ratio:1;object-fit:cover;background:#f6eff3;display:block}",
     "#sbx .sbx-card .b{padding:.6rem .7rem;display:flex;flex-direction:column;gap:.35rem;flex:1}",
-    "#sbx .sbx-card .n{font-size:.76rem;font-weight:600;line-height:1.35;height:4.05em;overflow:hidden;",
-    "display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;text-align:start}",
+    "#sbx .sbx-card .n{font-size:.76rem;font-weight:600;line-height:1.35;height:2.7em;overflow:hidden;",
+    "display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-align:start}",
+    "#sbx .sbx-card .d{font-size:.68rem;line-height:1.4;color:#8a6b76;height:2.8em;overflow:hidden;",
+    "display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-align:start}",
     "#sbx .sbx-card .p{color:#8E2D46;font-weight:700;font-size:.86rem;text-align:start}",
     "#sbx .sbx-card .sbx-btn{margin-top:auto}",
     ".sbx-scope .sbx-btn{background:#8E2D46;color:#fff;border:none;border-radius:.7rem;padding:.6rem;",
@@ -192,6 +194,7 @@
     open = false;
     stack = [];
     current = null;
+    setNavActive(null);
     if (!fromPop) history.back();
   }
   function paintBack() {
@@ -203,10 +206,32 @@
     else if (!push) stack = [];
     current = entry;
     openOverlay();
+    setNavActive(entry.tab || "products");
     elHead.textContent = entry.title;
     paintBack();
     elBody.scrollTop = 0;
     entry.render();
+  }
+
+  /* The page underneath doesn't change when a screen opens, so the bottom bar
+     would keep lighting up "الأقسام" while the customer is in المنتجات.
+     Move the highlight while a screen is open, restore it when it closes. */
+  var navSaved = null;
+  function setNavActive(kind) {
+    var nav = document.getElementById("sb-nav");
+    if (!nav) return;
+    var tabs = Array.prototype.slice.call(nav.querySelectorAll(".sb-tab"));
+    if (navSaved === null) {
+      navSaved = tabs.filter(function (a) { return a.classList.contains("sb-on"); });
+    }
+    tabs.forEach(function (a) { a.classList.remove("sb-on"); });
+    if (kind) {
+      var target = nav.querySelector('[data-sbx-tab="' + kind + '"]');
+      if (target) target.classList.add("sb-on");
+    } else {
+      navSaved.forEach(function (a) { a.classList.add("sb-on"); });
+      navSaved = null;
+    }
   }
   function goBack() {
     if (!stack.length) { hide(false); return; }
@@ -235,9 +260,36 @@
   /* ------------------------------------------------------------ products */
   var catsCache = null;
 
+  function prefetchCategories() {
+    if (catsCache) return;
+    api("/categories").then(function (d) { catsCache = d.categories || []; }).catch(function () {});
+  }
+
+  function normName(s) { return String(s || "").toLowerCase().replace(/[^a-z0-9]/g, ""); }
+
+  // Matches a brand name to an Odoo category, tolerating the spelling
+  // differences in the database (e.g. "BIODRMA", "LA-ROSHE POSAY").
+  function matchCategory(name) {
+    if (!catsCache || !name) return null;
+    var n = normName(name);
+    if (!n) return null;
+    var hit = catsCache.filter(function (c) { return normName(c.name) === n; })[0];
+    if (hit) return hit.id;
+    hit = catsCache.filter(function (c) {
+      var cn = normName(c.name);
+      return cn && (cn.indexOf(n) === 0 || n.indexOf(cn) === 0);
+    })[0];
+    if (hit) return hit.id;
+    hit = catsCache.filter(function (c) {
+      var cn = normName(c.name);
+      return cn.length > 4 && n.length > 4 && cn.slice(0, 4) === n.slice(0, 4);
+    })[0];
+    return hit ? hit.id : null;
+  }
+
   function screenProducts(categoryId, query, push) {
     var state = { cat: categoryId || null, q: query || "" };
-    goTo({ title: t("products"), render: function () { renderProducts(state); } }, push);
+    goTo({ title: t("products"), tab: "products", render: function () { renderProducts(state); } }, push);
   }
 
   function renderProducts(state) {
@@ -252,9 +304,12 @@
     var list = elBody.querySelector(".sbx-list");
     var timer = null;
 
+    // search from the 2nd letter, and clearing the box brings everything back
     input.addEventListener("input", function () {
       clearTimeout(timer);
-      timer = setTimeout(function () { state.q = input.value; load(); }, 350);
+      var v = input.value.trim();
+      if (v.length === 1) return;
+      timer = setTimeout(function () { state.q = v; load(); }, 250);
     });
 
     function paintChips() {
@@ -300,6 +355,7 @@
       '<div class="sbx-card" data-id="' + p.id + '">' +
       '<img src="' + esc(p.image) + '" alt="' + esc(p.name) + '" loading="lazy" data-go="' + p.id + '">' +
       '<div class="b"><div class="n" data-go="' + p.id + '">' + esc(p.name) + "</div>" +
+      (p.excerpt ? '<div class="d">' + esc(p.excerpt) + "</div>" : '<div class="d"></div>') +
       '<div class="p">' + esc(money(p.price)) + "</div>" +
       '<button class="sbx-btn" data-add="' + p.id + '">' + esc(t("add")) + "</button></div></div>"
     );
@@ -326,7 +382,7 @@
   }
 
   function screenProduct(id, push) {
-    goTo({ title: t("products"), render: function () { renderProduct(id); } }, push);
+    goTo({ title: t("products"), tab: "products", render: function () { renderProduct(id); } }, push);
   }
 
   function renderProduct(id) {
@@ -351,7 +407,7 @@
 
   /* ---------------------------------------------------------------- cart */
   function screenCart() {
-    goTo({ title: t("cart"), render: renderCart }, false);
+    goTo({ title: t("cart"), tab: "cart", render: renderCart }, false);
   }
 
   function renderCart() {
@@ -622,6 +678,26 @@
     var mProd = u.pathname.match(/\/shop\/(?:.*?-)?(\d+)\/?$/);
     var search = u.searchParams.get("search");
 
+    // Brand tiles: resolve the category by the brand NAME rather than trusting
+    // the id baked into the old build - so a tile can never open another brand,
+    // and brands without a category yet start working the moment you add one.
+    var inBrands = a.closest && a.closest("[data-sbx-brands]");
+    if (inBrands) {
+      var img = a.querySelector("img");
+      var brand = img ? (img.alt || "").trim() : "";
+      var byName = matchCategory(brand);
+      if (byName) {
+        e.preventDefault(); e.stopPropagation();
+        screenProducts(byName, "", false);
+        return;
+      }
+      if (!mCat && brand) {
+        e.preventDefault(); e.stopPropagation();
+        screenProducts(null, search || brand, false);
+        return;
+      }
+    }
+
     if (mCat) {
       e.preventDefault(); e.stopPropagation();
       screenProducts(mCat[1], "", false);
@@ -659,16 +735,19 @@
     var box = groups[0].el;
     if (box.getAttribute("data-sbx-brands")) return;
     box.setAttribute("data-sbx-brands", "1");
+    // 3 columns on a phone: 4 made the tiles small enough to mis-tap
+    var cols = window.innerWidth < 430 ? 3 : 4;
     box.style.display = "grid";
     box.style.gridAutoFlow = "row";
-    box.style.gridTemplateColumns = "repeat(4, minmax(0,1fr))";
-    box.style.gap = ".5rem";
+    box.style.gridTemplateRows = "auto";
+    box.style.gridTemplateColumns = "repeat(" + cols + ", minmax(0,1fr))";
+    box.style.gap = ".6rem";
     box.style.overflowX = "visible";
 
     links.forEach(function (a) {
       if (a.parentElement !== box) return;
-      a.style.height = "4rem";
-      a.style.padding = ".45rem";
+      a.style.height = cols === 3 ? "5rem" : "4.2rem";
+      a.style.padding = ".55rem";
       a.style.display = "grid";
       a.style.placeItems = "center";
       var span = a.querySelector("span");
@@ -731,6 +810,7 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
+  setTimeout(prefetchCategories, 2500); // so brand tiles resolve on the first tap
   setTimeout(boot, 600);
   setTimeout(boot, 1800);
   setTimeout(boot, 3200);
