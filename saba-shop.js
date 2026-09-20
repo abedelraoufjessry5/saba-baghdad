@@ -33,6 +33,7 @@
       orderIssue: "عندك مشكلة بالطلب؟", orderItems: "المنتجات",
       st_new: "وصلنا طلبك", st_prep: "قيد التجهيز", st_way: { m: "بالطريق إلك", f: "بالطريق إلچ" },
       st_done: { m: "تسلّمته", f: "تسلّمتيه" }, st_cancel: "ملغي",
+      showAll: "عرض الكل", showLess: "عرض أقل", seeAllResults: "شوف كل النتائج",
       addrTitle: "شلون نحچيك؟", addrM: "أهلاً بيك", addrF: "أهلاً بيچ",
       addrHint: "حتى نخاطبك بالشكل يريحك — تگدر تغيّرها بعدين من حسابك",
       changeAddr: "غيّر صيغة المخاطبة"
@@ -56,6 +57,7 @@
       orderIssue: "Problem with this order?", orderItems: "Items",
       st_new: "Order received", st_prep: "Being prepared", st_way: "On its way",
       st_done: "Delivered", st_cancel: "Cancelled",
+      showAll: "Show all", showLess: "Show less", seeAllResults: "See all results",
       addrTitle: "How should we address you?", addrM: "Welcome (m)", addrF: "Welcome (f)",
       addrHint: "You can change this later from your account",
       changeAddr: "Change how we address you"
@@ -221,7 +223,30 @@
     "padding:1.4rem 1.2rem calc(1.4rem + env(safe-area-inset-bottom));text-align:center}",
     "#sbx-addr h3{margin:0 0 1rem;font-size:1.1rem;color:#2b1620;font-weight:700}",
     "#sbx-addr .sbx-addr-row{display:flex;gap:.7rem}",
-    "#sbx-addr p{margin:.9rem 0 0;font-size:.76rem;color:#8a6b76;line-height:1.6}"
+    "#sbx-addr p{margin:.9rem 0 0;font-size:.76rem;color:#8a6b76;line-height:1.6}",
+    /* one-line entry to the orders screen */
+    "#sbx-orders-entry{margin:.7rem 1rem 0}",
+    "#sbx-orders-entry .sbx-row-btn{width:100%;display:flex;align-items:center;justify-content:space-between;",
+    "background:#fff;border:1px solid #F2DDE6;border-radius:1.1rem;padding:.95rem 1rem;font-family:inherit;",
+    "font-size:.95rem;font-weight:700;color:#8E2D46}",
+    "#sbx-orders-entry .sbx-row-arrow{color:#c49aab;font-size:1.1rem}",
+    /* brand strip toggle */
+    "[data-sbx-brands]::-webkit-scrollbar{display:none}",
+    "#sbx-brands-toggle{text-align:center;margin:.55rem 1rem 0}",
+    "#sbx-brands-toggle button{background:none;border:none;color:#8E2D46;font-weight:700;",
+    "font-size:.82rem;font-family:inherit;padding:.35rem .8rem}",
+    /* live suggestions under the home search box */
+    "#sbx-suggest{position:fixed;z-index:10040;background:#fff;border:1px solid #F2DDE6;border-radius:1rem;",
+    "box-shadow:0 12px 30px rgba(43,22,32,.14);overflow:hidden;max-height:60vh;overflow-y:auto}",
+    "#sbx-suggest .sbx-sg-item{display:flex;align-items:center;gap:.6rem;width:100%;background:#fff;",
+    "border:none;border-bottom:1px solid #F7EAF0;padding:.55rem .7rem;font-family:inherit;text-align:start}",
+    "#sbx-suggest .sbx-sg-item img{width:2.5rem;height:2.5rem;border-radius:.5rem;object-fit:cover;background:#f6eff3;flex:0 0 auto}",
+    "#sbx-suggest .sbx-sg-n{flex:1;min-width:0;font-size:.76rem;line-height:1.35;color:#2b1620;",
+    "display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}",
+    "#sbx-suggest .sbx-sg-p{font-size:.74rem;font-weight:700;color:#8E2D46;white-space:nowrap}",
+    "#sbx-suggest .sbx-sg-all{width:100%;background:#FCF4F9;border:none;padding:.65rem;color:#8E2D46;",
+    "font-weight:700;font-size:.8rem;font-family:inherit}",
+    "#sbx-suggest .sbx-sg-msg{padding:.9rem;text-align:center;color:#8a6b76;font-size:.82rem}"
   ].join("");
 
   var styleEl = document.createElement("style");
@@ -561,19 +586,24 @@
     if (document.getElementById("sbx-account")) return;
     var main = document.querySelector("main") || document.body;
 
-    // orders first - it's what customers open this page for
-    var orders = document.createElement("div");
-    orders.id = "sbx-orders";
-    orders.className = "sbx-scope";
-    orders.dir = isRTL() ? "rtl" : "ltr";
-    main.insertBefore(orders, main.firstChild);
-    mountOrders(orders);
-
     var panel = document.createElement("div");
     panel.id = "sbx-account";
     panel.className = "sbx-scope";
-    main.insertBefore(panel, orders.nextSibling);
+    main.insertBefore(panel, main.firstChild);
     paintAccount(panel, "login");
+
+    // one compact row under the account box; hidden entirely when empty
+    var count = myOrders().length;
+    if (count) {
+      var entry = document.createElement("div");
+      entry.id = "sbx-orders-entry";
+      entry.className = "sbx-scope";
+      entry.dir = isRTL() ? "rtl" : "ltr";
+      entry.innerHTML = '<button class="sbx-row-btn" data-open-orders><span>' + esc(t("myOrders")) +
+        ' <b>(' + count + ')</b></span><span class="sbx-row-arrow">' + (isRTL() ? "‹" : "›") + "</span></button>";
+      main.insertBefore(entry, panel.nextSibling);
+      entry.querySelector("[data-open-orders]").addEventListener("click", screenOrders);
+    }
 
     // let people switch how they're addressed
     if (isRTL()) {
@@ -582,7 +612,8 @@
       pref.className = "sbx-scope";
       pref.dir = "rtl";
       pref.innerHTML = '<button class="sbx-btn ghost" data-addr>' + esc(t("changeAddr")) + "</button>";
-      main.insertBefore(pref, panel.nextSibling);
+      var afterEntry = document.getElementById("sbx-orders-entry") || panel;
+      main.insertBefore(pref, afterEntry.nextSibling);
       pref.querySelector("[data-addr]").addEventListener("click", function () { askAddress(true); });
     }
   }
@@ -636,22 +667,28 @@
     return t("st_new");
   }
 
-  function mountOrders(host) {
+  // Opens as its own screen; the account page only shows a one-line entry,
+  // and nothing at all when there are no orders yet.
+  function screenOrders() {
+    goTo({ title: t("myOrders"), tab: "keep", render: function () { renderOrders(elBody, true); } }, false);
+  }
+
+  function renderOrders(host, padded) {
     var mine = myOrders();
+    var wrap = padded ? "sbx-pad" : "";
     if (!mine.length) {
-      host.innerHTML = "<h3>" + esc(t("myOrders")) + '</h3><p style="color:#8a6b76;font-size:.88rem">' +
-        esc(t("noOrders")) + "</p>";
+      host.innerHTML = '<div class="sbx-msg">' + esc(t("noOrders")) + "</div>";
       return;
     }
-    host.innerHTML = "<h3>" + esc(t("myOrders")) + '</h3><p style="color:#8a6b76;font-size:.85rem">' +
-      esc(t("loading")) + "</p>";
+    host.innerHTML = '<div class="' + wrap + '"><p style="color:#8a6b76;font-size:.85rem">' +
+      esc(t("loading")) + "</p></div>";
 
     api("/orders?ids=" + mine.map(function (o) { return o.id; }).join(","))
       .then(function (d) {
         var live = {};
         (d.orders || []).forEach(function (o) { live[o.id] = o; });
 
-        host.innerHTML = "<h3>" + esc(t("myOrders")) + "</h3>" +
+        host.innerHTML = '<div class="' + wrap + '">' +
           mine.map(function (saved) {
             var o = live[saved.id];
             var ref = o ? o.ref : "#" + saved.id;
@@ -672,7 +709,7 @@
               '<a class="sbx-btn wa" style="display:block;text-align:center;margin-top:.45rem;text-decoration:none" href="' +
               esc(issueLink(ref, total)) + '" target="_blank" rel="noreferrer">' + esc(t("orderIssue")) + "</a>" +
               "</div>";
-          }).join("");
+          }).join("") + "</div>";
 
         Array.prototype.forEach.call(host.querySelectorAll("[data-reorder]"), function (b) {
           b.addEventListener("click", function () {
@@ -685,11 +722,11 @@
       })
       .catch(function () {
         // Odoo unreachable - still show what this device remembers
-        host.innerHTML = "<h3>" + esc(t("myOrders")) + "</h3>" +
+        host.innerHTML = '<div class="' + wrap + '">' +
           mine.map(function (saved) {
             return '<div class="sbx-order"><div class="sbx-order-head"><b>#' + saved.id + "</b><span>" +
               new Date(saved.at).toLocaleDateString("en-GB") + "</span></div></div>";
-          }).join("");
+          }).join("") + "</div>";
       });
   }
 
@@ -902,21 +939,38 @@
     var box = groups[0].el;
     if (box.getAttribute("data-sbx-brands")) return;
     box.setAttribute("data-sbx-brands", "1");
-    // 3 columns on a phone: 4 made the tiles small enough to mis-tap
     var cols = window.innerWidth < 430 ? 3 : 4;
-    box.style.display = "grid";
-    box.style.gridAutoFlow = "row";
-    box.style.gridTemplateRows = "auto";
-    box.style.gridTemplateColumns = "repeat(" + cols + ", minmax(0,1fr))";
-    box.style.gap = ".6rem";
-    box.style.overflowX = "visible";
+
+    // two rows that scroll sideways by default, so the section stays short
+    function compact() {
+      box.style.display = "grid";
+      box.style.gridAutoFlow = "column";
+      box.style.gridTemplateColumns = "";
+      box.style.gridTemplateRows = "repeat(2, auto)";
+      box.style.gridAutoColumns = "5.6rem";
+      box.style.overflowX = "auto";
+      box.style.scrollbarWidth = "none";
+      box.style.gap = ".6rem";
+      box.style.scrollSnapType = "x proximity";
+    }
+    function expanded() {
+      box.style.display = "grid";
+      box.style.gridAutoFlow = "row";
+      box.style.gridTemplateRows = "auto";
+      box.style.gridAutoColumns = "";
+      box.style.gridTemplateColumns = "repeat(" + cols + ", minmax(0,1fr))";
+      box.style.overflowX = "visible";
+      box.style.gap = ".6rem";
+    }
+    compact();
 
     links.forEach(function (a) {
       if (a.parentElement !== box) return;
-      a.style.height = cols === 3 ? "5rem" : "4.2rem";
+      a.style.height = "4.6rem";
       a.style.padding = ".55rem";
       a.style.display = "grid";
       a.style.placeItems = "center";
+      a.style.scrollSnapAlign = "start";
       var span = a.querySelector("span");
       if (span) { span.style.width = "100%"; span.style.height = "100%"; span.style.display = "grid"; span.style.placeItems = "center"; }
       var img = a.querySelector("img");
@@ -928,6 +982,22 @@
         img.style.objectFit = "contain";
       }
     });
+
+    // "عرض الكل" - opens the whole wall of brands, and folds it back
+    if (!document.getElementById("sbx-brands-toggle")) {
+      var wrap = document.createElement("div");
+      wrap.id = "sbx-brands-toggle";
+      wrap.className = "sbx-scope";
+      wrap.dir = isRTL() ? "rtl" : "ltr";
+      wrap.innerHTML = '<button type="button">' + esc(t("showAll")) + "</button>";
+      box.parentElement.insertBefore(wrap, box.nextSibling);
+      var open = false;
+      wrap.querySelector("button").addEventListener("click", function () {
+        open = !open;
+        open ? expanded() : compact();
+        this.textContent = open ? t("showLess") : t("showAll");
+      });
+    }
   }
 
   // "شنو تحتاج؟" + footer: keep only on the home page and the account page
@@ -995,8 +1065,6 @@
         applyAddressText();
         var panel = document.getElementById("sbx-account");
         if (panel) paintAccount(panel, "login");
-        var orders = document.getElementById("sbx-orders");
-        if (orders) mountOrders(orders);
       });
     });
   }
@@ -1086,21 +1154,76 @@
     inputs.forEach(function (el) {
       if (el.getAttribute("data-sbx-search")) return;
       el.setAttribute("data-sbx-search", "1");
-      var open = function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var typed = el.value || "";
-        el.blur();
-        el.value = "";
-        screenProducts(null, typed.trim().length >= 2 ? typed.trim() : "", false);
-        setTimeout(function () {
-          var s = elBody.querySelector(".sbx-search");
-          if (s) s.focus();
-        }, 250);
-      };
-      el.addEventListener("focus", open, true);
-      el.addEventListener("click", open, true);
+
+      var timer = null;
+      el.addEventListener("input", function () {
+        clearTimeout(timer);
+        var v = el.value.trim();
+        if (v.length < 2) { hideHomeResults(); return; }
+        timer = setTimeout(function () { runHomeSearch(el, v); }, 260);
+      });
+      el.addEventListener("blur", function () {
+        // let a tap on a result register before the panel disappears
+        setTimeout(hideHomeResults, 250);
+      });
     });
+  }
+
+  var homePanel = null;
+  function hideHomeResults() { if (homePanel) { homePanel.remove(); homePanel = null; } }
+
+  function homeResultsHost(input) {
+    if (!homePanel) {
+      homePanel = document.createElement("div");
+      homePanel.id = "sbx-suggest";
+      homePanel.className = "sbx-scope";
+      document.body.appendChild(homePanel);
+    }
+    homePanel.dir = isRTL() ? "rtl" : "ltr";
+    var r = input.getBoundingClientRect();
+    homePanel.style.top = Math.round(r.bottom + 6) + "px";
+    homePanel.style.left = Math.round(r.left) + "px";
+    homePanel.style.width = Math.round(r.width) + "px";
+    return homePanel;
+  }
+
+  function runHomeSearch(input, q) {
+    var host = homeResultsHost(input);
+    host.innerHTML = '<div class="sbx-sg-msg">' + esc(t("loading")) + "</div>";
+    api("/products?limit=6&q=" + encodeURIComponent(q))
+      .then(function (d) {
+        if (!homePanel) return;
+        var items = d.products || [];
+        if (!items.length) {
+          host.innerHTML = '<div class="sbx-sg-msg">' + esc(t("empty")) + "</div>";
+          return;
+        }
+        host.innerHTML =
+          items.map(function (p) {
+            return '<button class="sbx-sg-item" data-p="' + p.id + '">' +
+              '<img src="' + esc(p.image) + '" alt="" loading="lazy">' +
+              '<span class="sbx-sg-n">' + esc(p.name) + "</span>" +
+              '<span class="sbx-sg-p">' + esc(money(p.price)) + "</span></button>";
+          }).join("") +
+          '<button class="sbx-sg-all" data-all>' + esc(t("seeAllResults")) +
+          (d.total > items.length ? " (" + d.total + ")" : "") + "</button>";
+
+        Array.prototype.forEach.call(host.querySelectorAll("[data-p]"), function (b) {
+          b.addEventListener("mousedown", function (e) { e.preventDefault(); });
+          b.addEventListener("click", function () {
+            hideHomeResults();
+            input.value = "";
+            screenProduct(b.getAttribute("data-p"), false);
+          });
+        });
+        host.querySelector("[data-all]").addEventListener("mousedown", function (e) { e.preventDefault(); });
+        host.querySelector("[data-all]").addEventListener("click", function () {
+          hideHomeResults();
+          input.value = "";
+          screenProducts(null, q, false);
+        });
+      })
+      .catch(function () { hideHomeResults(); });
   }
 
   /* ------------------------------- remove the "our website" link (asked) */
