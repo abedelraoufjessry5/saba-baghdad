@@ -262,10 +262,10 @@
     /* consultation button */
     "#sbx-chat-btn{position:fixed;z-index:9997;inset-inline-start:1rem;",
     "bottom:calc(var(--sb-nav-h,3.6rem) + env(safe-area-inset-bottom) + .8rem);",
-    "display:none;align-items:center;gap:.4rem;background:#8E2D46;color:#fff;border:none;",
+    "display:flex;align-items:center;gap:.4rem;background:#8E2D46;color:#fff;border:none;",
     "border-radius:999px;padding:.6rem .95rem;font-family:inherit;font-size:.82rem;font-weight:700;",
     "box-shadow:0 8px 20px rgba(142,45,70,.32)}",
-    "#sbx.on ~ #sbx-chat-btn{display:flex}",
+    "#sbx-chat-btn[hidden]{display:none}",
     "#sbx-chat-btn.sbx-chat-loading{opacity:.6}"
   ].join("");
 
@@ -1188,21 +1188,50 @@
       el.setAttribute("data-sbx-search", "1");
 
       var timer = null;
-      el.addEventListener("input", function () {
+      el.addEventListener("input", function (e) {
+        // Stop the keystroke from reaching the old build's own search, which
+        // would otherwise open a second dropdown saying it found nothing.
+        e.stopPropagation();
         clearTimeout(timer);
         var v = el.value.trim();
         if (v.length < 2) { hideHomeResults(); return; }
         timer = setTimeout(function () { runHomeSearch(el, v); }, 260);
-      });
-      el.addEventListener("blur", function () {
-        // let a tap on a result register before the panel disappears
-        setTimeout(hideHomeResults, 250);
+      }, true);
+
+      // the results stay put when the keyboard goes down; they close on a tap
+      // outside, on Escape, or once a product is picked
+      el.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") hideHomeResults();
       });
     });
+
+    if (!document.body.getAttribute("data-sbx-outside")) {
+      document.body.setAttribute("data-sbx-outside", "1");
+      document.addEventListener("click", function (e) {
+        if (!homePanel) return;
+        if (e.target.closest && (e.target.closest("#sbx-suggest") || e.target.closest("[data-sbx-search]"))) return;
+        hideHomeResults();
+      }, true);
+    }
   }
 
-  var homePanel = null;
-  function hideHomeResults() { if (homePanel) { homePanel.remove(); homePanel = null; } }
+  var homePanel = null, homeAnchor = null;
+  function hideHomeResults() {
+    if (homePanel) { homePanel.remove(); homePanel = null; homeAnchor = null; }
+  }
+
+  // the page shifts when the keyboard opens or closes - keep the panel glued
+  // to the search box instead of leaving it floating in the wrong spot
+  function repositionHomeResults() {
+    if (!homePanel || !homeAnchor) return;
+    var r = homeAnchor.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > window.innerHeight) { hideHomeResults(); return; }
+    homePanel.style.top = Math.round(r.bottom + 6) + "px";
+    homePanel.style.left = Math.round(r.left) + "px";
+    homePanel.style.width = Math.round(r.width) + "px";
+  }
+  window.addEventListener("scroll", repositionHomeResults, true);
+  window.addEventListener("resize", repositionHomeResults);
 
   function homeResultsHost(input) {
     if (!homePanel) {
@@ -1212,10 +1241,8 @@
       document.body.appendChild(homePanel);
     }
     homePanel.dir = isRTL() ? "rtl" : "ltr";
-    var r = input.getBoundingClientRect();
-    homePanel.style.top = Math.round(r.bottom + 6) + "px";
-    homePanel.style.left = Math.round(r.left) + "px";
-    homePanel.style.width = Math.round(r.width) + "px";
+    homeAnchor = input;
+    repositionHomeResults();
     return homePanel;
   }
 
