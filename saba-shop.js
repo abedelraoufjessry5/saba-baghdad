@@ -1355,15 +1355,28 @@
     chatCss();
 
     var base = "https://" + ODOO_HOST;
+
+    // Order matters: the loader defines odoo.__session_info__.livechatData and
+    // assets_embed.js builds the widget from it. Dynamically inserted scripts
+    // run async regardless of `defer`, so the second one has to wait for the
+    // first to finish - otherwise it finds no config and renders nothing.
     var s1 = document.createElement("script");
-    s1.defer = true;
+    s1.async = false;
     s1.src = base + "/im_livechat/loader/" + CHAT_CHANNEL;
-    var s2 = document.createElement("script");
-    s2.defer = true;
-    s2.src = base + "/im_livechat/assets_embed.js";
-    s2.onload = chatCss;
+
+    s1.onload = function () {
+      var s2 = document.createElement("script");
+      s2.async = false;
+      s2.src = base + "/im_livechat/assets_embed.js";
+      s2.onload = function () {
+        chatCss();
+        // the widget mounts a moment later; re-apply once it's there
+        setTimeout(chatCss, 1200);
+      };
+      document.head.appendChild(s2);
+    };
+
     document.head.appendChild(s1);
-    document.head.appendChild(s2);
   }
 
   /* ------------------------- keep home prices in step with Odoo */
@@ -1415,7 +1428,7 @@
     hookHomeSearch();
     removeWebsiteLink();
     refreshHomePrices();
-    setTimeout(startChat, 2500);
+    setTimeout(startChat, 1200);
     applyAddressText();
     if (langChosen() && isRTL() && !hasAddr()) askAddress(false);
   }
