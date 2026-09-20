@@ -13,19 +13,29 @@
   var T = {
     ar: {
       cart: "سلتي", account: "الحساب", products: "المنتجات", back: "رجوع",
-      search: "دوّر على منتج، ماركة...", all: "الكل", loading: "جاري التحميل...",
-      empty: "ما في نتائج", cartEmpty: "سلتك فاضية", add: "أضف للسلة",
-      total: "المجموع", checkout: "إتمام الطلب (دفع عند التوصيل)",
+      search: "دوّر على منتج أو ماركة...", all: "الكل", loading: "ثانية...",
+      empty: "ماكو نتائج", cartEmpty: { m: "ماكو شي بسلتك", f: "ماكو شي بسلتچ" },
+      add: "ضيّفه للسلة",
+      total: "الكلي", checkout: "أكمّل الطلب — الدفع عند الاستلام",
       name: "الاسم", phone: "رقم الهاتف", address: "العنوان", notes: "ملاحظات (اختياري)",
-      sending: "جاري الإرسال...", orderOk: "تم استلام طلبك رقم #",
-      orderOkSub: "رح نتواصل وياك لتأكيد التوصيل. الدفع عند الاستلام.",
-      continue: "متابعة التسوق", login: "تسجيل الدخول", register: "حساب جديد",
-      email: "الإيميل", password: "كلمة المرور", enter: "دخول", create: "إنشاء حساب",
-      noAccount: "ما عندك حساب؟ سجّل وحدة جديدة", haveAccount: "عندك حساب؟ سجّل دخول",
-      hello: "مرحباً", logout: "تسجيل الخروج", del: "حذف حسابي",
-      delWarn: "هذا الإجراء يوقف حسابك نهائياً ويحذف بياناتك الشخصية. أدخل كلمة المرور للتأكيد.",
-      delConfirm: "تأكيد حذف الحساب", cancel: "تراجع", currency: "ع.د",
-      err: "صار خطأ، حاول مرة ثانية", myAccount: "حسابي"
+      sending: "نرسل الطلب...", orderOk: "وصلنا طلبك رقم #",
+      orderOkSub: { m: "رح نتصل بيك نأكّد التوصيل. تدفع لما يوصلك.", f: "رح نتصل بيچ نأكّد التوصيل. تدفعين لما يوصلچ." },
+      continue: "كمّل تسوّق", login: "تسجيل الدخول", register: "حساب جديد",
+      email: "الإيميل", password: "كلمة المرور", enter: "دخول", create: "سوّي حساب",
+      noAccount: { m: "ماعندك حساب؟ سوّي واحد", f: "ماعندچ حساب؟ سوّي واحد" },
+      haveAccount: { m: "عندك حساب؟ ادخل", f: "عندچ حساب؟ ادخلي" },
+      hello: { m: "هلا بيك", f: "هلا بيچ" },
+      logout: "خروج", del: "حذف حسابي",
+      delWarn: { m: "هذا الإجراء يوقف حسابك نهائياً ويمسح بياناتك. اكتب كلمة المرور للتأكيد.", f: "هذا الإجراء يوقف حسابچ نهائياً ويمسح بياناتچ. اكتبي كلمة المرور للتأكيد." },
+      delConfirm: "أكّد حذف الحساب", cancel: "تراجع", currency: "د.ع",
+      err: "صار خلل، جرّب مرة ثانية", myAccount: "حسابي",
+      myOrders: "طلباتي", noOrders: "لسه ماكو طلبات", reorder: "اطلبه مرة ثانية",
+      orderIssue: "عندك مشكلة بالطلب؟", orderItems: "المنتجات",
+      st_new: "وصلنا طلبك", st_prep: "قيد التجهيز", st_way: { m: "بالطريق إلك", f: "بالطريق إلچ" },
+      st_done: { m: "تسلّمته", f: "تسلّمتيه" }, st_cancel: "ملغي",
+      addrTitle: "شلون نحچيك؟", addrM: "أهلاً بيك", addrF: "أهلاً بيچ",
+      addrHint: "حتى نخاطبك بالشكل يريحك — تگدر تغيّرها بعدين من حسابك",
+      changeAddr: "غيّر صيغة المخاطبة"
     },
     en: {
       cart: "Cart", account: "Account", products: "Products", back: "Back",
@@ -41,7 +51,14 @@
       hello: "Hello", logout: "Sign out", del: "Delete my account",
       delWarn: "This permanently closes your account and removes your personal data. Enter your password to confirm.",
       delConfirm: "Confirm deletion", cancel: "Cancel", currency: "IQD",
-      err: "Something went wrong, try again", myAccount: "My account"
+      err: "Something went wrong, try again", myAccount: "My account",
+      myOrders: "My orders", noOrders: "No orders yet", reorder: "Order again",
+      orderIssue: "Problem with this order?", orderItems: "Items",
+      st_new: "Order received", st_prep: "Being prepared", st_way: "On its way",
+      st_done: "Delivered", st_cancel: "Cancelled",
+      addrTitle: "How should we address you?", addrM: "Welcome (m)", addrF: "Welcome (f)",
+      addrHint: "You can change this later from your account",
+      changeAddr: "Change how we address you"
     }
   };
   T.ku = T.ar;
@@ -55,10 +72,35 @@
     } catch (e) {}
     return "ar";
   }
-  function t(k) { return (T[lang()] || T.ar)[k] || T.ar[k] || k; }
+  // "أهلاً بيك" vs "أهلاً بيچ" - chosen once on first launch, changeable later
+  var ADDR_KEY = "saba.addr";
+  function addr() {
+    try { return localStorage.getItem(ADDR_KEY) === "m" ? "m" : "f"; } catch (e) { return "f"; }
+  }
+  function hasAddr() {
+    try { return localStorage.getItem(ADDR_KEY) === "m" || localStorage.getItem(ADDR_KEY) === "f"; }
+    catch (e) { return false; }
+  }
+  // lang() falls back to "ar", so check whether a language was really picked -
+  // otherwise the sheet would cover the language screen itself.
+  function langChosen() {
+    try {
+      if (localStorage.getItem("saba.lang")) return true;
+      if (document.cookie.match("(?:^|; )saba\\.lang=")) return true;
+    } catch (e) {}
+    return false;
+  }
+
+  function t(k) {
+    var v = (T[lang()] || T.ar)[k];
+    if (v === undefined) v = T.ar[k];
+    if (v && typeof v === "object") return v[addr()] || v.f || v.m;
+    return v === undefined ? k : v;
+  }
   function isRTL() { var l = lang(); return l === "ar" || l === "ku"; }
+  // Prices always in western digits (16,000) - Abed's call
   function money(n) {
-    try { return Number(n).toLocaleString(isRTL() ? "ar-IQ" : "en-US") + " " + t("currency"); }
+    try { return Number(n).toLocaleString("en-US") + " " + t("currency"); }
     catch (e) { return n + " " + t("currency"); }
   }
   function esc(s) {
@@ -68,7 +110,7 @@
   }
 
   /* ---------------------------------------------------------------- store */
-  var CART_KEY = "saba.cart.v1", AUTH_KEY = "saba.auth.v1";
+  var CART_KEY = "saba.cart.v1", AUTH_KEY = "saba.auth.v1", ORDERS_KEY = "saba.orders.v1";
   function readJSON(k, d) { try { var r = localStorage.getItem(k); return r ? JSON.parse(r) : d; } catch (e) { return d; } }
   function writeJSON(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 
@@ -76,6 +118,16 @@
   var auth = readJSON(AUTH_KEY, null);
 
   function saveCart() { writeJSON(CART_KEY, cart); paintBadge(); }
+
+  /* Orders placed from THIS device. No login needed, and no way to see
+     someone else's orders. Each entry keeps the basket so "اطلبه مرة ثانية"
+     works without extra lookups. */
+  function myOrders() { return readJSON(ORDERS_KEY, []); }
+  function rememberOrder(id, items) {
+    var list = myOrders().filter(function (o) { return o.id !== id; });
+    list.unshift({ id: id, at: Date.now(), items: items });
+    writeJSON(ORDERS_KEY, list.slice(0, 30));
+  }
   function cartCount() { return cart.reduce(function (n, i) { return n + i.qty; }, 0); }
   function cartTotal() { return cart.reduce(function (n, i) { return n + i.qty * i.price; }, 0); }
   function addToCart(p, qty) {
@@ -146,8 +198,30 @@
     "font-size:.58rem;min-width:1.05rem;height:1.05rem;border-radius:999px;display:flex;align-items:center;",
     "justify-content:center;padding:0 .18rem;font-weight:700}",
     /* account panel injected into the contact page */
-    "#sbx-account{margin:1rem 1rem 0;background:#fff;border:1px solid #F2DDE6;border-radius:1.1rem;padding:1rem}",
-    "#sbx-account h3{margin:0 0 .8rem;font-size:1.02rem;font-weight:700;color:#8E2D46}"
+    "#sbx-account,#sbx-orders{margin:1rem 1rem 0;background:#fff;border:1px solid #F2DDE6;",
+    "border-radius:1.1rem;padding:1rem}",
+    "#sbx-pref{margin:.7rem 1rem 0}",
+    "#sbx-account h3,#sbx-orders h3{margin:0 0 .8rem;font-size:1.02rem;font-weight:700;color:#8E2D46}",
+    /* my orders */
+    ".sbx-order{border:1px solid #F2DDE6;border-radius:.9rem;padding:.75rem;margin-bottom:.7rem;background:#FCF8FA}",
+    ".sbx-order-head{display:flex;justify-content:space-between;align-items:center;font-size:.9rem}",
+    ".sbx-order-head span{color:#8a6b76;font-size:.78rem}",
+    ".sbx-chipstate{display:inline-block;margin:.45rem 0;padding:.22rem .65rem;border-radius:999px;",
+    "background:#F2DDE6;color:#8E2D46;font-size:.74rem;font-weight:700}",
+    ".sbx-lines{list-style:none;margin:.3rem 0 .5rem;padding:0}",
+    ".sbx-lines li{display:flex;justify-content:space-between;gap:.5rem;font-size:.78rem;",
+    "color:#5b3f4a;padding:.16rem 0;line-height:1.4}",
+    ".sbx-lines li span:first-child{flex:1;min-width:0}",
+    ".sbx-order-total{display:flex;justify-content:space-between;font-size:.85rem;margin:.4rem 0 .6rem;",
+    "padding-top:.45rem;border-top:1px dashed #F2DDE6}",
+    /* how-we-address-you sheet */
+    "#sbx-addr{position:fixed;inset:0;z-index:10050;background:rgba(43,22,32,.45);display:flex;",
+    "align-items:flex-end;justify-content:center}",
+    "#sbx-addr .sbx-addr-card{background:#FCF4F9;width:100%;max-width:520px;border-radius:1.4rem 1.4rem 0 0;",
+    "padding:1.4rem 1.2rem calc(1.4rem + env(safe-area-inset-bottom));text-align:center}",
+    "#sbx-addr h3{margin:0 0 1rem;font-size:1.1rem;color:#2b1620;font-weight:700}",
+    "#sbx-addr .sbx-addr-row{display:flex;gap:.7rem}",
+    "#sbx-addr p{margin:.9rem 0 0;font-size:.76rem;color:#8a6b76;line-height:1.6}"
   ].join("");
 
   var styleEl = document.createElement("style");
@@ -452,6 +526,7 @@
         })
       })
         .then(function (d) {
+          rememberOrder(d.orderId, cart.slice());
           cart = []; saveCart();
           html('<div class="sbx-pad"><div class="sbx-note ok">' + esc(t("orderOk")) + d.orderId + " — " +
             esc(t("orderOkSub")) + '</div><button class="sbx-btn" data-cont>' + esc(t("continue")) + "</button></div>");
@@ -485,11 +560,31 @@
     if ((window.__TAB__ || "") !== "contact") return;
     if (document.getElementById("sbx-account")) return;
     var main = document.querySelector("main") || document.body;
+
+    // orders first - it's what customers open this page for
+    var orders = document.createElement("div");
+    orders.id = "sbx-orders";
+    orders.className = "sbx-scope";
+    orders.dir = isRTL() ? "rtl" : "ltr";
+    main.insertBefore(orders, main.firstChild);
+    mountOrders(orders);
+
     var panel = document.createElement("div");
     panel.id = "sbx-account";
     panel.className = "sbx-scope";
-    main.insertBefore(panel, main.firstChild);
+    main.insertBefore(panel, orders.nextSibling);
     paintAccount(panel, "login");
+
+    // let people switch how they're addressed
+    if (isRTL()) {
+      var pref = document.createElement("div");
+      pref.id = "sbx-pref";
+      pref.className = "sbx-scope";
+      pref.dir = "rtl";
+      pref.innerHTML = '<button class="sbx-btn ghost" data-addr>' + esc(t("changeAddr")) + "</button>";
+      main.insertBefore(pref, panel.nextSibling);
+      pref.querySelector("[data-addr]").addEventListener("click", function () { askAddress(true); });
+    }
   }
 
   function paintAccount(panel, mode) {
@@ -529,6 +624,78 @@
           btn.disabled = false;
         });
     });
+  }
+
+  /* --------------------------------------------------------- my orders */
+  function statusLabel(o) {
+    if (o.state === "cancel") return t("st_cancel");
+    if (o.state === "done") return t("st_done");
+    if (o.delivery === "full") return t("st_done");
+    if (o.delivery === "started" || o.delivery === "partial") return t("st_way");
+    if (o.state === "sale") return t("st_prep");
+    return t("st_new");
+  }
+
+  function mountOrders(host) {
+    var mine = myOrders();
+    if (!mine.length) {
+      host.innerHTML = "<h3>" + esc(t("myOrders")) + '</h3><p style="color:#8a6b76;font-size:.88rem">' +
+        esc(t("noOrders")) + "</p>";
+      return;
+    }
+    host.innerHTML = "<h3>" + esc(t("myOrders")) + '</h3><p style="color:#8a6b76;font-size:.85rem">' +
+      esc(t("loading")) + "</p>";
+
+    api("/orders?ids=" + mine.map(function (o) { return o.id; }).join(","))
+      .then(function (d) {
+        var live = {};
+        (d.orders || []).forEach(function (o) { live[o.id] = o; });
+
+        host.innerHTML = "<h3>" + esc(t("myOrders")) + "</h3>" +
+          mine.map(function (saved) {
+            var o = live[saved.id];
+            var ref = o ? o.ref : "#" + saved.id;
+            var when = new Date(saved.at).toLocaleDateString("en-GB");
+            var total = o ? money(o.total) : money((saved.items || []).reduce(function (n, i) { return n + i.qty * i.price; }, 0));
+            var lines = o && o.lines.length
+              ? o.lines
+              : (saved.items || []).map(function (i) { return { name: i.name, qty: i.qty, total: i.qty * i.price }; });
+
+            return '<div class="sbx-order">' +
+              '<div class="sbx-order-head"><b>' + esc(ref) + "</b><span>" + esc(when) + "</span></div>" +
+              '<div class="sbx-chipstate">' + esc(o ? statusLabel(o) : t("st_new")) + "</div>" +
+              '<ul class="sbx-lines">' + lines.map(function (l) {
+                return "<li><span>" + esc(l.name) + "</span><span>×" + l.qty + "</span></li>";
+              }).join("") + "</ul>" +
+              '<div class="sbx-order-total"><span>' + esc(t("total")) + "</span><b>" + esc(total) + "</b></div>" +
+              '<button class="sbx-btn ghost" data-reorder="' + saved.id + '">' + esc(t("reorder")) + "</button>" +
+              '<a class="sbx-btn wa" style="display:block;text-align:center;margin-top:.45rem;text-decoration:none" href="' +
+              esc(issueLink(ref, total)) + '" target="_blank" rel="noreferrer">' + esc(t("orderIssue")) + "</a>" +
+              "</div>";
+          }).join("");
+
+        Array.prototype.forEach.call(host.querySelectorAll("[data-reorder]"), function (b) {
+          b.addEventListener("click", function () {
+            var saved = myOrders().filter(function (o) { return String(o.id) === b.getAttribute("data-reorder"); })[0];
+            if (!saved || !saved.items) return;
+            saved.items.forEach(function (i) { addToCart(i, i.qty); });
+            screenCart();
+          });
+        });
+      })
+      .catch(function () {
+        // Odoo unreachable - still show what this device remembers
+        host.innerHTML = "<h3>" + esc(t("myOrders")) + "</h3>" +
+          mine.map(function (saved) {
+            return '<div class="sbx-order"><div class="sbx-order-head"><b>#' + saved.id + "</b><span>" +
+              new Date(saved.at).toLocaleDateString("en-GB") + "</span></div></div>";
+          }).join("");
+      });
+  }
+
+  function issueLink(ref, total) {
+    var msg = "مرحبا، عندي استفسار عن طلبي " + ref + " (" + total + ")";
+    return "https://api.whatsapp.com/send/?phone=%2B" + WA + "&text=" + encodeURIComponent(msg);
   }
 
   function paintLoggedIn(panel) {
@@ -800,6 +967,151 @@
     }
   }
 
+  /* ------------------------------------------- how we address the customer */
+  // Arabic verbs are gendered, so the app has to know which form to use.
+  // Asked once, on the same screen as the language, and changeable later.
+  function askAddress(force) {
+    if (!isRTL()) return;
+    if (!force && hasAddr()) return;
+    if (document.getElementById("sbx-addr")) return;
+
+    var sheet = document.createElement("div");
+    sheet.id = "sbx-addr";
+    sheet.className = "sbx-scope";
+    sheet.dir = "rtl";
+    sheet.innerHTML =
+      '<div class="sbx-addr-card">' +
+      "<h3>" + esc(t("addrTitle")) + "</h3>" +
+      '<div class="sbx-addr-row">' +
+      '<button class="sbx-btn" data-v="m">' + esc(t("addrM")) + "</button>" +
+      '<button class="sbx-btn" data-v="f">' + esc(t("addrF")) + "</button>" +
+      "</div><p>" + esc(t("addrHint")) + "</p></div>";
+    document.body.appendChild(sheet);
+
+    Array.prototype.forEach.call(sheet.querySelectorAll("[data-v]"), function (b) {
+      b.addEventListener("click", function () {
+        try { localStorage.setItem(ADDR_KEY, b.getAttribute("data-v")); } catch (e) {}
+        sheet.remove();
+        applyAddressText();
+        var panel = document.getElementById("sbx-account");
+        if (panel) paintAccount(panel, "login");
+        var orders = document.getElementById("sbx-orders");
+        if (orders) mountOrders(orders);
+      });
+    });
+  }
+
+  // The old pages' copy is written for a female customer and lives inside a
+  // compiled bundle, so it can't be edited - swap the known phrases instead.
+  var FEM_TO_MASC = {
+    "شنو تحتاجين اليوم؟": "شنو تحتاج اليوم؟",
+    "اختاري حالتچ وإحنا ندلچ على المنتجات المناسبة": "اختار حالتك وإحنا ندلك على المنتجات المناسبة",
+    "ابدي من هنا": "ابدأ من هنا",
+    "قطرات تفرق بنضارة بشرتچ": "قطرات تفرق بنضارة بشرتك",
+    "ماسكات تشتغل وانتي نايمة": "ماسكات تشتغل وانت نايم",
+    "اكتبي هنا .... و إحنا نساعدچ": "اكتب هنا .... و إحنا نساعدك",
+    "اكتبي هنا ... و إحنا نساعدچ": "اكتب هنا ... و إحنا نساعدك",
+    // generic fallbacks, applied after the full phrases above
+    "تحتاجين": "تحتاج",
+    "بشرتچ": "بشرتك",
+    "حالتچ": "حالتك",
+    "نساعدچ": "نساعدك",
+    "ندلچ": "ندلك",
+    "اكتبي": "اكتب",
+    "اختاري": "اختار",
+    "ابدي": "ابدأ",
+    "شوفي": "شوف",
+    "جربي": "جرب",
+    "تريدين": "تريد",
+    "وانتي": "وانت",
+    "نايمة": "نايم",
+    "إلچ": "إلك",
+    "عندچ": "عندك",
+    "وياچ": "وياك"
+  };
+
+  var addrObserver = null;
+  function applyAddressText() {
+    if (!isRTL() || addr() !== "m") return;
+    swapText(document.body);
+    if (addrObserver) return;
+    // React re-renders would undo the swap, so keep watching
+    addrObserver = new MutationObserver(function (muts) {
+      for (var i = 0; i < muts.length; i++) {
+        var m = muts[i];
+        if (m.type === "characterData" && m.target.parentNode) swapNode(m.target);
+        for (var j = 0; j < m.addedNodes.length; j++) swapText(m.addedNodes[j]);
+      }
+    });
+    addrObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+  }
+
+  function swapNode(node) {
+    var v = node.nodeValue;
+    if (!v || v.length > 200) return;
+    var out = v;
+    for (var k in FEM_TO_MASC) if (out.indexOf(k) !== -1) out = out.split(k).join(FEM_TO_MASC[k]);
+    if (out !== v) node.nodeValue = out;
+  }
+
+  function swapText(root) {
+    if (!root) return;
+    if (root.nodeType === 3) return swapNode(root);
+    if (root.nodeType !== 1) return;
+    if (root.id === "sbx" || root.id === "sbx-addr") return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    var n;
+    while ((n = walker.nextNode())) swapNode(n);
+    // placeholders aren't text nodes
+    Array.prototype.forEach.call(root.querySelectorAll ? root.querySelectorAll("input[placeholder]") : [], function (el) {
+      var p = el.getAttribute("placeholder") || "";
+      var out = p;
+      for (var k in FEM_TO_MASC) if (out.indexOf(k) !== -1) out = out.split(k).join(FEM_TO_MASC[k]);
+      if (out !== p) el.setAttribute("placeholder", out);
+    });
+  }
+
+  /* ------------------------- the old home search box -> the live search */
+  // The home page had its own search with ~126 hand-written entries and no
+  // connection to Odoo, so brands like ANUA or VICHY returned nothing.
+  function hookHomeSearch() {
+    var inputs = Array.prototype.filter.call(
+      document.querySelectorAll("input"),
+      function (el) {
+        if (el.closest("#sbx") || el.closest("#sbx-account") || el.closest("#sbx-orders")) return false;
+        var p = (el.getAttribute("placeholder") || "") + " " + (el.getAttribute("aria-label") || "");
+        return /اكتب|اكتبي|دوّر|دور على|search/i.test(p);
+      }
+    );
+    inputs.forEach(function (el) {
+      if (el.getAttribute("data-sbx-search")) return;
+      el.setAttribute("data-sbx-search", "1");
+      var open = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var typed = el.value || "";
+        el.blur();
+        el.value = "";
+        screenProducts(null, typed.trim().length >= 2 ? typed.trim() : "", false);
+        setTimeout(function () {
+          var s = elBody.querySelector(".sbx-search");
+          if (s) s.focus();
+        }, 250);
+      };
+      el.addEventListener("focus", open, true);
+      el.addEventListener("click", open, true);
+    });
+  }
+
+  /* ------------------------------- remove the "our website" link (asked) */
+  function removeWebsiteLink() {
+    var links = Array.prototype.filter.call(document.querySelectorAll("a"), function (a) {
+      var txt = (a.textContent || "").trim();
+      return /موقعنا الإلكتروني|موقعنا الالكتروني|Our website/i.test(txt) && txt.length < 40;
+    });
+    links.forEach(function (a) { a.remove(); });
+  }
+
   /* ---------------------------------------------------------------- boot */
   function boot() {
     addTabs();
@@ -807,7 +1119,22 @@
     trimContactBlock();
     fixBrandLogos();
     mountAccountPanel();
+    hookHomeSearch();
+    removeWebsiteLink();
+    applyAddressText();
+    if (langChosen() && isRTL() && !hasAddr()) askAddress(false);
   }
+
+  // The language screen is the app's own; watch for the moment it's answered
+  // so the address question can follow immediately on the same screen.
+  var addrPoll = setInterval(function () {
+    if (hasAddr() || !isRTL()) { clearInterval(addrPoll); return; }
+    if (!langChosen()) return;
+    askAddress(false);
+    hookHomeSearch();
+    clearInterval(addrPoll);
+  }, 700);
+  setTimeout(function () { clearInterval(addrPoll); }, 60000);
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
   setTimeout(prefetchCategories, 2500); // so brand tiles resolve on the first tap
