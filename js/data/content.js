@@ -874,6 +874,8 @@ export const CATEGORIES = [
   }
 ];
 
+// Logo files on the old Mocha server have meaningless names (zz.png, zzz.webp…);
+// each one below was checked against the logo it actually shows.
 export const BRANDS = [
   {
     "name": "La Roche-Posay",
@@ -887,7 +889,7 @@ export const BRANDS = [
   },
   {
     "name": "Bioderma",
-    "image": "zzz.webp",
+    "image": "zz.png",
     "cat": 11
   },
   {
@@ -912,17 +914,17 @@ export const BRANDS = [
   },
   {
     "name": "ACM",
-    "image": "zzzz.jpg",
+    "image": "zzz.webp",
     "cat": 59
   },
   {
     "name": "Noreva",
-    "image": "zz.png",
+    "image": "zzzz.jpg",
     "cat": 39
   },
   {
     "name": "Sebamed",
-    "image": "9b292484-8010-4dab-aeed-8db1cdf161c3.jpg",
+    "image": "images.png",
     "cat": 18
   },
   {
@@ -937,12 +939,12 @@ export const BRANDS = [
   },
   {
     "name": "The Purest Solutions",
-    "image": "news-p.v1.20241101.683ea9001d4c4f4684d592d4f425a3df_P1.jpg",
+    "image": "9b292484-8010-4dab-aeed-8db1cdf161c3.jpg",
     "cat": 17
   },
   {
     "name": "ISISPHARMA",
-    "image": "images.png",
+    "image": "yyRE31Abuz3z9AU2jJo2vz1JhvWQeNblzH6wQS9c.webp",
     "cat": 37
   },
   {
@@ -952,7 +954,7 @@ export const BRANDS = [
   },
   {
     "name": "SKIN1004",
-    "image": "yyRE31Abuz3z9AU2jJo2vz1JhvWQeNblzH6wQS9c.webp",
+    "image": "news-p.v1.20241101.683ea9001d4c4f4684d592d4f425a3df_P1.jpg",
     "cat": 50
   },
   {
