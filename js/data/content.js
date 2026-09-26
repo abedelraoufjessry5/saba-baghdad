@@ -871,38 +871,6 @@ export const CATEGORIES = [
         "q": "كيترات"
       }
     ]
-  },
-  {
-    "id": "offers",
-    "name": "العروض",
-    "icon": "🏷️",
-    "image": "young-female-pink-bathrobe-holding-make-up-flasks-blue(1).jpg",
-    "subs": [
-      {
-        "id": "weekend-offers",
-        "name": "عروض نهاية الأسبوع",
-        "image": "https://images.unsplash.com/photo-1607083206968-13611e3d76db?w=200&h=200&fit=crop",
-        "q": "عروض نهاية الأسبوع"
-      },
-      {
-        "id": "summer-offers",
-        "name": "عروض الموسم",
-        "image": "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=200&h=200&fit=crop",
-        "q": "عروض الصيف"
-      },
-      {
-        "id": "holiday-offers",
-        "name": "عروض من صبا",
-        "image": "https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=200&h=200&fit=crop",
-        "q": "عروض الأعياد"
-      },
-      {
-        "id": "winter-offers",
-        "name": "لقطة الأسبوع",
-        "image": "https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?w=200&h=200&fit=crop",
-        "q": "عروض الشتاء"
-      }
-    ]
   }
 ];
 
