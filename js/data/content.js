@@ -43,7 +43,7 @@ export const HERO = [
   },
   {
     "id": "scalp",
-    "image": "medium-shot-woman-giving-herself-scalp-massage.jpg",
+    "image": "Screenshot-2026-02-02-at-14-41-12-Woman-doing-herself-a-scalp-massage-Free-Photo.png",
     "title": {
       "ar": "عناية بفروة الراس",
       "en": "Scalp care",
@@ -371,7 +371,7 @@ export const CATEGORIES = [
       {
         "id": "leave-in-cream",
         "name": "ليف ان كريم",
-        "image": "medium-shot-woman-giving-herself-scalp-massage.jpg",
+        "image": "young-woman-applying-anti-dandruff-product.jpg",
         "q": "ليف ان كريم"
       },
       {
