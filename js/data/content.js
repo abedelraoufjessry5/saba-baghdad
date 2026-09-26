@@ -979,6 +979,7 @@ export const BRANDS = [
   }
 ];
 
+// Korean best sellers, all live on Odoo with their photos (prices refresh from Odoo).
 export const TRENDING = [
   {
     "id": 165,
@@ -987,25 +988,97 @@ export const TRENDING = [
     "name": "COSRX Advanced Snail 96 Mucin Essence — خلاصة الحلزون ٩٦",
     "price": 16000,
     "badge": "ترند",
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/165/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/165/image_512"
   },
   {
-    "id": 167,
-    "key": "167",
-    "brand": "COSRX",
-    "name": "COSRX Low pH Good Morning Cleanser — غسول جل منخفض الحموضة",
-    "price": 12000,
-    "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/167/image_512"
+    "id": 1914,
+    "key": "1914",
+    "brand": "SKIN1004",
+    "name": "SKIN1004 Madagascar Centella Ampoule 55ml — أمبول السنتيلا",
+    "price": 22500,
+    "badge": "الأكثر مبيعاً",
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/1914/image_512"
+  },
+  {
+    "id": 171,
+    "key": "171",
+    "brand": "Anua",
+    "name": "Anua Heartleaf Pore Control Cleansing Oil — زيت منظف للمسام",
+    "price": 25000,
+    "badge": "كوري",
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/171/image_512"
   },
   {
     "id": 1697,
     "key": "1697",
     "brand": "Beauty of Joseon",
-    "name": "Beauty of Joseon Relief Sun SPF50+ — واقي شمس الأرز والبروبيوتيك",
+    "name": "Beauty of Joseon Relief Sun SPF50+ — واقي شمس الأرز",
     "price": 22000,
     "badge": "الأكثر مبيعاً",
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/1697/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/1697/image_512"
+  },
+  {
+    "id": 1733,
+    "key": "1733",
+    "brand": "MEDICUBE",
+    "name": "Medicube Glutathione Glow Serum — سيروم الجلوتاثيون للإشراقة",
+    "price": 26000,
+    "badge": "ترند",
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/1733/image_512"
+  },
+  {
+    "id": 1808,
+    "key": "1808",
+    "brand": "SOME BY MI",
+    "name": "SOME BY MI 30 Days Miracle Serum — سيروم للبشرة المعرضة للحبوب",
+    "price": 24000,
+    "badge": null,
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/1808/image_512"
+  },
+  {
+    "id": 209,
+    "key": "209",
+    "brand": "TOCOBO",
+    "name": "TOCOBO Bio Watery Sun Cream SPF50 — واقي شمس بقوام مائي",
+    "price": 26000,
+    "badge": "كوري",
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/209/image_512"
+  },
+  {
+    "id": 1701,
+    "key": "1701",
+    "brand": "EQQUAL BERRY",
+    "name": "EQQUALBERRY Vitamin Illuminating Serum — سيروم الفيتامينات",
+    "price": 27000,
+    "badge": null,
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/1701/image_512"
+  },
+  {
+    "id": 174,
+    "key": "174",
+    "brand": "Anua",
+    "name": "Anua Niacinamide 10% + TXA 4% Serum — سيروم النياسيناميد",
+    "price": 27000,
+    "badge": null,
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/174/image_512"
+  },
+  {
+    "id": 1956,
+    "key": "1956",
+    "brand": "SKIN1004",
+    "name": "SKIN1004 Hyalu-Cica Water-Fit Sun Serum SPF50+ — واقي شمس سيروم",
+    "price": 21500,
+    "badge": null,
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/1956/image_512"
+  },
+  {
+    "id": 1714,
+    "key": "1714",
+    "brand": "MEDICUBE",
+    "name": "Medicube PDRN Pink Collagen Exosome Shot — سيروم الكولاجين",
+    "price": 25000,
+    "badge": "ترند",
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/1714/image_512"
   },
   {
     "id": 1694,
@@ -1014,147 +1087,7 @@ export const TRENDING = [
     "name": "Beauty of Joseon Glow Deep Serum — سيروم الأرز والألفا أربوتين",
     "price": 20000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/1694/image_512"
-  },
-  {
-    "id": null,
-    "key": "anua-1",
-    "brand": "Anua",
-    "name": "Anua Heartleaf 77% Toner — تونر ورق القلب ٧٧٪",
-    "price": null,
-    "badge": "كوري",
-    "image": null,
-    "cat": 46
-  },
-  {
-    "id": null,
-    "key": "anua-2",
-    "brand": "Anua",
-    "name": "Anua Heartleaf Cleansing Oil — غسول زيتي بورق القلب",
-    "price": null,
-    "badge": null,
-    "image": null,
-    "cat": 46
-  },
-  {
-    "id": null,
-    "key": "sk-1",
-    "brand": "SKIN1004",
-    "name": "SKIN1004 Centella Ampoule — أمبولة السنتيلا المهدّئة",
-    "price": null,
-    "badge": "كوري",
-    "image": null,
-    "cat": 50
-  },
-  {
-    "id": null,
-    "key": "sk-2",
-    "brand": "SKIN1004",
-    "name": "SKIN1004 Centella Ampoule Foam — غسول رغوي بالسنتيلا",
-    "price": null,
-    "badge": null,
-    "image": null,
-    "cat": 50
-  },
-  {
-    "id": null,
-    "key": "sbm-1",
-    "brand": "SOME BY MI",
-    "name": "SOME BY MI AHA·BHA·PHA 30 Days Miracle Toner — تونر الـ٣٠ يوم",
-    "price": null,
-    "badge": "كوري",
-    "image": null,
-    "cat": 66
-  },
-  {
-    "id": null,
-    "key": "sbm-2",
-    "brand": "SOME BY MI",
-    "name": "SOME BY MI Miracle Acne Clear Foam — غسول لحب الشباب",
-    "price": null,
-    "badge": null,
-    "image": null,
-    "cat": 66
-  },
-  {
-    "id": null,
-    "key": "toc-1",
-    "brand": "TOCOBO",
-    "name": "TOCOBO Bio Watery Sun Cream — واقي شمس مائي",
-    "price": null,
-    "badge": "كوري",
-    "image": null,
-    "cat": 51
-  },
-  {
-    "id": null,
-    "key": "toc-2",
-    "brand": "TOCOBO",
-    "name": "TOCOBO Coconut Clay Cleansing Balm — بالم تنظيف بالطين",
-    "price": null,
-    "badge": null,
-    "image": null,
-    "cat": 51
-  },
-  {
-    "id": null,
-    "key": "med-1",
-    "brand": "MEDICUBE",
-    "name": "Medicube Collagen Night Wrapping Mask — ماسك الكولاجين الليلي",
-    "price": null,
-    "badge": "كوري",
-    "image": null,
-    "cat": 88
-  },
-  {
-    "id": null,
-    "key": "med-2",
-    "brand": "MEDICUBE",
-    "name": "Medicube Zero Pore Pad — باد تنظيف وتضييق المسام",
-    "price": null,
-    "badge": null,
-    "image": null,
-    "cat": 88
-  },
-  {
-    "id": null,
-    "key": "eq-1",
-    "brand": "EQQUAL BERRY",
-    "name": "EQQUALBERRY Vitamin Illuminating Serum — سيروم فيتامين للإشراق",
-    "price": null,
-    "badge": "كوري",
-    "image": null,
-    "cat": 87
-  },
-  {
-    "id": null,
-    "key": "eq-2",
-    "brand": "EQQUAL BERRY",
-    "name": "EQQUALBERRY Hydrating Toner — تونر مرطّب",
-    "price": null,
-    "badge": null,
-    "image": null,
-    "cat": 87
-  },
-  {
-    "id": null,
-    "key": "ar-1",
-    "brand": "Arencia",
-    "name": "Arencia Fresh Cleansing Bar — صابونة تنظيف طازجة مقطّعة يدوياً",
-    "price": null,
-    "badge": "جديد",
-    "image": null,
-    "q": "Arencia"
-  },
-  {
-    "id": null,
-    "key": "ar-2",
-    "brand": "Arencia",
-    "name": "Arencia Clay Mask Bar — ماسك الطين الكوري",
-    "price": null,
-    "badge": null,
-    "image": null,
-    "q": "Arencia"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/1694/image_512"
   },
   {
     "id": 164,
@@ -1163,16 +1096,61 @@ export const TRENDING = [
     "name": "COSRX The Niacinamide 15 Serum — سيروم النياسيناميد ١٥٪",
     "price": 21000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/164/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/164/image_512"
   },
   {
-    "id": 166,
-    "key": "166",
-    "brand": "COSRX",
-    "name": "COSRX Advanced Snail Peptide Eye Cream — كريم العين بالحلزون",
-    "price": 28000,
+    "id": 1793,
+    "key": "1793",
+    "brand": "SOME BY MI",
+    "name": "SOME BY MI 30 Days Miracle Toner — تونر للبشرة المعرضة للحبوب",
+    "price": 19000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/166/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/1793/image_512"
+  },
+  {
+    "id": 207,
+    "key": "207",
+    "brand": "TOCOBO",
+    "name": "TOCOBO Cica Cooling Sun Stick SPF50+ — واقي شمس ستيك",
+    "price": 21000,
+    "badge": null,
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/207/image_512"
+  },
+  {
+    "id": 1773,
+    "key": "1773",
+    "brand": "EQQUAL BERRY",
+    "name": "EQQUALBERRY Swimming Pool Ampoule — أمبول مرطب",
+    "price": 27000,
+    "badge": "كوري",
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/1773/image_512"
+  },
+  {
+    "id": 3465,
+    "key": "3465",
+    "brand": "Centellian 24",
+    "name": "Centellian24 Madeca Cream Time Reverse — كريم ماديكا",
+    "price": 20000,
+    "badge": "كوري",
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/3465/image_512"
+  },
+  {
+    "id": 1749,
+    "key": "1749",
+    "brand": "MEDICUBE",
+    "name": "Medicube PDRN Pink Collagen Bubble Serum — سيروم فقاعات الكولاجين",
+    "price": 26000,
+    "badge": null,
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/1749/image_512"
+  },
+  {
+    "id": 1695,
+    "key": "1695",
+    "brand": "Beauty of Joseon",
+    "name": "Beauty of Joseon Light On Serum — سيروم السنتيلا وفيتامين سي",
+    "price": 24000,
+    "badge": null,
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/1695/image_512"
   }
 ];
 
