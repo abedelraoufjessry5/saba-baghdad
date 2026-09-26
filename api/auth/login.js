@@ -1,38 +1,25 @@
+// POST /api/auth/login { email, password } -> { token, exp, user }
 import { authenticateUser, execute } from "../_lib/odoo.js";
-import { ok, guarded } from "../_lib/respond.js";
+import { handler, send, body, clientIp, HttpError } from "../_lib/http.js";
+import { createSession } from "../_lib/tokens.js";
+import { limit } from "../_lib/limit.js";
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    res.status(405).json({ error: "POST only" });
-    return;
-  }
-  await guarded(res, async () => {
-    const { email, password } = req.body || {};
-    if (!email || !password) {
-      res.status(400).json({ error: "email and password are required" });
-      return;
-    }
+export default handler(["POST"], async (req, res) => {
+  const b = body(req);
+  const email = String(b.email || "").trim().toLowerCase();
+  const password = String(b.password || "");
+  if (!email || !password) throw new HttpError(400, "اكتبوا الإيميل وكلمة المرور");
+  limit("login:ip:" + clientIp(req), 60, 600); // shared mobile IPs: keep loose
+  limit("login:email:" + email, 8, 600);
 
-    const uid = await authenticateUser(email, password);
-    if (!uid) {
-      res.status(401).json({ error: "إيميل أو كلمة مرور غلط" });
-      return;
-    }
+  const uid = await authenticateUser(email, password);
+  if (!uid) throw new HttpError(401, "الإيميل أو كلمة المرور غلط");
 
-    const rows = await execute("res.users", "search_read", [
-      [["id", "=", uid]]
-    ], { fields: ["id", "name", "partner_id"], limit: 1 });
-
-    const user = rows[0];
-    ok(res, {
-      userId: user.id,
-      partnerId: user.partner_id[0],
-      name: user.name
-      // NOTE (v1 limitation): this just confirms the credentials are valid.
-      // There's no session token/cookie yet - the front-end keeps a local
-      // "logged in" flag. Fine to ship, but a real session (signed cookie
-      // or JWT) should replace this before this handles anything sensitive
-      // beyond browsing order history.
-    });
+  const [user] = await execute("res.users", "read", [[uid]], { fields: ["id", "name", "login", "partner_id"] });
+  const pid = user.partner_id[0];
+  const [partner] = await execute("res.partner", "read", [[pid]], { fields: ["phone"] });
+  send(res, {
+    ...createSession({ uid, pid }),
+    user: { name: user.name, email: user.login, phone: (partner && partner.phone) || "" }
   });
-}
+});

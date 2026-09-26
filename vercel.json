@@ -1,11 +1,97 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/contact",
+      "destination": "/account",
+      "permanent": false
+    },
+    {
+      "source": "/contact.html",
+      "destination": "/account",
+      "permanent": false
+    },
+    {
+      "source": "/categories.html",
+      "destination": "/categories",
+      "permanent": false
+    },
+    {
+      "source": "/offers",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/offers.html",
+      "destination": "/",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/categories",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/account",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/products",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/product/:id",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/cart",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/orders",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/services",
+      "destination": "/index.html"
+    }
+  ],
   "headers": [
     {
-      "source": "/saba-shop.js",
+      "source": "/(js|css)/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/img/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
       ]
     }
   ]

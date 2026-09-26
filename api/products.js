@@ -1,95 +1,70 @@
+// GET /api/products?category_id=&q=&on_sale=1&limit=24&offset=0
+//  -> { products: [...], total }
 import { execute, imageUrl } from "./_lib/odoo.js";
-import { ok, guarded } from "./_lib/respond.js";
-import { searchTerms, orDomain, stripHtml } from "./_lib/search.js";
-import { descriptionFields, pickDescription } from "./_lib/fields.js";
+import { handler, send } from "./_lib/http.js";
+import { searchTerms, orDomain, stripHtml } from "./_lib/text.js";
+import { descriptionFields, hasComparePrice, pickDescription, PUBLISHED } from "./_lib/catalog.js";
 
-export default async function handler(req, res) {
-  await guarded(res, async () => {
-    const { category_id, q, on_sale, limit = "24", offset = "0" } = req.query;
+const MAX_LIMIT = 100;
 
-    const descFields = await descriptionFields();
+export default handler(["GET"], async (req, res) => {
+  const { category_id, q, on_sale } = req.query;
+  const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 24, 1), MAX_LIMIT);
+  const offset = Math.max(parseInt(req.query.offset, 10) || 0, 0);
 
-    const domain = [["website_published", "=", true]];
-    if (category_id) {
-      domain.push(["public_categ_ids", "child_of", Number(category_id)]);
+  const [descFields, withCompare] = await Promise.all([descriptionFields(), hasComparePrice()]);
+
+  const domain = [PUBLISHED];
+  const cat = parseInt(category_id, 10);
+  if (cat > 0) domain.push(["public_categ_ids", "child_of", cat]);
+
+  // name AND description, for the query and its Arabic synonym
+  if (q) {
+    const conds = [];
+    for (const term of searchTerms(q)) {
+      conds.push(["name", "ilike", term]);
+      for (const f of descFields) conds.push([f, "ilike", term]);
     }
+    domain.push(...orDomain(conds));
+  }
 
-    // Search the name AND the description, for the query and its Arabic
-    // synonym (so "بيوديرما" finds products named "BIODERMA ...").
-    if (q) {
-      const terms = searchTerms(q);
-      const conds = [];
-      for (const t of terms) {
-        conds.push(["name", "ilike", t]);
-        for (const f of descFields) conds.push([f, "ilike", t]);
-      }
-      domain.push(...orDomain(conds));
-    }
+  const fields = ["id", "name", "list_price", "public_categ_ids", ...descFields];
+  if (withCompare) fields.push("compare_list_price");
 
-    const fields = [
-      "id",
-      "name",
-      "list_price",
-      "compare_list_price",
-      "public_categ_ids",
-      ...descFields
-    ];
+  let rows;
+  let total;
+  if (on_sale === "1") {
+    // "on sale" compares two fields, which a domain can't do: find the
+    // discounted ids first, then read just the requested page.
+    if (!withCompare) return send(res, { products: [], total: 0 }, 120);
+    const candidates = await execute("product.template", "search_read",
+      [[...domain, ["compare_list_price", ">", 0]]], { fields: ["id", "list_price", "compare_list_price"], order: "name, id", limit: 2000 });
+    const ids = candidates.filter((p) => p.compare_list_price > p.list_price).map((p) => p.id);
+    total = ids.length;
+    const page = ids.slice(offset, offset + limit);
+    rows = page.length ? await execute("product.template", "read", [page], { fields }) : [];
+    rows.sort((a, b) => page.indexOf(a.id) - page.indexOf(b.id));
+  } else {
+    [rows, total] = await Promise.all([
+      execute("product.template", "search_read", [domain], { fields, order: "name, id", limit, offset }),
+      execute("product.template", "search_count", [domain])
+    ]);
+  }
 
-    const lim = Math.min(Number(limit) || 24, 100);
-    const off = Math.max(Number(offset) || 0, 0);
-
-    // Offers compare two fields, which an Odoo domain can't do - narrow to the
-    // discounted ones first, then finish the comparison here.
-    const saleMode = on_sale === "1";
-    if (saleMode) domain.push(["compare_list_price", ">", 0]);
-
-    let rows, total;
-    try {
-      // Ask Odoo for ONE page, not the whole catalogue. Count runs alongside.
-      const [page, count] = await Promise.all([
-        execute("product.template", "search_read", [domain], {
-          fields,
-          order: "name",
-          limit: saleMode ? 300 : lim,
-          offset: saleMode ? 0 : off
-        }),
-        execute("product.template", "search_count", [domain])
-      ]);
-      rows = page;
-      total = count;
-    } catch {
-      // a field this database doesn't have - fall back to the safe minimum
-      const safeDomain = q
-        ? [["website_published", "=", true], ["name", "ilike", q]]
-        : [["website_published", "=", true]];
-      rows = await execute("product.template", "search_read", [safeDomain], {
-        fields: ["id", "name", "list_price", "public_categ_ids"],
-        order: "name",
-        limit: lim,
-        offset: off
-      });
-      total = await execute("product.template", "search_count", [safeDomain]);
-    }
-
-    let mapped = rows.map((p) => ({
-      id: p.id,
-      name: p.name,
-      price: p.list_price,
-      comparePrice: p.compare_list_price || 0,
-      onSale: !!p.compare_list_price && p.compare_list_price > p.list_price,
-      // Saba doesn't track stock in Odoo, so nothing is ever "unavailable".
-      inStock: true,
-      excerpt: stripHtml(pickDescription(p, descFields), 110),
-      categoryIds: p.public_categ_ids || [],
-      image: imageUrl("product.template", p.id, "image_512")
-    }));
-
-    if (saleMode) {
-      mapped = mapped.filter((p) => p.onSale);
-      total = mapped.length;
-      mapped = mapped.slice(off, off + lim);
-    }
-
-    ok(res, { products: mapped, total }, 120);
-  });
-}
+  send(res, {
+    products: rows.map((p) => {
+      const compare = withCompare ? p.compare_list_price || 0 : 0;
+      return {
+        id: p.id,
+        name: p.name,
+        price: p.list_price,
+        comparePrice: compare,
+        onSale: compare > p.list_price,
+        excerpt: stripHtml(pickDescription(p, descFields), 110),
+        categoryIds: p.public_categ_ids || [],
+        image: imageUrl("product.template", p.id, "image_512")
+      };
+    }),
+    total
+  }, 120);
+});

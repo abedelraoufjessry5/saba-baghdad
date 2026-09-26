@@ -1,30 +1,31 @@
 /*
- * Pulls the 58 images still served by Mocha into ./assets, then points the
- * four pages at that local copy. Run it once, from this folder, while the
- * Mocha CDN is still up:
+ * Copies the 58 photos still served by Mocha into ./img/content and points
+ * the app at that local copy. Run it once from this folder, while the Mocha
+ * link still works:
  *
  *     node download-assets.mjs
  *
- * Afterwards the app has no dependency on Mocha at all and you can cancel
- * the subscription.
+ * Afterwards the app no longer needs Mocha and the subscription can go.
  */
-
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+
+// work from this file's folder, wherever the command is typed from
+process.chdir(path.dirname(fileURLToPath(import.meta.url)));
 
 const CDN = "https://019beba1-942b-7e71-8d2c-d730501e122b.mochausercontent.com";
-const PAGES = ["index.html", "categories.html", "offers.html", "contact.html"];
-const OUT = "assets";
+const OUT = path.join("img", "content");
+const CONFIG = path.join("js", "config.js");
 
 const files = JSON.parse(fs.readFileSync("assets-list.json", "utf-8"));
 fs.mkdirSync(OUT, { recursive: true });
 
 let ok = 0;
 const failed = [];
-
 for (const name of files) {
   const dest = path.join(OUT, name);
-  if (fs.existsSync(dest)) {
+  if (fs.existsSync(dest) && fs.statSync(dest).size > 0) {
     ok++;
     console.log(`· ${name} (already here)`);
     continue;
@@ -41,30 +42,18 @@ for (const name of files) {
   }
 }
 
-console.log(`\n${ok}/${files.length} images saved to ./${OUT}`);
-
+console.log(`\n${ok}/${files.length} photos saved to ./${OUT.replace(/\\/g, "/")}`);
 if (failed.length) {
-  console.log(
-    `\n${failed.length} could not be fetched. The pages are left pointing at\n` +
-      `Mocha so nothing breaks; re-run once you sort those out:\n` +
-      failed.map((f) => "  - " + f).join("\n")
-  );
+  console.log(`\n${failed.length} could not be fetched; the app keeps using Mocha until they are:\n` + failed.map((f) => "  - " + f).join("\n"));
   process.exit(1);
 }
 
-/* Every image is local now, so switch the pages over. */
-for (const page of PAGES) {
-  const before = fs.readFileSync(page, "utf-8");
-  const after = before.replace(
-    'window.__IMG_BASE__ = ""',
-    'window.__IMG_BASE__ = "./assets"'
-  );
-  if (before === after) {
-    console.log(`· ${page} already points at ./assets`);
-    continue;
-  }
-  fs.writeFileSync(page, after);
-  console.log(`✓ ${page} now loads images from ./assets`);
+const before = fs.readFileSync(CONFIG, "utf-8");
+const after = before.replace(/export const IMG_BASE = "[^"]*";/, 'export const IMG_BASE = "/img/content";');
+if (after !== before) {
+  fs.writeFileSync(CONFIG, after);
+  console.log("✓ js/config.js now loads photos from /img/content");
+} else {
+  console.log("· js/config.js already points at /img/content");
 }
-
-console.log("\nDone. The app no longer needs Mocha.");
+console.log("\nDone. Deploy again, then the Mocha subscription can be cancelled.");

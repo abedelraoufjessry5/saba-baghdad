@@ -1,6 +1,11 @@
 {
   "name": "saba-baghdad",
   "private": true,
-  "version": "2.1.0",
-  "type": "module"
+  "version": "3.0.0",
+  "type": "module",
+  "description": "Saba Baghdad Pharmacy app - static front-end + Vercel functions on top of Odoo",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "assets": "node download-assets.mjs"
+  }
 }

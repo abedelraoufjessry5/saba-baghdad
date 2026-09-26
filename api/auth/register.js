@@ -1,65 +1,41 @@
-import { execute } from "../_lib/odoo.js";
-import { ok, guarded } from "../_lib/respond.js";
+// POST /api/auth/register { name, email, phone, password } -> { token, exp, user }
+// Creates a free Odoo PORTAL user (not a paid internal seat). Odoo itself
+// stores and checks the password.
+import { execute, existingFields } from "../_lib/odoo.js";
+import { handler, send, body, clientIp, HttpError } from "../_lib/http.js";
+import { createSession } from "../_lib/tokens.js";
+import { limit } from "../_lib/limit.js";
+import { cleanText, isEmail, normalizePhone } from "../_lib/text.js";
 
-// Creates a free Odoo PORTAL user (not an internal/paid seat) so customers
-// get a real, secure Odoo login (password hashing, etc. handled by Odoo
-// itself) without touching your internal-user license count.
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    res.status(405).json({ error: "POST only" });
-    return;
-  }
-  await guarded(res, async () => {
-    const { name, email, phone, password } = req.body || {};
-    if (!name || !email || !password) {
-      res.status(400).json({ error: "name, email and password are required" });
-      return;
-    }
+export default handler(["POST"], async (req, res) => {
+  const b = body(req);
+  const name = cleanText(b.name, 80);
+  const email = String(b.email || "").trim().toLowerCase();
+  const password = String(b.password || "");
+  const phoneRaw = cleanText(b.phone, 30);
+  const phone = phoneRaw ? normalizePhone(phoneRaw) : "";
 
-    const dupe = await execute("res.users", "search_read", [
-      [["login", "=", email]]
-    ], { fields: ["id"], limit: 1 });
-    if (dupe.length) {
-      res.status(409).json({ error: "هذا الإيميل مسجل مسبقاً" });
-      return;
-    }
+  if (name.length < 2) throw new HttpError(400, "الاسم مطلوب");
+  if (!isEmail(email)) throw new HttpError(400, "الإيميل غير صحيح");
+  if (password.length < 8) throw new HttpError(400, "كلمة المرور لازم تكون ٨ أحرف أو أكثر");
+  if (phoneRaw && !phone) throw new HttpError(400, "رقم الهاتف لازم يكون رقم موبايل عراقي، مثل 07701234567");
+  limit("register:ip:" + clientIp(req), 30, 3600); // shared mobile IPs: keep loose
+  limit("register:email:" + email, 5, 3600);
 
-    const [, portalGroupId] = await execute("ir.model.data", "check_object_reference", [
-      "base",
-      "group_portal"
-    ]);
+  const taken = await execute("res.users", "search_count", [[["login", "=", email], ["active", "in", [true, false]]]]);
+  if (taken) throw new HttpError(409, "هذا الإيميل مسجّل مسبقاً");
 
-    // Odoo renamed res.users.groups_id -> group_ids in recent versions (18/19),
-    // so ask the server which one it actually has instead of guessing.
-    let groupField = "groups_id";
-    try {
-      const f = await execute("res.users", "fields_get", [["group_ids", "groups_id"]], {
-        attributes: ["type"]
-      });
-      if (f && f.group_ids) groupField = "group_ids";
-    } catch {
-      /* fall back to the legacy name */
-    }
+  const [, portalGroup] = await execute("ir.model.data", "check_object_reference", ["base", "group_portal"]);
+  // Odoo 18+ renamed res.users.groups_id to group_ids
+  const groupField = (await existingFields("res.users", ["group_ids", "groups_id"]))[0] || "groups_id";
 
-    const partnerId = await execute("res.partner", "create", [
-      { name, email, phone: phone || "" }
-    ]);
+  // Odoo creates the contact (partner) together with the user.
+  const uid = await execute("res.users", "create", [{
+    name, login: email, email, password, [groupField]: [[6, 0, [portalGroup]]]
+  }]);
+  const [user] = await execute("res.users", "read", [[uid]], { fields: ["partner_id"] });
+  const pid = user.partner_id[0];
+  if (phone) await execute("res.partner", "write", [[pid], { phone }]);
 
-    const baseVals = { name, login: email, email, password, partner_id: partnerId };
-
-    let userId;
-    try {
-      userId = await execute("res.users", "create", [
-        Object.assign({}, baseVals, { [groupField]: [[6, 0, [portalGroupId]]] })
-      ]);
-    } catch (err) {
-      // last resort: try the other field name before giving up
-      const other = groupField === "group_ids" ? "groups_id" : "group_ids";
-      userId = await execute("res.users", "create", [
-        Object.assign({}, baseVals, { [other]: [[6, 0, [portalGroupId]]] })
-      ]);
-    }
-
-    ok(res, { userId, partnerId, name });
-  });
-}
+  send(res, { ...createSession({ uid, pid }), user: { name, email, phone: phone || "" } });
+});

@@ -1,48 +1,35 @@
-import { execute } from "./_lib/odoo.js";
-import { ok, guarded } from "./_lib/respond.js";
+// GET /api/health?key=YOUR_HEALTH_KEY - checks the Odoo connection.
+// Only answers when HEALTH_KEY is set in Vercel and the same key is given;
+// shows no customer names or details.
+import crypto from "crypto";
+import { execute, existingFields } from "./_lib/odoo.js";
+import { handler, send, HttpError } from "./_lib/http.js";
+import { APP_ORIGIN, PUBLISHED } from "./_lib/catalog.js";
 
-// Diagnostics: open /api/health in a browser to see exactly what Odoo says.
-// Handy when something fails and the app only shows a short error.
-export default async function handler(req, res) {
-  await guarded(res, async () => {
-    const out = { ok: true, checks: {} };
-
-    try {
-      const v = await execute("ir.module.module", "search_read", [
-        [["name", "=", "base"], ["state", "=", "installed"]]
-      ], { fields: ["latest_version"], limit: 1 });
-      out.checks.odooVersion = v.length ? v[0].latest_version : "unknown";
-    } catch (e) {
-      out.checks.odooVersion = "error: " + e.message;
-    }
-
-    try {
-      const n = await execute("product.template", "search_count", [
-        [["website_published", "=", true]]
-      ]);
-      out.checks.publishedProducts = n;
-    } catch (e) {
-      out.checks.publishedProducts = "error: " + e.message;
-    }
-
-    try {
-      const f = await execute("res.users", "fields_get", [["group_ids", "groups_id"]], {
-        attributes: ["type"]
-      });
-      out.checks.userGroupField = f && f.group_ids ? "group_ids" : "groups_id";
-    } catch (e) {
-      out.checks.userGroupField = "error: " + e.message;
-    }
-
-    try {
-      const orders = await execute("sale.order", "search_read", [
-        [["origin", "=", "Saba Baghdad App"]]
-      ], { fields: ["id", "name", "state", "partner_id", "amount_total", "create_date"], limit: 5, order: "id desc" });
-      out.checks.lastAppOrders = orders;
-    } catch (e) {
-      out.checks.lastAppOrders = "error: " + e.message;
-    }
-
-    ok(res, out);
-  });
+function keyMatches(given) {
+  const expected = process.env.HEALTH_KEY || "";
+  const a = Buffer.from(String(given || ""));
+  const b = Buffer.from(expected);
+  return expected.length >= 8 && a.length === b.length && crypto.timingSafeEqual(a, b);
 }
+
+export default handler(["GET"], async (req, res) => {
+  if (!keyMatches(req.query.key)) throw new HttpError(404, "Not found");
+  const out = { ok: true, checks: {} };
+  const check = async (name, fn) => {
+    try { out.checks[name] = await fn(); } catch (e) { out.ok = false; out.checks[name] = "error: " + e.message; }
+  };
+  await check("odooVersion", async () => {
+    const v = await execute("ir.module.module", "search_read", [[["name", "=", "base"], ["state", "=", "installed"]]], { fields: ["latest_version"], limit: 1 });
+    return v.length ? v[0].latest_version : "unknown";
+  });
+  await check("publishedProducts", () => execute("product.template", "search_count", [[PUBLISHED]]));
+  await check("userGroupField", async () => (await existingFields("res.users", ["group_ids", "groups_id"]))[0] || "none");
+  await check("comparePrice", async () => (await existingFields("product.template", ["compare_list_price"])).length === 1);
+  await check("sessionSecret", async () => (process.env.SESSION_SECRET ? "set" : "derived from ODOO_API_KEY (set SESSION_SECRET)"));
+  await check("lastAppOrders", async () => {
+    const rows = await execute("sale.order", "search_read", [[["origin", "=", APP_ORIGIN]]], { fields: ["name", "state", "amount_total", "create_date"], limit: 5, order: "id desc" });
+    return rows.map((o) => ({ ref: o.name, state: o.state, total: o.amount_total, at: o.create_date }));
+  });
+  send(res, out);
+});

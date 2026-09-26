@@ -1,92 +1,97 @@
-// Server-side only. Talks to Odoo's JSON-RPC endpoint using the API key
-// stored in Vercel environment variables. This file runs inside /api
-// functions (Node serverless runtime) and its output is never sent to the
-// browser as source - only the JSON each endpoint chooses to return.
+// Server-side only: talks to Odoo's JSON-RPC endpoint with the API key kept
+// in Vercel's environment variables. Nothing in this folder reaches the
+// browser - only the JSON each endpoint decides to return.
+import { HttpError } from "./http.js";
 
-const ODOO_URL = process.env.ODOO_URL;
-const ODOO_DB = process.env.ODOO_DB;
-const ODOO_LOGIN = process.env.ODOO_LOGIN;
-const ODOO_API_KEY = process.env.ODOO_API_KEY;
+const TIMEOUT_MS = 15000;
+const UID_TTL_MS = 10 * 60 * 1000; // re-authenticate every 10 minutes
 
-let cachedUid = null;
-let cachedAt = 0;
-const UID_TTL_MS = 10 * 60 * 1000; // re-authenticate every 10 min
+function config() {
+  const { ODOO_URL, ODOO_DB, ODOO_LOGIN, ODOO_API_KEY } = process.env;
+  if (!ODOO_URL || !ODOO_DB || !ODOO_LOGIN || !ODOO_API_KEY) {
+    throw new HttpError(500, "Missing Odoo env vars. Set ODOO_URL, ODOO_DB, ODOO_LOGIN, ODOO_API_KEY in Vercel project settings.", { expose: true });
+  }
+  return { url: ODOO_URL.replace(/\/+$/, ""), db: ODOO_DB, login: ODOO_LOGIN, key: ODOO_API_KEY };
+}
+
+export class OdooError extends Error {}
 
 async function rpc(service, method, args) {
-  if (!ODOO_URL || !ODOO_DB || !ODOO_LOGIN || !ODOO_API_KEY) {
-    throw new Error(
-      "Missing Odoo env vars. Set ODOO_URL, ODOO_DB, ODOO_LOGIN, ODOO_API_KEY in Vercel project settings."
-    );
+  const { url } = config();
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  let res;
+  try {
+    res = await fetch(url + "/jsonrpc", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: { service, method, args }, id: Date.now() }),
+      signal: ctrl.signal
+    });
+  } catch (err) {
+    throw new OdooError(`Odoo unreachable (${service}.${method}): ${err.message}`);
+  } finally {
+    clearTimeout(timer);
   }
-  const res = await fetch(`${ODOO_URL}/jsonrpc`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      jsonrpc: "2.0",
-      method: "call",
-      params: { service, method, args },
-      id: Date.now()
-    })
-  });
-  if (!res.ok) {
-    throw new Error(`Odoo HTTP ${res.status} on ${service}.${method}`);
-  }
+  if (!res.ok) throw new OdooError(`Odoo HTTP ${res.status} on ${service}.${method}`);
   const json = await res.json();
   if (json.error) {
-    const msg =
-      json.error.data?.message || json.error.message || "Unknown Odoo RPC error";
-    const err = new Error(msg);
-    err.odoo = json.error;
-    throw err;
+    const e = new OdooError(json.error.data?.message || json.error.message || "Unknown Odoo RPC error");
+    e.odoo = json.error;
+    throw e;
   }
   return json.result;
 }
 
-async function getUid() {
-  const fresh = Date.now() - cachedAt < UID_TTL_MS;
-  if (cachedUid && fresh) return cachedUid;
-  const uid = await rpc("common", "authenticate", [ODOO_DB, ODOO_LOGIN, ODOO_API_KEY, {}]);
+let cachedUid = null;
+let cachedAt = 0;
+
+async function serviceUid() {
+  if (cachedUid && Date.now() - cachedAt < UID_TTL_MS) return cachedUid;
+  const { db, login, key } = config();
+  const uid = await rpc("common", "authenticate", [db, login, key, {}]);
   if (!uid) {
-    throw new Error(
-      "Odoo authentication failed (bad db name, login, or API key). Check ODOO_DB - it may not match the URL subdomain."
-    );
+    throw new HttpError(500, "Odoo authentication failed (check ODOO_DB, ODOO_LOGIN and ODOO_API_KEY).", { expose: true });
   }
   cachedUid = uid;
   cachedAt = Date.now();
   return uid;
 }
 
-// Generic model call, e.g. execute("product.template", "search_read", [domain], {fields, limit})
+// Any model call as the service account:
+// execute("product.template", "search_read", [domain], { fields, limit })
 export async function execute(model, method, args = [], kwargs = {}) {
-  const uid = await getUid();
-  return rpc("object", "execute_kw", [
-    ODOO_DB,
-    uid,
-    ODOO_API_KEY,
-    model,
-    method,
-    args,
-    kwargs
-  ]);
+  const { db, key } = config();
+  const uid = await serviceUid();
+  return rpc("object", "execute_kw", [db, uid, key, model, method, args, kwargs]);
 }
 
-// Verifies a CUSTOMER's own email + password (not the admin service account
-// used by execute()). Returns their uid, or null if the credentials are wrong.
+// Checks a CUSTOMER's own email + password. Returns their user id or null.
 export async function authenticateUser(login, password) {
+  const { db } = config();
   try {
-    const uid = await rpc("common", "authenticate", [ODOO_DB, login, password, {}]);
-    return uid || null;
+    return (await rpc("common", "authenticate", [db, login, password, {}])) || null;
   } catch {
     return null;
   }
 }
 
-// Public image URL for a record - no auth needed for website_published records,
-// so we never fetch base64 image data through RPC (slow + huge payloads).
-export function imageUrl(model, id, field = "image_1024") {
-  return `${ODOO_URL}/web/image/${model}/${id}/${field}`;
+// Which of these fields exist on the model (field names differ between Odoo
+// versions and installed modules). Cached per server instance.
+const fieldCache = new Map();
+export async function existingFields(model, names) {
+  const key = model + ":" + names.join(",");
+  if (!fieldCache.has(key)) {
+    const p = execute(model, "fields_get", [names], { attributes: ["type"] })
+      .then((found) => names.filter((n) => found && found[n]))
+      .catch((e) => { fieldCache.delete(key); throw e; });
+    fieldCache.set(key, p);
+  }
+  return fieldCache.get(key);
 }
 
-export function odooUrl() {
-  return ODOO_URL;
+// Public image of a published product - loaded by the phone straight from
+// Odoo, never passed through here as base64.
+export function imageUrl(model, id, field = "image_1024") {
+  return `${config().url}/web/image/${model}/${id}/${field}`;
 }
