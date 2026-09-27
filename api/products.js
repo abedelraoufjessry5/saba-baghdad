@@ -1,5 +1,8 @@
-// GET /api/products?category_id=&q=&on_sale=1&limit=24&offset=0
+// GET /api/products?category_id=&q=&terms=a|b&exclude=1,2&on_sale=1&limit=24&offset=0
 //  -> { products: [...], total }
+//  q      free search: name OR description, plus its Arabic synonym
+//  terms  exact list used by the home "concerns": any term in the product NAME
+//  exclude product ids to leave out
 import { execute, imageUrl } from "./_lib/odoo.js";
 import { handler, send } from "./_lib/http.js";
 import { searchTerms, orDomain, stripHtml } from "./_lib/text.js";
@@ -9,6 +12,8 @@ const MAX_LIMIT = 100;
 
 export default handler(["GET"], async (req, res) => {
   const { category_id, q, on_sale } = req.query;
+  const terms = [...new Set(String(req.query.terms || "").split("|").map((x) => x.trim()).filter((x) => x.length >= 2 && x.length <= 40))].slice(0, 12);
+  const exclude = String(req.query.exclude || "").split(",").map((x) => parseInt(x, 10)).filter((x) => x > 0).slice(0, 50);
   const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 24, 1), MAX_LIMIT);
   const offset = Math.max(parseInt(req.query.offset, 10) || 0, 0);
 
@@ -27,6 +32,8 @@ export default handler(["GET"], async (req, res) => {
     }
     domain.push(...orDomain(conds));
   }
+  if (terms.length) domain.push(...orDomain(terms.map((term) => ["name", "ilike", term])));
+  if (exclude.length) domain.push(["id", "not in", exclude]);
 
   const fields = ["id", "name", "list_price", "public_categ_ids", ...descFields];
   if (withCompare) fields.push("compare_list_price");

@@ -1,8 +1,10 @@
 /* المنتجات: live list from Odoo with search, category chips and "show more".
-   Filters are kept in the address (?cat=&q=) so "back" from a product
-   returns to exactly the same list. */
+   Filters are kept in the address (?cat=&q=&concern=) so "back" from a
+   product returns to exactly the same list. A "concern" (home cards) is a
+   fixed product filter defined in data/content.js. */
 import { h, money, debounce, hideOnError } from "../dom.js";
-import { t } from "../i18n.js";
+import { t, pickLang } from "../i18n.js";
+import { CONCERNS } from "../data/content.js";
 import { api, loadCategories } from "../api.js";
 import { addToCart } from "../store.js";
 import { navigate, restoreScroll } from "../router.js";
@@ -32,6 +34,7 @@ export function productsView({ query }) {
   const state = {
     cat: query.cat ? Number(query.cat) || null : null,
     q: query.q || "",
+    concern: CONCERNS.find((c) => c.id === query.concern) || null,
     loaded: 0,
     total: 0,
     request: 0
@@ -50,6 +53,7 @@ export function productsView({ query }) {
     const s = new URLSearchParams();
     if (state.cat) s.set("cat", state.cat);
     if (state.q) s.set("q", state.q);
+    if (state.concern) s.set("concern", state.concern.id);
     const url = "/products" + (s.toString() ? "?" + s : "");
     history.replaceState({ ...(history.state || {}), loaded: state.loaded }, "", url);
   }
@@ -65,7 +69,14 @@ export function productsView({ query }) {
     }
     more.querySelector("button").disabled = true;
     try {
-      const d = await api.products({ category_id: state.cat, q: state.q, limit, offset: state.loaded });
+      const c = state.concern;
+      const d = await api.products({
+        category_id: state.cat,
+        q: c ? c.q : state.q,
+        terms: c && c.terms ? c.terms.join("|") : null,
+        exclude: c && c.exclude ? c.exclude.join(",") : null,
+        limit, offset: state.loaded
+      });
       if (my !== state.request) return;
       const items = d.products || [];
       state.total = d.total || 0;
@@ -100,15 +111,24 @@ export function productsView({ query }) {
       }, c.name)));
   }
 
+  // typing a search replaces the concern filter
+  const title = h("h1", null, state.concern ? pickLang(state.concern.name) : t("tab.products"));
+  function leaveConcern() {
+    if (!state.concern) return;
+    state.concern = null;
+    title.textContent = t("tab.products");
+  }
+
   const search = debounce(() => load(true), 250);
   input.addEventListener("input", () => {
     const v = input.value.trim();
     if (v.length === 1) return; // from the 2nd letter; empty = everything
     state.q = v;
+    leaveConcern();
     search();
   });
   input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") { e.preventDefault(); input.blur(); search.cancel(); state.q = input.value.trim(); load(true); }
+    if (e.key === "Enter") { e.preventDefault(); input.blur(); search.cancel(); state.q = input.value.trim(); leaveConcern(); load(true); }
   });
 
   loadCategories().then(paintChips).catch(() => chips.replaceChildren());
@@ -116,7 +136,7 @@ export function productsView({ query }) {
 
   return {
     el: h("div", { class: "screen" },
-      screenBar(t("tab.products")),
+      screenBar(title),
       h("div", { class: "pad", style: { paddingBottom: "0" } }, input),
       chips, msg, grid, more),
     destroy() { search.cancel(); state.request++; }

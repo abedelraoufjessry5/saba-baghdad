@@ -15,6 +15,7 @@ import {
 export function linkFor(item) {
   if (item.product) return "/product/" + item.product;
   if (item.cat) return "/products?cat=" + item.cat;
+  if (item.terms || item.exclude) return "/products?concern=" + encodeURIComponent(item.id);
   if (item.q) return "/products?q=" + encodeURIComponent(item.q);
   return "/products";
 }

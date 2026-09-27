@@ -29,7 +29,7 @@ export function screenBar(title) {
     : h("span", { class: "spacer" });
   return h("div", { class: "screen-bar" },
     backBtn,
-    h("h1", null, title),
+    typeof title === "string" ? h("h1", null, title) : title,
     h("button", { class: "x", type: "button", "aria-label": t("close"), onClick: close }, icon("x", { size: 20 }))
   );
 }

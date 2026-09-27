@@ -50,7 +50,7 @@ export const HERO = [
       "ku": "چاودێری سەری سەر"
     },
     "sub": {
-      "ar": "شامبوهات وعلاجات للتساگط",
+      "ar": "شامبوهات وعلاجات للتساقط",
       "en": "Shampoos and hair treatments",
       "ku": "شامپۆ و چارەسەری قژ"
     },
@@ -97,7 +97,8 @@ export const CONCERNS = [
       "ku": "دانەی لاوان"
     },
     "image": "side-view-smiley-man-with-skin-problems(1).jpg",
-    "q": "حب الشباب"
+    "q": "حب الشباب",
+    "exclude": [59]
   },
   {
     "id": "pigmentation",
@@ -153,21 +154,42 @@ export const CONCERNS = [
     "id": "sensitive",
     "name": {
       "ar": "المناطق الحسّاسة",
-      "en": "Sensitive areas",
+      "en": "Intimate care",
       "ku": "ناوچە هەستیارەکان"
     },
     "image": "portrait-cheerful-attractive-young-lady-holding-tampon-sanitary-napkin(1).jpg",
-    "q": "حساسة"
+    "terms": ["المناطق الحساسة", "مناطق حساسة", "intimate", "intimo", "vaginal", "مهبل", "غسول نسائي", "gyno"]
   },
   {
-    "id": "foot-fungus",
+    "id": "foot-care",
     "name": {
-      "ar": "فطريات القدم",
-      "en": "Foot fungus",
-      "ku": "کەپرەکی پێ"
+      "ar": "العناية بالقدم",
+      "en": "Foot care",
+      "ku": "چاودێری پێ"
     },
     "image": "woman-having-foot-treatment.jpg",
-    "q": "فطريات"
+    "terms": ["القدم", "للقدمين", "foot", "feet", "pieds", "heel", "الكعب", "corn"]
+  },
+  {
+    "id": "makeup",
+    "name": {
+      "ar": "المكياج ومستحضرات التجميل",
+      "en": "Makeup & cosmetics",
+      "ku": "مەیکئەپ و جوانکاری"
+    },
+    "image": "front-view-young-attractive-female-doing-her-make-up-with-mascara-dark-pink-wall-model-color-female-young-girl(1).jpg",
+    "terms": ["maybelline", "makeup", "make up", "lipstick", "gloss", "foundation", "concealer", "كونسيلر", "mascara", "primer", "أحمر شفاه"]
+  },
+  {
+    "id": "kids",
+    "name": {
+      "ar": "العناية بالأطفال",
+      "en": "Baby & kids care",
+      "ku": "چاودێری منداڵ"
+    },
+    "image": "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=500&fit=crop",
+    "terms": ["baby", "bebe", "kids", "children", "pediatric", "للأطفال", "الأطفال", "اطفال"],
+    "exclude": [619, 1664]
   }
 ];
 
@@ -1264,13 +1286,13 @@ export const FEATURED = [
     "image": "https://saba-baghdad.odoo.com/web/image/product.product/14/image_512"
   },
   {
-    "id": 19,
-    "key": "19",
+    "id": 3361,
+    "key": "3361",
     "brand": null,
-    "name": "SVR Sebiaclear — غسول جل للبشرة الدهنية ٤٠٠ مل",
-    "price": 27000,
+    "name": "SVR Sebiaclear — غسول جل رغوي للبشرة الدهنية ٤٠٠ مل",
+    "price": 29000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/19/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/3361/image_512"
   },
   {
     "id": 21,
@@ -1282,13 +1304,13 @@ export const FEATURED = [
     "image": "https://saba-baghdad.odoo.com/web/image/product.product/21/image_512"
   },
   {
-    "id": 22,
-    "key": "22",
+    "id": 3369,
+    "key": "3369",
     "brand": null,
-    "name": "SVR Topialyse Cleansing Oil — غسول زيتي ٤٠٠ مل",
-    "price": 25000,
+    "name": "SVR Topialyse — زيت منظف للبشرة الجافة والحساسة ٤٠٠ مل",
+    "price": 28000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/22/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/3369/image_512"
   },
   {
     "id": 29,
@@ -1309,13 +1331,13 @@ export const FEATURED = [
     "image": "https://saba-baghdad.odoo.com/web/image/product.product/30/image_512"
   },
   {
-    "id": 31,
-    "key": "31",
+    "id": 2970,
+    "key": "2970",
     "brand": null,
-    "name": "RILASTIL D-Clar — سيروم مركّز لعلاج التصبّغات",
-    "price": 35000,
+    "name": "Rilastil D-Clar — قطرات مركّزة لعلاج التصبّغات",
+    "price": 36000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/31/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/2970/image_512"
   },
   {
     "id": 2,
