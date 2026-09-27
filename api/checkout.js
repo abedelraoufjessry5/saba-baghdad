@@ -12,7 +12,7 @@ import { handler, send, body, clientIp, HttpError } from "./_lib/http.js";
 import { activeSession, orderToken } from "./_lib/tokens.js";
 import { limit } from "./_lib/limit.js";
 import { normalizePhone, phoneVariants, cleanText } from "./_lib/text.js";
-import { APP_ORIGIN, PUBLISHED } from "./_lib/catalog.js";
+import { APP_ORIGIN, catalogDomain } from "./_lib/catalog.js";
 import { ZONES, deliveryProductId } from "./_lib/delivery.js";
 
 // Orders are confirmed straight away so they land in Sales Orders (as the
@@ -106,7 +106,7 @@ export default handler(["POST"], async (req, res) => {
   // (variant) ids. Only published products can be ordered.
   const tmplIds = [...order.qtyById.keys()];
   const published = await execute("product.template", "search_read",
-    [[["id", "in", tmplIds], PUBLISHED, ["sale_ok", "=", true]]], { fields: ["id"] });
+    [[["id", "in", tmplIds], ...(await catalogDomain()), ["sale_ok", "=", true]]], { fields: ["id"] });
   const publishedIds = new Set(published.map((p) => p.id));
   const variants = await execute("product.product", "search_read",
     [[["product_tmpl_id", "in", [...publishedIds]]]], { fields: ["id", "product_tmpl_id"], order: "id" });

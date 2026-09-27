@@ -2,7 +2,7 @@
 import { execute, imageUrl } from "./_lib/odoo.js";
 import { handler, send, HttpError } from "./_lib/http.js";
 import { cleanHtml, stripHtml } from "./_lib/text.js";
-import { descriptionFields, hasComparePrice, pickDescription, PUBLISHED } from "./_lib/catalog.js";
+import { descriptionFields, hasComparePrice, pickDescription, catalogDomain } from "./_lib/catalog.js";
 
 export default handler(["GET"], async (req, res) => {
   const id = parseInt(req.query.id, 10);
@@ -12,7 +12,7 @@ export default handler(["GET"], async (req, res) => {
   const fields = ["id", "name", "list_price", "public_categ_ids", ...descFields];
   if (withCompare) fields.push("compare_list_price");
 
-  const rows = await execute("product.template", "search_read", [[["id", "=", id], PUBLISHED]], { fields, limit: 1 });
+  const rows = await execute("product.template", "search_read", [[["id", "=", id], ...(await catalogDomain())]], { fields, limit: 1 });
   const p = rows[0];
   if (!p) throw new HttpError(404, "المنتج غير موجود");
 

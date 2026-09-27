@@ -1,10 +1,13 @@
 // GET /api/health?key=YOUR_HEALTH_KEY - checks the Odoo connection.
+// GET /api/health?key=YOUR_HEALTH_KEY&report=hidden - page listing the
+//     products that are hidden from the website (&format=csv for Excel).
 // Only answers when HEALTH_KEY is set in Vercel and the same key is given;
 // shows no customer names or details.
 import crypto from "crypto";
 import { execute, existingFields } from "./_lib/odoo.js";
 import { handler, send, HttpError } from "./_lib/http.js";
-import { APP_ORIGIN, PUBLISHED } from "./_lib/catalog.js";
+import { APP_ORIGIN, PUBLISHED, catalogDomain } from "./_lib/catalog.js";
+import { hiddenProducts, reportCsv, reportHtml } from "./_lib/report.js";
 
 function keyMatches(given) {
   const expected = process.env.HEALTH_KEY || "";
@@ -15,6 +18,20 @@ function keyMatches(given) {
 
 export default handler(["GET"], async (req, res) => {
   if (!keyMatches(req.query.key)) throw new HttpError(404, "Not found");
+  if (req.query.report === "hidden") {
+    const data = await hiddenProducts();
+    res.setHeader("Cache-Control", "no-store");
+    res.setHeader("X-Robots-Tag", "noindex");
+    res.statusCode = 200;
+    if (req.query.format === "csv") {
+      res.setHeader("Content-Type", "text/csv; charset=utf-8");
+      res.setHeader("Content-Disposition", 'attachment; filename="saba-hidden-products.csv"');
+      return res.end(reportCsv(data));
+    }
+    const csvHref = "?key=" + encodeURIComponent(req.query.key) + "&report=hidden&format=csv";
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    return res.end(reportHtml(data, { odooUrl: String(process.env.ODOO_URL || "").replace(/\/+$/, ""), csvHref }));
+  }
   const out = { ok: true, checks: {} };
   const check = async (name, fn) => {
     try { out.checks[name] = await fn(); } catch (e) { out.ok = false; out.checks[name] = "error: " + e.message; }
@@ -24,6 +41,8 @@ export default handler(["GET"], async (req, res) => {
     return v.length ? v[0].latest_version : "unknown";
   });
   await check("publishedProducts", () => execute("product.template", "search_count", [[PUBLISHED]]));
+  await check("catalogMode", async () => process.env.CATALOG_MODE === "ready" ? "ready (published + ready to sell)" : "published only");
+  await check("productsInApp", async () => execute("product.template", "search_count", [await catalogDomain()]));
   await check("userGroupField", async () => (await existingFields("res.users", ["group_ids", "groups_id"]))[0] || "none");
   await check("comparePrice", async () => (await existingFields("product.template", ["compare_list_price"])).length === 1);
   await check("sessionSecret", async () => (process.env.SESSION_SECRET ? "set" : "derived from ODOO_API_KEY (set SESSION_SECRET)"));

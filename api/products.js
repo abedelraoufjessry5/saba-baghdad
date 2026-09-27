@@ -6,7 +6,7 @@
 import { execute, imageUrl } from "./_lib/odoo.js";
 import { handler, send } from "./_lib/http.js";
 import { searchTerms, orDomain, stripHtml } from "./_lib/text.js";
-import { descriptionFields, hasComparePrice, pickDescription, PUBLISHED } from "./_lib/catalog.js";
+import { descriptionFields, hasComparePrice, pickDescription, catalogDomain } from "./_lib/catalog.js";
 
 const MAX_LIMIT = 100;
 
@@ -17,9 +17,9 @@ export default handler(["GET"], async (req, res) => {
   const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 24, 1), MAX_LIMIT);
   const offset = Math.max(parseInt(req.query.offset, 10) || 0, 0);
 
-  const [descFields, withCompare] = await Promise.all([descriptionFields(), hasComparePrice()]);
+  const [descFields, withCompare, shown] = await Promise.all([descriptionFields(), hasComparePrice(), catalogDomain()]);
 
-  const domain = [PUBLISHED];
+  const domain = [...shown];
   const cat = parseInt(category_id, 10);
   if (cat > 0) domain.push(["public_categ_ids", "child_of", cat]);
 
