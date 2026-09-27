@@ -168,7 +168,8 @@ export const CONCERNS = [
       "ku": "چاودێری پێ"
     },
     "image": "woman-having-foot-treatment.jpg",
-    "terms": ["القدم", "للقدمين", "foot", "feet", "pieds", "heel", "الكعب", "corn"]
+    "terms": ["القدم", "للقدمين", "foot", "feet", "pieds", "heel", "الكعب", "corn caps", "corn plaster"],
+    "exclude": [2952]
   },
   {
     "id": "makeup",
@@ -178,7 +179,8 @@ export const CONCERNS = [
       "ku": "مەیکئەپ و جوانکاری"
     },
     "image": "front-view-young-attractive-female-doing-her-make-up-with-mascara-dark-pink-wall-model-color-female-young-girl(1).jpg",
-    "terms": ["maybelline", "makeup", "make up", "lipstick", "gloss", "foundation", "concealer", "كونسيلر", "mascara", "primer", "أحمر شفاه"]
+    "terms": ["maybelline", "makeup", "make up", "lipstick", "gloss", "foundation", "concealer", "كونسيلر", "mascara", "primer", "أحمر شفاه"],
+    "exclude": [3343]
   },
   {
     "id": "kids",
