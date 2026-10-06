@@ -31,35 +31,35 @@
   "rewrites": [
     {
       "source": "/categories",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/account",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/products",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/product/:id",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/cart",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/orders",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/about",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/services",
-      "destination": "/index.html"
+      "destination": "/"
     }
   ],
   "headers": [
