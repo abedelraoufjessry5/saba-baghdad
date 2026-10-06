@@ -1,10 +1,10 @@
 /* المنتجات: live list from Odoo with search, category chips and "show more".
-   Filters are kept in the address (?cat=&q=&concern=) so "back" from a
-   product returns to exactly the same list. A "concern" (home cards) is a
-   fixed product filter defined in data/content.js. */
+   Filters are kept in the address (?cat=&q=&set=) so "back" from a product
+   returns to exactly the same list. A "set" is a fixed product group
+   (home cards, banners, category tree) defined in data/sets.js. */
 import { h, money, debounce, hideOnError } from "../dom.js";
 import { t, pickLang } from "../i18n.js";
-import { CONCERNS } from "../data/content.js";
+import { setTitle } from "../data/content.js";
 import { api, loadCategories } from "../api.js";
 import { addToCart } from "../store.js";
 import { navigate, restoreScroll } from "../router.js";
@@ -34,7 +34,7 @@ export function productsView({ query }) {
   const state = {
     cat: query.cat ? Number(query.cat) || null : null,
     q: query.q || "",
-    concern: CONCERNS.find((c) => c.id === query.concern) || null,
+    set: query.set || query.concern || "", // "concern" = links from the previous version
     loaded: 0,
     total: 0,
     request: 0
@@ -53,7 +53,7 @@ export function productsView({ query }) {
     const s = new URLSearchParams();
     if (state.cat) s.set("cat", state.cat);
     if (state.q) s.set("q", state.q);
-    if (state.concern) s.set("concern", state.concern.id);
+    if (state.set) s.set("set", state.set);
     const url = "/products" + (s.toString() ? "?" + s : "");
     history.replaceState({ ...(history.state || {}), loaded: state.loaded }, "", url);
   }
@@ -69,12 +69,10 @@ export function productsView({ query }) {
     }
     more.querySelector("button").disabled = true;
     try {
-      const c = state.concern;
       const d = await api.products({
         category_id: state.cat,
-        q: c ? c.q : state.q,
-        terms: c && c.terms ? c.terms.join("|") : null,
-        exclude: c && c.exclude ? c.exclude.join(",") : null,
+        set: state.set || null,
+        q: state.set ? null : state.q,
         limit, offset: state.loaded
       });
       if (my !== state.request) return;
@@ -111,11 +109,11 @@ export function productsView({ query }) {
       }, c.name)));
   }
 
-  // typing a search replaces the concern filter
-  const title = h("h1", null, state.concern ? pickLang(state.concern.name) : t("tab.products"));
-  function leaveConcern() {
-    if (!state.concern) return;
-    state.concern = null;
+  // typing a search replaces the product group
+  const title = h("h1", null, (state.set && pickLang(setTitle(state.set))) || t("tab.products"));
+  function leaveSet() {
+    if (!state.set) return;
+    state.set = "";
     title.textContent = t("tab.products");
   }
 
@@ -124,11 +122,11 @@ export function productsView({ query }) {
     const v = input.value.trim();
     if (v.length === 1) return; // from the 2nd letter; empty = everything
     state.q = v;
-    leaveConcern();
+    leaveSet();
     search();
   });
   input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") { e.preventDefault(); input.blur(); search.cancel(); state.q = input.value.trim(); leaveConcern(); load(true); }
+    if (e.key === "Enter") { e.preventDefault(); input.blur(); search.cancel(); state.q = input.value.trim(); leaveSet(); load(true); }
   });
 
   loadCategories().then(paintChips).catch(() => chips.replaceChildren());

@@ -1,6 +1,8 @@
 // Product fields that differ between Odoo versions / modules, and which
 // products the app shows.
 import { execute, existingFields } from "./odoo.js";
+import { orDomain } from "./text.js";
+import { SETS, NOT_SUPPLEMENT } from "../../js/data/sets.js";
 
 // The shop description has different names; Saba fills the eCommerce one.
 const DESC_CANDIDATES = ["description_ecommerce", "website_description", "description_sale"];
@@ -59,3 +61,16 @@ export async function catalogDomain() {
   return ["|", PUBLISHED, "&", "&", "&", ["id", "in", withPhoto], ...SELLABLE];
 }
 export const APP_ORIGIN = "Saba Baghdad App";
+
+// A product group from js/data/sets.js as Odoo domain terms (+ its free
+// search, if it has one). null = no such group.
+export function setFilter(id) {
+  const set = Object.prototype.hasOwnProperty.call(SETS, id) ? SETS[id] : null;
+  if (!set) return null;
+  const domain = [];
+  if (set.terms && set.terms.length) domain.push(...orDomain(set.terms.map((t) => ["name", "ilike", t])));
+  const without = [...(set.without || []), ...(set.vitamins ? NOT_SUPPLEMENT : [])];
+  for (const w of without) domain.push(["name", "not ilike", w]);
+  if (set.exclude && set.exclude.length) domain.push(["id", "not in", set.exclude]);
+  return { domain, q: set.q || "" };
+}

@@ -4,6 +4,7 @@
 
    Image names without "http" live in the content folder (see IMG_BASE in
    config.js). Every item says where a tap goes:
+     set:     open the product list for a product group in data/sets.js
      q:       open the product list searching for this text
      cat:     open the product list for this Odoo website category id
      product: open this Odoo product (product.template id)            */
@@ -24,7 +25,7 @@ export const HERO = [
       "en": "A few drops, visible glow",
       "ku": "چەند دڵۆپێک، درەوشانەوەیەکی دیار"
     },
-    "q": "سيروم"
+    "set": "face-serum"
   },
   {
     "id": "sun",
@@ -39,7 +40,7 @@ export const HERO = [
       "en": "SPF 50+ sunscreens",
       "ku": "پارێزەری خۆر SPF 50+"
     },
-    "q": "واقي شمس"
+    "set": "sun"
   },
   {
     "id": "scalp",
@@ -54,7 +55,7 @@ export const HERO = [
       "en": "Shampoos and hair treatments",
       "ku": "شامپۆ و چارەسەری قژ"
     },
-    "q": "شامبو"
+    "set": "scalp"
   },
   {
     "id": "mask",
@@ -69,7 +70,7 @@ export const HERO = [
       "en": "Masks that work while you sleep",
       "ku": "ماسک کە لە خەودا کار دەکات"
     },
-    "q": "ماسك"
+    "set": "face-mask"
   },
   {
     "id": "eyes",
@@ -84,7 +85,7 @@ export const HERO = [
       "en": "Eye creams and serums",
       "ku": "کرێم و سیرۆمی چاو"
     },
-    "q": "الهالات السوداء"
+    "set": "dark-circles"
   }
 ];
 
@@ -97,8 +98,7 @@ export const CONCERNS = [
       "ku": "دانەی لاوان"
     },
     "image": "side-view-smiley-man-with-skin-problems(1).jpg",
-    "q": "حب الشباب",
-    "exclude": [59]
+    "set": "acne"
   },
   {
     "id": "pigmentation",
@@ -108,7 +108,7 @@ export const CONCERNS = [
       "ku": "ڕەنگی پێست"
     },
     "image": "portrait-young-woman-being-confident-with-acne(1).jpg",
-    "q": "تصبغات"
+    "set": "pigmentation"
   },
   {
     "id": "dark-circles",
@@ -118,7 +118,7 @@ export const CONCERNS = [
       "ku": "خولکەی ڕەش"
     },
     "image": "woman-using-eye-cream-side-view(1).jpg",
-    "q": "هالات"
+    "set": "dark-circles"
   },
   {
     "id": "dryness",
@@ -128,7 +128,7 @@ export const CONCERNS = [
       "ku": "پێستی وشک"
     },
     "image": "woman-looking-her-rosacea-mirror(1).jpg",
-    "q": "جافة"
+    "set": "dryness"
   },
   {
     "id": "sun",
@@ -138,7 +138,7 @@ export const CONCERNS = [
       "ku": "پارێزەری خۆر"
     },
     "image": "view-man-applying-lotion-sunburn-skin-beach(1).jpg",
-    "q": "واقي شمس"
+    "set": "sun"
   },
   {
     "id": "sweating",
@@ -148,7 +148,7 @@ export const CONCERNS = [
       "ku": "ئارەقی زۆر"
     },
     "image": "close-up-woman-applying-deodorant-arm(1).jpg",
-    "q": "تعرق"
+    "set": "sweating"
   },
   {
     "id": "sensitive",
@@ -158,7 +158,7 @@ export const CONCERNS = [
       "ku": "ناوچە هەستیارەکان"
     },
     "image": "portrait-cheerful-attractive-young-lady-holding-tampon-sanitary-napkin(1).jpg",
-    "terms": ["المناطق الحساسة", "مناطق حساسة", "intimate", "intimo", "vaginal", "مهبل", "غسول نسائي", "gyno"]
+    "set": "sensitive"
   },
   {
     "id": "foot-care",
@@ -168,8 +168,7 @@ export const CONCERNS = [
       "ku": "چاودێری پێ"
     },
     "image": "woman-having-foot-treatment.jpg",
-    "terms": ["القدم", "للقدمين", "foot", "feet", "pieds", "heel", "الكعب", "corn caps", "corn plaster"],
-    "exclude": [2952]
+    "set": "foot-care"
   },
   {
     "id": "makeup",
@@ -179,8 +178,7 @@ export const CONCERNS = [
       "ku": "مەیکئەپ و جوانکاری"
     },
     "image": "front-view-young-attractive-female-doing-her-make-up-with-mascara-dark-pink-wall-model-color-female-young-girl(1).jpg",
-    "terms": ["maybelline", "makeup", "make up", "lipstick", "gloss", "foundation", "concealer", "كونسيلر", "mascara", "primer", "أحمر شفاه"],
-    "exclude": [3343]
+    "set": "makeup"
   },
   {
     "id": "kids",
@@ -190,8 +188,7 @@ export const CONCERNS = [
       "ku": "چاودێری منداڵ"
     },
     "image": "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=500&fit=crop",
-    "terms": ["baby", "bebe", "kids", "children", "pediatric", "للأطفال", "الأطفال", "اطفال"],
-    "exclude": [619, 1664]
+    "set": "kids"
   }
 ];
 
@@ -203,52 +200,52 @@ export const CATEGORIES = [
     "image": "portrait-cheerful-attractive-young-lady-holding-tampon-sanitary-napkin(1).jpg",
     "subs": [
       {
-        "id": "nail-care-sub",
-        "name": "عناية المرأة الموظفة",
-        "image": "front-view-working-woman-holding-cup-coffee-desk.jpg",
-        "q": "عناية المرأة الموظفة"
+        "id": "sensitive",
+        "name": "العناية بالمناطق الحساسة",
+        "image": "portrait-cheerful-attractive-young-lady-holding-tampon-sanitary-napkin(1).jpg",
+        "set": "sensitive"
       },
       {
-        "id": "personal-care-sub",
-        "name": "العناية الشخصية",
+        "id": "womens-vitamins-w",
+        "name": "فيتامينات ومكملات المرأة",
         "image": "front-view-young-woman-posing.jpg",
-        "q": "العناية الشخصية"
-      },
-      {
-        "id": "brittle-split",
-        "name": "عناية بعد يوم طويل",
-        "image": "front-view-young-female-with-clock-towel-her-head-pink-background.jpg",
-        "q": "عناية بعد يوم طويل"
-      },
-      {
-        "id": "cuticles-care",
-        "name": "عناية السفر",
-        "image": "high-angle-hand-holding-cream-container.jpg",
-        "q": "عناية السفر"
+        "set": "womens-vitamins"
       },
       {
         "id": "anti-wrinkle",
         "name": "مكافحة التجاعيد",
         "image": "8610838.jpg",
-        "q": "مكافحة التجاعيد"
+        "set": "anti-aging"
       },
       {
-        "id": "morning-evening-routine",
-        "name": "روتين صباحي / مسائي",
+        "id": "brightening",
+        "name": "تفتيح وتوحيد لون البشرة",
         "image": "woman-doing-her-selfcare-ritual.jpg",
-        "q": "روتين صباحي مسائي"
+        "set": "pigmentation"
       },
       {
-        "id": "natural-chemical-masks",
-        "name": "ماسكات طبيعية وكيميائية",
+        "id": "face-masks",
+        "name": "ماسكات الوجه",
         "image": "portrait-woman-wearing-face-mask.jpg",
-        "q": "ماسكات طبيعية كيميائية"
+        "set": "face-mask"
       },
       {
-        "id": "Winter-care-Summer-care",
-        "name": "عناية الشتاء / عناية الصيف",
+        "id": "stretch-marks-women",
+        "name": "علامات التمدد",
+        "image": "high-angle-hand-holding-cream-container.jpg",
+        "set": "stretch-marks"
+      },
+      {
+        "id": "sun-women",
+        "name": "واقيات الشمس",
         "image": "beautiful-woman-white-dress-lavander-field.jpg",
-        "q": "عناية الشتاء عناية الصيف"
+        "set": "sun"
+      },
+      {
+        "id": "hair-removal-women",
+        "name": "إزالة الشعر",
+        "image": "front-view-young-female-with-clock-towel-her-head-pink-background.jpg",
+        "set": "hair-removal"
       }
     ]
   },
@@ -262,103 +259,153 @@ export const CATEGORIES = [
         "id": "makeup-remover",
         "name": "مزيل مكياج",
         "image": "young-female-pajamas-sleep-mask-holding-spray-pink(1).jpg",
-        "q": "مزيل مكياج"
+        "set": "makeup-remover"
       },
       {
         "id": "eye-care",
         "name": "حول العين",
         "image": "woman-posing-with-avocado-front-view.jpg",
-        "q": "حول العين"
+        "set": "dark-circles"
       },
       {
         "id": "face-toner",
         "name": "تونر وجه",
         "image": "young-female-pink-bathrobe-holding-make-up-flasks-blue(1).jpg",
-        "q": "تونر"
+        "set": "face-toner"
       },
       {
         "id": "lashes-brows",
         "name": "الرموش والحواجب",
         "image": "front-view-young-attractive-female-doing-her-make-up-with-mascara-dark-pink-wall-model-color-female-young-girl(1).jpg",
-        "q": "رموش حواجب"
+        "set": "lashes-brows"
       },
       {
         "id": "thermal-water",
         "name": "مياه حرارية",
         "image": "front-view-young-beautiful-lady-bathrobe-smiles-cleans-away-all-make-up(1).jpg",
-        "q": "مياه حرارية"
+        "set": "thermal-water"
       },
       {
         "id": "face-soap",
         "name": "صابون للوجه",
         "image": "young-woman-taking-care-herself-home(1).jpg",
-        "q": "صابون وجه"
+        "set": "face-soap"
       },
       {
         "id": "face-wash",
         "name": "غسول وجه",
         "image": "beautiful-woman-delicately-moisturizes-skin-with-cosmetic-tonic-portrait-lady-with-healthy-skin-without-makeup-isolated-wall(1).jpg",
-        "q": "غسول وجه"
+        "set": "face-wash"
       },
       {
         "id": "face-serum",
         "name": "سيروم وجه",
         "image": "woman-applying-serum-her-face(1).jpg",
-        "q": "سيروم وجه"
+        "set": "face-serum"
       },
       {
         "id": "sunscreen",
         "name": "واقي شمس",
         "image": "woman-applying-sunscreen-beach-summer-skincare(1).jpg",
-        "q": "واقي شمس"
+        "set": "sun"
       },
       {
         "id": "face-mask",
         "name": "ماسك وجه",
         "image": "woman-wearing-bathrobe-towel-with-facemask(1).jpg",
-        "q": "ماسك وجه"
+        "set": "face-mask"
       },
       {
         "id": "face-care",
         "name": "العناية بالوجه",
         "image": "young-woman-bathrobe-holding-cream.jpg",
-        "q": "العناية بالوجه"
+        "set": "face-care"
       },
       {
         "id": "lip-care",
         "name": "العناية بالشفاه",
         "image": "woman-using-lip-gloss-front-view.jpg",
-        "q": "العناية بالشفاه"
+        "set": "lip-care"
       },
       {
         "id": "face-repair",
         "name": "مرمم للوجه",
         "image": "woman-looking-away-from-camera.jpg",
-        "q": "مرمم وجه"
+        "set": "face-repair"
       },
       {
         "id": "face-moisturizer",
         "name": "مرطب وجه",
         "image": "woman-applying-face-cream-front-view.jpg",
-        "q": "مرطب وجه"
+        "set": "face-moisturizer"
+      },
+      {
+        "id": "face-exfoliants",
+        "name": "مقشرات الوجه",
+        "image": "woman-doing-her-selfcare-ritual.jpg",
+        "set": "face-exfoliants"
+      },
+      {
+        "id": "anti-aging-skin",
+        "name": "مكافحة التجاعيد",
+        "image": "8610838.jpg",
+        "set": "anti-aging"
       },
       {
         "id": "treatment-gel",
-        "name": "جل معالج",
+        "name": "علاجات موضعية للحبوب",
         "image": "clear-gel-being-poured-onto-finger.jpg",
-        "q": "جل معالج"
+        "set": "treatment-gel"
       },
       {
         "id": "mesotherapy",
-        "name": "ميزوثيرابي",
+        "name": "بوسترات وأدوات الميزوثيرابي",
         "image": "cosmetologist-makes-beauty-injection-woman-s-face-clinic.jpg",
-        "q": "ميزوثيرابي"
+        "set": "mesotherapy"
       },
       {
         "id": "acne-patches",
         "name": "لاصقات حب الشباب",
         "image": "1681037440058434300.jpg.webp",
-        "q": "لاصقات حب الشباب"
+        "set": "acne-patches"
+      }
+    ]
+  },
+  {
+    "id": "makeup",
+    "name": "المكياج ومستحضرات التجميل",
+    "icon": "💄",
+    "image": "front-view-young-attractive-female-doing-her-make-up-with-mascara-dark-pink-wall-model-color-female-young-girl(1).jpg",
+    "subs": [
+      {
+        "id": "lipstick",
+        "name": "أحمر وملمع الشفاه",
+        "image": "woman-using-lip-gloss-front-view.jpg",
+        "set": "lipstick"
+      },
+      {
+        "id": "foundation",
+        "name": "فاونديشن وكونسيلر",
+        "image": "young-female-pink-bathrobe-holding-make-up-flasks-blue(1).jpg",
+        "set": "foundation"
+      },
+      {
+        "id": "blush",
+        "name": "بلاشر",
+        "image": "front-view-young-attractive-female-doing-her-make-up-with-mascara-dark-pink-wall-model-color-female-young-girl(1).jpg",
+        "set": "blush"
+      },
+      {
+        "id": "primer",
+        "name": "برايمر ومثبت المكياج",
+        "image": "beautiful-woman-delicately-moisturizes-skin-with-cosmetic-tonic-portrait-lady-with-healthy-skin-without-makeup-isolated-wall(1).jpg",
+        "set": "primer"
+      },
+      {
+        "id": "makeup-remover-mk",
+        "name": "مزيل المكياج",
+        "image": "front-view-young-beautiful-lady-bathrobe-smiles-cleans-away-all-make-up(1).jpg",
+        "set": "makeup-remover"
       }
     ]
   },
@@ -372,37 +419,37 @@ export const CATEGORIES = [
         "id": "shampoo",
         "name": "شامبو",
         "image": "young-woman-applying-anti-dandruff-product.jpg",
-        "q": "شامبو"
+        "set": "shampoo"
       },
       {
         "id": "conditioner",
         "name": "بلسم",
         "image": "Screenshot-2026-02-02-at-14-36-48-Woman-brushing-hair-after-washing-it-Free-Photo.png",
-        "q": "بلسم"
+        "set": "conditioner"
       },
       {
         "id": "hair-serum-oil",
         "name": "سيروم وزيوت للشعر",
         "image": "medium-shot-young-woman-using-serum.jpg",
-        "q": "سيروم زيت شعر"
+        "set": "hair-serum-oil"
       },
       {
         "id": "hair-mask",
         "name": "ماسك شعر",
         "image": "Screenshot-2026-02-02-at-14-38-19-Young-woman-applying-anti-dandruff-product-Free-Photo.png",
-        "q": "ماسك شعر"
+        "set": "hair-mask"
       },
       {
         "id": "leave-in-cream",
-        "name": "ليف ان كريم",
+        "name": "ليف إن وتصفيف الشعر",
         "image": "young-woman-applying-anti-dandruff-product.jpg",
-        "q": "ليف ان كريم"
+        "set": "leave-in-cream"
       },
       {
         "id": "hair-loss-treatment",
         "name": "علاج تساقط الشعر",
         "image": "Screenshot-2026-02-02-at-14-41-12-Woman-doing-herself-a-scalp-massage-Free-Photo.png",
-        "q": "علاج تساقط الشعر"
+        "set": "hair-loss-treatment"
       }
     ]
   },
@@ -413,58 +460,34 @@ export const CATEGORIES = [
     "image": "woman-having-foot-treatment.jpg",
     "subs": [
       {
-        "id": "foot-wash",
-        "name": "غسول قدم",
-        "image": "https://saba-baghdad.odoo.com/web/image/7779-4095b7d9/9399445_35007.webp",
-        "q": "غسول قدم"
-      },
-      {
-        "id": "foot-soap",
-        "name": "صابون قدم",
-        "image": "https://saba-baghdad.odoo.com/web/image/7796-b72890ec/flat-lay-natural-self-care-products-composition.webp",
-        "q": "صابون قدم"
-      },
-      {
         "id": "foot-cream",
         "name": "كريم قدم",
         "image": "https://saba-baghdad.odoo.com/web/image/7791-efa132b4/128701.webp",
-        "q": "كريم قدم"
+        "set": "foot-cream"
       },
       {
         "id": "heel-cracks",
         "name": "تشققات الكعب",
         "image": "https://saba-baghdad.odoo.com/web/image/7792-545ac3f6/woman-cracked-heels-with-white-background-foot-healthy-concept.webp",
-        "q": "تشققات الكعب"
+        "set": "heel-cracks"
       },
       {
         "id": "dead-skin",
-        "name": "إزالة الجلد الميت",
+        "name": "الجلد الميت ومسمار القدم",
         "image": "https://saba-baghdad.odoo.com/web/image/7791-efa132b4/128701.webp",
-        "q": "إزالة الجلد الميت"
-      },
-      {
-        "id": "foot-fungus",
-        "name": "فطريات القدم",
-        "image": "https://saba-baghdad.odoo.com/web/image/7790-9c4946ae/representation-microorganisms-with-foot.webp",
-        "q": "فطريات القدم"
+        "set": "dead-skin"
       },
       {
         "id": "foot-odor",
-        "name": "رائحة القدم",
+        "name": "رائحة وتعرق القدم",
         "image": "https://saba-baghdad.odoo.com/web/image/7789-47e8f03b/92672761_10004424.webp",
-        "q": "رائحة القدم"
+        "set": "foot-odor"
       },
       {
-        "id": "toenails",
-        "name": "أظافر القدم",
-        "image": "https://saba-baghdad.odoo.com/web/image/7794-cefaea0b/beautiful-female-feet-with-pink-glitter-pedicure.webp",
-        "q": "أظافر القدم"
-      },
-      {
-        "id": "foot-massage",
-        "name": "مساج القدم",
+        "id": "foot-insoles",
+        "name": "دبانات ومساند القدم",
         "image": "https://saba-baghdad.odoo.com/web/image/7793-f21ee788/acupressure-big-toe-pad-foot-reflexology-session.webp",
-        "q": "مساج القدم"
+        "set": "foot-insoles"
       }
     ]
   },
@@ -478,67 +501,37 @@ export const CATEGORIES = [
         "id": "mens-face-wash",
         "name": "غسول الوجه للرجال",
         "image": "https://saba-baghdad.odoo.com/web/image/7810-8fbb58b8/2148088261.webp",
-        "q": "غسول وجه رجال"
-      },
-      {
-        "id": "mens-moisturizer",
-        "name": "كريمات الترطيب",
-        "image": "https://saba-baghdad.odoo.com/web/image/7808-4ff54612/2149438533.webp",
-        "q": "كريم ترطيب رجال"
-      },
-      {
-        "id": "beard-care",
-        "name": "العناية باللحية",
-        "image": "https://saba-baghdad.odoo.com/web/image/7809-fcb57c4a/14681.webp",
-        "q": "العناية باللحية"
-      },
-      {
-        "id": "beard-oil",
-        "name": "زيوت اللحية",
-        "image": "https://saba-baghdad.odoo.com/web/image/7816-87948cd5/2148883819.webp",
-        "q": "زيت لحية"
+        "set": "mens-face-wash"
       },
       {
         "id": "aftershave",
-        "name": "ما بعد الحلاقة",
+        "name": "الحلاقة وما بعد الحلاقة",
         "image": "https://saba-baghdad.odoo.com/web/image/7812-ab96ed87/2148883824.webp",
-        "q": "بعد الحلاقة"
-      },
-      {
-        "id": "mens-haircare",
-        "name": "العناية بالشعر",
-        "image": "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=200&h=200&fit=crop",
-        "q": "شعر رجال"
+        "set": "aftershave"
       },
       {
         "id": "mens-hair-loss",
-        "name": "تساقط الشعر",
+        "name": "شعر الرجال والتساقط",
         "image": "https://images.unsplash.com/photo-1585751119414-ef2636f8aede?w=200&h=200&fit=crop",
-        "q": "تساقط شعر رجال"
+        "set": "mens-hair-loss"
       },
       {
         "id": "mens-deodorant",
-        "name": "مزيلات العرق",
+        "name": "مزيلات العرق للرجال",
         "image": "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=200&h=200&fit=crop",
-        "q": "مزيل عرق رجال"
+        "set": "mens-deodorant"
       },
       {
         "id": "mens-body-care",
-        "name": "عناية الجسم للرجال",
+        "name": "العناية الشخصية للرجال",
         "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
-        "q": "جسم رجال"
+        "set": "mens-body-care"
       },
       {
-        "id": "mens-sensitive-skin",
-        "name": "منتجات البشرة الحساسة",
-        "image": "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=200&h=200&fit=crop",
-        "q": "بشرة حساسة رجال"
-      },
-      {
-        "id": "mens-daily-care",
-        "name": "العناية اليومية",
-        "image": "https://images.unsplash.com/photo-1581750082458-a7e10a575c2a?w=200&h=200&fit=crop",
-        "q": "عناية يومية رجال"
+        "id": "mens-vitamins-m",
+        "name": "فيتامينات الرجال",
+        "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop",
+        "set": "mens-vitamins"
       }
     ]
   },
@@ -550,57 +543,57 @@ export const CATEGORIES = [
     "subs": [
       {
         "id": "pregnancy-followup",
-        "name": "متابعة الحمل",
+        "name": "الحمل والخصوبة",
         "image": "https://images.unsplash.com/photo-1544126592-807ade215a0b?w=200&h=200&fit=crop",
-        "q": "متابعة الحمل"
+        "set": "pregnancy-followup"
       },
       {
-        "id": "vaccinations",
-        "name": "التطعيمات",
-        "image": "https://images.unsplash.com/photo-1632053002928-1919605ee6f7?w=200&h=200&fit=crop",
-        "q": "التطعيمات"
-      },
-      {
-        "id": "health-nutrition",
-        "name": "الصحة والتغذية",
-        "image": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=200&h=200&fit=crop",
-        "q": "الصحة والتغذية"
-      },
-      {
-        "id": "mental-health",
-        "name": "الصحة النفسية",
-        "image": "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=200&h=200&fit=crop",
-        "q": "الصحة النفسية"
-      },
-      {
-        "id": "child-growth",
-        "name": "نمو الطفل",
-        "image": "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=200&h=200&fit=crop",
-        "q": "نمو الطفل"
-      },
-      {
-        "id": "child-vaccinations",
-        "name": "تطعيمات الطفل",
-        "image": "https://images.unsplash.com/photo-1578307992223-0b424892f3cf?w=200&h=200&fit=crop",
-        "q": "تطعيمات الطفل"
+        "id": "pregnancy-vitamins-m",
+        "name": "فيتامينات الحامل",
+        "image": "https://images.unsplash.com/photo-1544126592-807ade215a0b?w=200&h=200&fit=crop",
+        "set": "pregnancy-vitamins"
       },
       {
         "id": "sleep-breastfeeding",
-        "name": "النوم والرضاعة",
+        "name": "الرضاعة",
         "image": "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=200&h=200&fit=crop",
-        "q": "النوم والرضاعة"
+        "set": "sleep-breastfeeding"
+      },
+      {
+        "id": "stretch-marks-mom",
+        "name": "التمدد وما بعد الولادة",
+        "image": "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=200&h=200&fit=crop",
+        "set": "stretch-marks-mom"
+      },
+      {
+        "id": "baby-skin",
+        "name": "العناية ببشرة الطفل",
+        "image": "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=200&h=200&fit=crop",
+        "set": "baby-skin"
+      },
+      {
+        "id": "baby-bath",
+        "name": "شامبو واستحمام الأطفال",
+        "image": "https://images.unsplash.com/photo-1578307992223-0b424892f3cf?w=200&h=200&fit=crop",
+        "set": "baby-bath"
+      },
+      {
+        "id": "kids-vitamins-m",
+        "name": "فيتامينات وتغذية الأطفال",
+        "image": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=200&h=200&fit=crop",
+        "set": "kids-vitamins"
       },
       {
         "id": "child-health",
         "name": "صحة الطفل",
         "image": "https://images.unsplash.com/photo-1489710437720-ebb67ec84dd2?w=200&h=200&fit=crop",
-        "q": "صحة الطفل"
+        "set": "child-health"
       }
     ]
   },
   {
     "id": "nail-care",
-    "name": "العناية بالأظافر",
+    "name": "العناية بالأظافر واليدين",
     "icon": "💅",
     "image": "front-view-working-woman-holding-cup-coffee-desk.jpg",
     "subs": [
@@ -608,37 +601,13 @@ export const CATEGORIES = [
         "id": "nail-strengtheners",
         "name": "مقويات الأظافر",
         "image": "https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=200&h=200&fit=crop",
-        "q": "مقويات الأظافر"
+        "set": "nail-strengtheners"
       },
       {
-        "id": "nail-clippers",
-        "name": "قصّافات أظافر",
-        "image": "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=200&h=200&fit=crop",
-        "q": "قصافات أظافر"
-      },
-      {
-        "id": "nail-files",
-        "name": "مبارد",
-        "image": "https://images.unsplash.com/photo-1610992015732-2449b0dd2b3f?w=200&h=200&fit=crop",
-        "q": "مبارد أظافر"
-      },
-      {
-        "id": "care-kits",
-        "name": "مجموعات عناية (Kit)",
-        "image": "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=200&h=200&fit=crop",
-        "q": "مجموعات عناية أظافر"
-      },
-      {
-        "id": "crack-treatment",
-        "name": "منتجات علاج التشقق",
+        "id": "hand-care",
+        "name": "كريمات اليدين",
         "image": "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=200&h=200&fit=crop",
-        "q": "علاج تشقق أظافر"
-      },
-      {
-        "id": "antifungals",
-        "name": "مضادات الفطريات",
-        "image": "https://images.unsplash.com/photo-1584308972272-9e4e7685e80f?w=200&h=200&fit=crop",
-        "q": "مضادات فطريات أظافر"
+        "set": "hand-care"
       }
     ]
   },
@@ -652,37 +621,37 @@ export const CATEGORIES = [
         "id": "body-lightening",
         "name": "تفتيح وتقشير",
         "image": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=200&h=200&fit=crop",
-        "q": "تفتيح تقشير"
+        "set": "body-lightening"
       },
       {
         "id": "body-moisturizer",
         "name": "ترطيب الجسم",
         "image": "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=200&h=200&fit=crop",
-        "q": "ترطيب جسم"
+        "set": "body-moisturizer"
       },
       {
         "id": "body-wash",
         "name": "غسول الجسم",
         "image": "https://plain-eeur-prod-public.komododecks.com/202603/25/84ZGv22cWibwwqDNI73R/image.png",
-        "q": "غسول جسم"
+        "set": "body-wash"
       },
       {
         "id": "body-oil",
         "name": "زيت للجسم",
         "image": "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=200&h=200&fit=crop",
-        "q": "زيت جسم"
+        "set": "body-oil"
       },
       {
         "id": "stretch-marks",
         "name": "علامات التمدد",
         "image": "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=200&h=200&fit=crop",
-        "q": "علامات التمدد"
+        "set": "stretch-marks"
       },
       {
         "id": "hair-removal",
         "name": "إزالة الشعر",
         "image": "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=200&h=200&fit=crop",
-        "q": "إزالة الشعر"
+        "set": "hair-removal"
       }
     ]
   },
@@ -693,34 +662,28 @@ export const CATEGORIES = [
     "image": "front-view-young-woman-posing.jpg",
     "subs": [
       {
-        "id": "mouth-gel",
-        "name": "جل للفم",
-        "image": "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=200&h=200&fit=crop",
-        "q": "جل فم"
-      },
-      {
         "id": "toothpaste",
-        "name": "معجون اسنان",
+        "name": "معجون أسنان",
         "image": "https://images.unsplash.com/photo-1579154341098-e4e158cc7f55?w=200&h=200&fit=crop",
-        "q": "معجون اسنان"
+        "set": "toothpaste"
       },
       {
         "id": "toothbrush",
-        "name": "فرشة اسنان",
+        "name": "فرشاة أسنان",
         "image": "https://images.unsplash.com/photo-1559131397-f94da358f7ca?w=200&h=200&fit=crop",
-        "q": "فرشة اسنان"
+        "set": "toothbrush"
       },
       {
         "id": "mouthwash",
         "name": "غسول الفم",
         "image": "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=200&h=200&fit=crop",
-        "q": "غسول الفم"
+        "set": "mouthwash"
       },
       {
-        "id": "dental-floss",
-        "name": "خيط اسنان ومستلزمات",
-        "image": "https://images.unsplash.com/photo-1606819717115-9159c900370b?w=200&h=200&fit=crop",
-        "q": "خيط اسنان"
+        "id": "breath-strips",
+        "name": "معطرات الفم ومثبت الأطقم",
+        "image": "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=200&h=200&fit=crop",
+        "set": "breath-strips"
       }
     ]
   },
@@ -734,121 +697,127 @@ export const CATEGORIES = [
         "id": "energy-activity-vitamins",
         "name": "فيتامينات الطاقة والنشاط",
         "image": "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=200&h=200&fit=crop",
-        "q": "فيتامينات الطاقة والنشاط"
+        "set": "energy-activity-vitamins"
       },
       {
         "id": "immunity-vitamins",
         "name": "فيتامينات المناعة",
         "image": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&h=200&fit=crop",
-        "q": "فيتامينات المناعة"
+        "set": "immunity-vitamins"
       },
       {
         "id": "skin-beauty-vitamins",
         "name": "فيتامينات البشرة والجمال",
         "image": "https://images.unsplash.com/photo-1612817288484-6f916006741a?w=200&h=200&fit=crop",
-        "q": "فيتامينات البشرة والجمال"
+        "set": "skin-beauty-vitamins"
       },
       {
         "id": "hair-nails-vitamins",
         "name": "فيتامينات الشعر والأظافر",
         "image": "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=200&h=200&fit=crop",
-        "q": "فيتامينات الشعر والأظافر"
+        "set": "hair-nails-vitamins"
       },
       {
         "id": "bones-joints-vitamins",
         "name": "فيتامينات العظام والمفاصل",
         "image": "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=200&h=200&fit=crop",
-        "q": "فيتامينات العظام والمفاصل"
+        "set": "bones-joints-vitamins"
       },
       {
         "id": "heart-circulation-vitamins",
         "name": "فيتامينات القلب والدورة الدموية",
         "image": "https://images.unsplash.com/photo-1628348070889-cb656235b4eb?w=200&h=200&fit=crop",
-        "q": "فيتامينات القلب والدورة الدموية"
+        "set": "heart-circulation-vitamins"
       },
       {
         "id": "focus-memory-vitamins",
         "name": "فيتامينات التركيز والذاكرة",
         "image": "https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=200&h=200&fit=crop",
-        "q": "فيتامينات التركيز والذاكرة"
+        "set": "focus-memory-vitamins"
       },
       {
         "id": "sleep-relaxation-vitamins",
         "name": "فيتامينات النوم والراحة",
         "image": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=200&h=200&fit=crop",
-        "q": "فيتامينات النوم والراحة"
+        "set": "sleep-relaxation-vitamins"
       },
       {
         "id": "mens-vitamins",
         "name": "فيتامينات للرجال",
         "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop",
-        "q": "فيتامينات للرجال"
+        "set": "mens-vitamins"
       },
       {
         "id": "womens-vitamins",
         "name": "فيتامينات للنساء",
         "image": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&h=200&fit=crop",
-        "q": "فيتامينات للنساء"
+        "set": "womens-vitamins"
       },
       {
         "id": "pregnancy-vitamins",
         "name": "فيتامينات للحامل",
         "image": "https://images.unsplash.com/photo-1544126592-807ade215a0b?w=200&h=200&fit=crop",
-        "q": "فيتامينات للحامل"
+        "set": "pregnancy-vitamins"
       },
       {
         "id": "kids-vitamins",
         "name": "فيتامينات للأطفال",
         "image": "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=200&h=200&fit=crop",
-        "q": "فيتامينات للأطفال"
+        "set": "kids-vitamins"
       },
       {
         "id": "seniors-vitamins",
         "name": "فيتامينات لكبار السن",
         "image": "https://images.unsplash.com/photo-1447005497901-b3e9ee359928?w=200&h=200&fit=crop",
-        "q": "فيتامينات لكبار السن"
+        "set": "seniors-vitamins"
       },
       {
         "id": "general-supplements",
         "name": "مكملات غذائية عامة",
         "image": "https://images.unsplash.com/photo-1550572017-edd951aa8f72?w=200&h=200&fit=crop",
-        "q": "مكملات غذائية عامة"
+        "set": "general-supplements"
       },
       {
         "id": "antioxidants",
         "name": "مضادات الأكسدة",
         "image": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=200&h=200&fit=crop",
-        "q": "مضادات الأكسدة"
+        "set": "antioxidants"
       },
       {
         "id": "omega-fish-oils",
         "name": "الأوميغا وزيوت السمك",
         "image": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=200&h=200&fit=crop",
-        "q": "أوميغا زيوت السمك"
+        "set": "omega-fish-oils"
       },
       {
         "id": "probiotics-digestive",
         "name": "البروبيوتيك وصحة الجهاز الهضمي",
         "image": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=200&h=200&fit=crop",
-        "q": "بروبيوتيك صحة الجهاز الهضمي"
+        "set": "probiotics-digestive"
       },
       {
         "id": "mineral-deficiency-vitamins",
         "name": "فيتامينات نقص العناصر",
         "image": "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=200&h=200&fit=crop",
-        "q": "فيتامينات نقص العناصر حديد مغنيسيوم زنك"
+        "set": "mineral-deficiency-vitamins"
       },
       {
         "id": "diabetes-vitamins",
         "name": "فيتامينات لمرضى السكري",
         "image": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=200&h=200&fit=crop",
-        "q": "فيتامينات لمرضى السكري"
+        "set": "diabetes-vitamins"
       },
       {
         "id": "nerve-vitamins",
         "name": "فيتامينات مرضى الاعصاب",
         "image": "https://images.unsplash.com/photo-1559757175-7cb057fba93c?w=200&h=200&fit=crop",
-        "q": "فيتامينات مرضى الاعصاب"
+        "set": "nerve-vitamins"
+      },
+      {
+        "id": "weight-loss",
+        "name": "التنحيف وإدارة الوزن",
+        "image": "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=200&h=200&fit=crop",
+        "set": "weight-loss"
       }
     ]
   },
@@ -860,39 +829,39 @@ export const CATEGORIES = [
     "subs": [
       {
         "id": "glucose-monitors",
-        "name": "أجهزة فحص السكر",
+        "name": "أجهزة وشرائط فحص السكر",
         "image": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=200&h=200&fit=crop",
-        "q": "أجهزة فحص السكر"
+        "set": "glucose-monitors"
       },
       {
         "id": "blood-pressure-monitors",
         "name": "أجهزة فحص الضغط",
         "image": "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=200&h=200&fit=crop",
-        "q": "أجهزة فحص الضغط"
+        "set": "blood-pressure-monitors"
       },
       {
         "id": "thermometers",
         "name": "مقياس حرارة",
         "image": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&h=200&fit=crop",
-        "q": "مقياس حرارة"
+        "set": "thermometers"
       },
       {
-        "id": "pulse-oximeters",
-        "name": "أجهزة قياس الأوكسجين",
+        "id": "first-aid",
+        "name": "الإسعافات الأولية والضمادات",
         "image": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=200&h=200&fit=crop",
-        "q": "أجهزة قياس الأوكسجين"
+        "set": "first-aid"
       },
       {
         "id": "support-braces",
-        "name": "مشدات",
+        "name": "مشدات ومساند طبية",
         "image": "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=200&h=200&fit=crop",
-        "q": "مشدات طبية"
+        "set": "support-braces"
       },
       {
         "id": "catheters",
-        "name": "كيترات",
+        "name": "كيترات الركبة والكاحل",
         "image": "https://images.unsplash.com/photo-1583912267550-d974311a9a6e?w=200&h=200&fit=crop",
-        "q": "كيترات"
+        "set": "catheters"
       }
     ]
   }
@@ -1361,3 +1330,15 @@ export const FEATURED = [
   }
 ];
 
+
+// The name to show on the product list for a product group (data/sets.js).
+export function setTitle(id) {
+  const concern = CONCERNS.find((c) => c.set === id);
+  if (concern) return concern.name;
+  for (const c of CATEGORIES) {
+    const s = c.subs.find((x) => x.set === id);
+    if (s) return s.name;
+  }
+  const slide = HERO.find((h) => h.set === id);
+  return slide ? slide.title : null;
+}
