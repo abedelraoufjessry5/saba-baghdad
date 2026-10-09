@@ -336,7 +336,7 @@ export const CATEGORIES = [
       {
         "id": "beauty-tools",
         "name": "أدوات العناية بالبشرة",
-        "image": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop",
+        "image": "young-female-pajamas-sleep-mask-holding-spray-pink(1).jpg",
         "set": "beauty-tools"
       }
     ]
