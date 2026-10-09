@@ -9,7 +9,7 @@ export function limit(key, max, windowSeconds) {
   const now = Date.now();
   const cutoff = now - windowSeconds * 1000;
   const hits = (buckets.get(key) || []).filter((t) => t > cutoff);
-  if (hits.length >= max) throw new HttpError(429, "طلبات كثيرة، جرّبوا بعد شوية");
+  if (hits.length >= max) throw new HttpError(429, "طلبات كثيرة، يرجى المحاولة بعد قليل");
   hits.push(now);
   buckets.set(key, hits);
   if (buckets.size > 5000) {

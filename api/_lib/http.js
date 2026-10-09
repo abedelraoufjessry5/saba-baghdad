@@ -65,7 +65,7 @@ export function handler(methods, fn) {
         res.status(err.status).json({ error: err.expose ? err.message : "Server error" });
       } else {
         console.error(err);
-        res.status(502).json({ error: "تعذّر الاتصال بالمتجر، جرّبوا بعد شوية" });
+        res.status(502).json({ error: "تعذّر الاتصال بالمتجر، يرجى المحاولة بعد قليل" });
       }
     }
   };

@@ -30,7 +30,7 @@ function readOrder(req) {
   const address = cleanText(b.address, 300);
   const notes = cleanText(b.notes, 500);
   if (name.length < 2) throw new HttpError(400, "الاسم مطلوب");
-  if (!phone) throw new HttpError(400, "رقم الهاتف لازم يكون رقم موبايل عراقي، مثل 07701234567");
+  if (!phone) throw new HttpError(400, "يرجى كتابة رقم موبايل عراقي صحيح، مثل 07701234567");
   if (address.length < 3) throw new HttpError(400, "العنوان مطلوب");
   const zone = String(b.zone || "");
   if (!ZONES[zone]) throw new HttpError(400, "اختاروا منطقة التوصيل");
@@ -44,7 +44,7 @@ function readOrder(req) {
     qtyById.set(id, Math.min(MAX_QTY, (qtyById.get(id) || 0) + qty));
   }
   if (!qtyById.size) throw new HttpError(400, "السلة فارغة");
-  if (qtyById.size > MAX_LINES) throw new HttpError(400, "عدد المنتجات كبير، قسّموا الطلب");
+  if (qtyById.size > MAX_LINES) throw new HttpError(400, "عدد المنتجات كبير، يرجى تقسيم الطلب");
   const key = /^[A-Za-z0-9-]{16,64}$/.test(String(b.key || "")) ? "APP-" + b.key : null;
   return { name, phone, address, zone, notes, qtyById, key };
 }
@@ -116,7 +116,7 @@ export default handler(["POST"], async (req, res) => {
     if (!variantOf[tid]) variantOf[tid] = v.id;
   }
   const missing = tmplIds.filter((id) => !variantOf[id]);
-  if (missing.length) throw new HttpError(400, "بعض المنتجات ما عادت متوفرة بالمتجر، احذفوها من السلة وجرّبوا مرة ثانية");
+  if (missing.length) throw new HttpError(400, "بعض المنتجات لم تعد متوفرة، احذفوها من السلة وحاولوا مرة أخرى");
 
   const customer = await findOrCreateCustomer(order, session);
   const shippingId = await deliveryAddress(customer, order);

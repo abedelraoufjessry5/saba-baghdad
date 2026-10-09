@@ -16,9 +16,9 @@ export default handler(["POST"], async (req, res) => {
 
   const [user] = await execute("res.users", "read", [[session.uid]], { fields: ["id", "login", "partner_id", "share"] });
   if (!user) throw new HttpError(401, "انتهت الجلسة، سجّلوا الدخول مرة ثانية");
-  if (!user.share) throw new HttpError(403, "هذا الحساب ما ينحذف من التطبيق"); // never staff accounts
+  if (!user.share) throw new HttpError(403, "لا يمكن حذف هذا الحساب من التطبيق"); // never staff accounts
   const uid = await authenticateUser(user.login, password);
-  if (uid !== session.uid) throw new HttpError(401, "كلمة المرور غلط");
+  if (uid !== session.uid) throw new HttpError(401, "كلمة المرور غير صحيحة");
 
   const pid = user.partner_id[0];
   // free the email (so it can sign up again later) and close the account

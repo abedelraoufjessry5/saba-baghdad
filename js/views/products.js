@@ -1,4 +1,6 @@
-/* المنتجات: live list from Odoo with search, category chips and "show more".
+/* المنتجات: live list from Odoo with search, category chips and endless
+   scrolling (the next page loads by itself near the bottom; the button is
+   only a fallback for browsers without IntersectionObserver).
    Filters are kept in the address (?cat=&q=&set=) so "back" from a product
    returns to exactly the same list. A "set" is a fixed product group
    (home cards, banners, category tree) defined in data/sets.js. */
@@ -46,8 +48,16 @@ export function productsView({ query }) {
   const chips = h("div", { class: "chips" });
   const grid = h("div", { class: "grid-2" });
   const msg = h("div", { class: "msg" }, t("loading"));
-  const more = h("div", { class: "pad", hidden: true },
-    h("button", { class: "btn ghost", type: "button", onClick: () => load(false) }, t("loadMore")));
+  const auto = typeof IntersectionObserver === "function";
+  const moreBtn = h("button", { class: "btn ghost", type: "button", hidden: auto, onClick: () => load(false) }, t("loadMore"));
+  const moreNote = h("div", { class: "more-loading", hidden: !auto }, t("loading"));
+  const more = h("div", { class: "pad", hidden: true }, moreBtn, moreNote);
+  let busy = false;
+  // endless scroll: load the next page when the end of the list comes near
+  const watcher = auto ? new IntersectionObserver((entries) => {
+    if (entries.some((e) => e.isIntersecting) && !busy && !more.hidden) load(false);
+  }, { rootMargin: "600px 0px" }) : null;
+  if (watcher) watcher.observe(more);
 
   function syncUrl() {
     const s = new URLSearchParams();
@@ -67,7 +77,9 @@ export function productsView({ query }) {
       msg.hidden = false;
       more.hidden = true;
     }
-    more.querySelector("button").disabled = true;
+    busy = true;
+    moreBtn.disabled = true;
+    let ok = false;
     try {
       const d = await api.products({
         category_id: state.cat,
@@ -85,12 +97,21 @@ export function productsView({ query }) {
       more.hidden = state.loaded >= state.total || items.length === 0;
       syncUrl();
       if (reset) restoreScroll();
+      ok = true;
     } catch (e) {
       if (my !== state.request) return;
       msg.textContent = e.message;
       msg.hidden = false;
+      moreBtn.hidden = false; // after an error, loading more is by hand
+      moreNote.hidden = true;
     } finally {
-      more.querySelector("button").disabled = false;
+      busy = false;
+      moreBtn.disabled = false;
+      // still on screen (tall phones / short pages): keep filling
+      if (ok && watcher && !more.hidden && state.loaded > 0) {
+        const r = more.getBoundingClientRect();
+        if (r.top < innerHeight + 600) setTimeout(() => { if (!busy && !more.hidden) load(false); }, 0);
+      }
     }
   }
 
@@ -137,6 +158,6 @@ export function productsView({ query }) {
       screenBar(title),
       h("div", { class: "pad", style: { paddingBottom: "0" } }, input),
       chips, msg, grid, more),
-    destroy() { search.cancel(); state.request++; }
+    destroy() { search.cancel(); state.request++; if (watcher) watcher.disconnect(); }
   };
 }

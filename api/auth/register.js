@@ -17,8 +17,8 @@ export default handler(["POST"], async (req, res) => {
 
   if (name.length < 2) throw new HttpError(400, "الاسم مطلوب");
   if (!isEmail(email)) throw new HttpError(400, "الإيميل غير صحيح");
-  if (password.length < 8) throw new HttpError(400, "كلمة المرور لازم تكون ٨ أحرف أو أكثر");
-  if (phoneRaw && !phone) throw new HttpError(400, "رقم الهاتف لازم يكون رقم موبايل عراقي، مثل 07701234567");
+  if (password.length < 8) throw new HttpError(400, "كلمة المرور يجب أن تكون ٨ أحرف أو أكثر");
+  if (phoneRaw && !phone) throw new HttpError(400, "يرجى كتابة رقم موبايل عراقي صحيح، مثل 07701234567");
   limit("register:ip:" + clientIp(req), 30, 3600); // shared mobile IPs: keep loose
   limit("register:email:" + email, 5, 3600);
 

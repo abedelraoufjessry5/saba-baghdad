@@ -502,3 +502,4 @@ main.page { padding-bottom: 2.5rem; }
 .totals > div { display: flex; justify-content: space-between; gap: .5rem; }
 .totals .grand { border-top: 1px dashed var(--line); padding-top: .5rem; margin-top: .15rem; font-weight: 700; font-size: 1.02rem; color: #2b1620; }
 .totals .grand span:last-child { color: var(--rose); }
+.more-loading { text-align: center; color: #8a6b76; font-size: .85rem; padding: .6rem 0; }

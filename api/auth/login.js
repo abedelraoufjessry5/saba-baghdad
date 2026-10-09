@@ -13,7 +13,7 @@ export default handler(["POST"], async (req, res) => {
   limit("login:email:" + email, 8, 600);
 
   const uid = await authenticateUser(email, password);
-  if (!uid) throw new HttpError(401, "الإيميل أو كلمة المرور غلط");
+  if (!uid) throw new HttpError(401, "الإيميل أو كلمة المرور غير صحيحة");
 
   const [user] = await execute("res.users", "read", [[uid]], { fields: ["id", "name", "login", "partner_id"] });
   const pid = user.partner_id[0];

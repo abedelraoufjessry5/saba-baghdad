@@ -32,8 +32,8 @@ export const SETS = {
     without: ["deodorant", "مزيل عرق", "lip", "شفاه", "hand cream", "لليدين", "after sun", "scars", "ندبات", "kit", "cleansing", "تنظيف", "غسول", "cleanser"]
   },
   "sweating": {
-    terms: ["perspirant", "deodorant", "transpirant", "antiperspirant", "hidrosis", "تعرق", "مزيل عرق", "مزيل رائحة", "spirial", "control spray talc"],
-    without: ["intimate", "للمناطق الحساسة", "المنطقة الحساسة", "make-up", "مكياج"],
+    terms: ["perspirant", "deodorant", "transpirant", "antiperspirant", "hidrosis", "تعرق", "مزيل عرق", "مزيل رائحة", "spirial", "control spray talc", "shower gel", "shower cream", "body wash", "جل استحمام", "جل الاستحمام", "غسول للجسم", "غسول جسم", "غسول الجسم", "body cleanser", "face & body wash", "wash emulsion"],
+    without: ["intimate", "للمناطق الحساسة", "المنطقة الحساسة", "make-up", "مكياج", "baby", "للأطفال", "bebe", "kids", "newborn", "vaginal", "genital"],
     exclude: [3068]
   },
   "sensitive": {
@@ -96,8 +96,11 @@ export const SETS = {
     without: ["hair", "شعر", "body", "للجسم", "pads", "وسادات", "mask", "قناع", "ماسك", "deodorant", "مضاد تعرق", "perspirant", "مزيل عرق", "تعرق", "eye"]
   },
   "mesotherapy": {
-    terms: ["meso", "ميزو", "derma roller", "درما رولر", "ديرما رولر", "booster shot", "boosting shot", "exosome shot", "ncef-shot", "shot 5xp", "filler shot", "shot supreme"],
+    terms: ["meso", "ميزو", "booster shot", "boosting shot", "exosome shot", "ncef-shot", "shot 5xp", "filler shot", "shot supreme"],
     without: ["mask", "ماسك", "قناع", "cream", "كريم"]
+  },
+  "beauty-tools": {
+    terms: ["derma roller", "درما رولر", "ديرما رولر", "gua sha", "guasha", "غواشا", "كواشا", "ice roller", "ice globe", "face roller", "jade roller", "rose quartz", "roller massager", "facial massager", "headband", "ربطة شعر", "makeup sponge", "beauty blender", "اسفنجة مكياج", "facial brush", "cleansing brush", "فرشاة تنظيف الوجه", "washbag"]
   },
   "acne-patches": {
     terms: ["patch", "لاصقات شفافة لعلاج الحبوب", "spot cover", "hydrocolloid", "acne patch", "pimple patch"],
@@ -119,10 +122,12 @@ export const SETS = {
     without: ["sun", "واقي شمس", "spf50"]
   },
   "blush": {
-    terms: ["blush", "بلاشر"]
+    terms: ["blush", "بلاشر"],
+    without: ["gloss", "lip", "شفاه"]
   },
   "primer": {
-    terms: ["makeup primer", "setting spray", "برايمر", "مثبت للمكياج", "مثبت المكياج"]
+    terms: ["makeup primer", "setting spray", "برايمر", "مثبت للمكياج", "مثبت المكياج"],
+    without: ["anthelios", "spf", "sun", "واقي", "mist"]
   },
   "shampoo": {
     terms: ["shampoo", "شامبو", "wash |", ".wash", "foam shampoo", "dry shampoo"],
