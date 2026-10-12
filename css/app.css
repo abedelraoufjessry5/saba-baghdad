@@ -563,3 +563,11 @@ main.page { padding-bottom: 2.5rem; }
   display: inline-block; margin: -.4rem 0 .8rem; font-size: .76rem; font-weight: 700; color: var(--ok);
   background: var(--ok-bg); padding: .15rem .6rem; border-radius: 999px;
 }
+.o-skel { height: 15.5rem; background: linear-gradient(100deg, rgba(255,255,255,.12) 30%, rgba(255,255,255,.22) 50%, rgba(255,255,255,.12) 70%); background-size: 300% 100%; animation: oskel 1.4s linear infinite; }
+@keyframes oskel { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+.o-soon {
+  flex: 1; display: flex; align-items: center; gap: .6rem; padding: 1rem 1.1rem; border-radius: 1.1rem;
+  background: rgba(255, 255, 255, .08); border: 1px dashed rgba(210, 164, 105, .45);
+  color: rgba(248, 187, 208, .9); font-family: var(--font-ui); font-size: .85rem;
+}
+.o-soon svg { color: var(--gold); }

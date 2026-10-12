@@ -228,8 +228,9 @@ export function categoryList() {
 }
 
 /* ------------------------------------------------------------- offers */
-// Live from Odoo: every product whose "compare to" price is above its price.
-// The section stays out of the page until there is at least one offer.
+// Live: the app's offers (data/offers.js) and every Odoo product whose
+// "compare to" price is above its price. Always on the home page; with no
+// offer it shows a "new offers soon" card.
 export function offerCard(p) {
   const save = p.comparePrice - p.price;
   return h("a", { class: "o-card press", href: "/product/" + p.id },
@@ -245,8 +246,9 @@ export function offerCard(p) {
 }
 
 export function offers() {
-  const rail = h("div", { class: "scroll-x rail offers-rail" });
-  const el = h("section", { class: "offers", hidden: true },
+  const rail = h("div", { class: "scroll-x rail offers-rail" },
+    [0, 1, 2].map(() => h("span", { class: "o-card o-skel", "aria-hidden": "true" })));
+  const el = h("section", { class: "offers" },
     h("div", { class: "offers-box" },
       h("div", { class: "offers-head" },
         h("div", null,
@@ -259,10 +261,11 @@ export function offers() {
   api.products({ on_sale: 1, limit: 12 })
     .then((d) => {
       const list = (d.products || []).filter((p) => p.comparePrice > p.price);
-      if (!list.length) return;
-      rail.replaceChildren(...list.map(offerCard));
-      el.hidden = false;
+      rail.replaceChildren(...(list.length ? list.map(offerCard) : [soon()]));
     })
-    .catch(() => { /* no offers strip */ });
+    .catch(() => rail.replaceChildren(soon()));
+  function soon() {
+    return h("div", { class: "o-soon" }, icon("tag", { size: 22 }), h("span", null, t("offers.empty")));
+  }
   return el;
 }
