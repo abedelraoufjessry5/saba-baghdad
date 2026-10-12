@@ -1,6 +1,6 @@
 /* The sections of the home and categories tabs, in the same look as
    the original app. Content comes from data/content.js. */
-import { h, money, hideOnError } from "../dom.js";
+import { h, money, hideOnError, percentOff } from "../dom.js";
 import { icon } from "../icons.js";
 import { t, pickLang, isRTL } from "../i18n.js";
 import { contentImage } from "../config.js";
@@ -225,4 +225,44 @@ export function categoryList() {
   }));
   paint();
   return section({ label: t("cats.label"), title: t("cats.title") }, h("div", { class: "cats" }, items.map((i) => i.el)));
+}
+
+/* ------------------------------------------------------------- offers */
+// Live from Odoo: every product whose "compare to" price is above its price.
+// The section stays out of the page until there is at least one offer.
+export function offerCard(p) {
+  const save = p.comparePrice - p.price;
+  return h("a", { class: "o-card press", href: "/product/" + p.id },
+    h("span", { class: "pic" },
+      hideOnError(h("img", { src: p.image, alt: p.name, loading: "lazy", decoding: "async" }), "none"),
+      h("span", { class: "seal" }, percentOff(p.price, p.comparePrice))),
+    h("span", { class: "body" },
+      h("span", { class: "name clamp-2" }, p.name),
+      h("span", { class: "prices" },
+        h("span", { class: "now" }, money(p.price)),
+        h("s", { class: "was" }, money(p.comparePrice))),
+      h("span", { class: "save" }, t("offers.save") + " " + money(save))));
+}
+
+export function offers() {
+  const rail = h("div", { class: "scroll-x rail offers-rail" });
+  const el = h("section", { class: "offers", hidden: true },
+    h("div", { class: "offers-box" },
+      h("div", { class: "offers-head" },
+        h("div", null,
+          h("p", { class: "label-en" }, t("offers.label")),
+          h("h2", { class: "display" }, t("offers.title")),
+          h("p", { class: "sub" }, t("offers.sub"))),
+        h("a", { class: "offers-all press", href: "/products?sale=1" },
+          t("offers.all"), icon("chevronLeft", { size: 15, className: "ltr-flip" }))),
+      rail));
+  api.products({ on_sale: 1, limit: 12 })
+    .then((d) => {
+      const list = (d.products || []).filter((p) => p.comparePrice > p.price);
+      if (!list.length) return;
+      rail.replaceChildren(...list.map(offerCard));
+      el.hidden = false;
+    })
+    .catch(() => { /* no offers strip */ });
+  return el;
 }

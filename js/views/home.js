@@ -1,10 +1,10 @@
-/* الرئيسية: search, banners, concerns, product rails, brands, why-us and
+/* الرئيسية: search, banners, offers (live from Odoo), concerns, product rails, brands, why-us and
    the contact footer. */
 import { h } from "../dom.js";
 import { t } from "../i18n.js";
 import { appHeader, footer } from "../components/layout.js";
 import { searchBox } from "../components/search.js";
-import { hero, concerns, productRail, brands, trust, refreshPrices } from "../components/blocks.js";
+import { hero, offers, concerns, productRail, brands, trust, refreshPrices } from "../components/blocks.js";
 import { TRENDING, FEATURED } from "../data/content.js";
 
 export function homeView() {
@@ -13,6 +13,7 @@ export function homeView() {
   const main = h("main", { class: "page fade" },
     search.el,
     slides.el,
+    offers(),
     concerns(),
     productRail({ label: t("trend.label"), title: t("trend.title"), sub: t("trend.sub"), items: TRENDING }),
     productRail({ label: t("products.label"), title: t("products.title"), items: FEATURED }),

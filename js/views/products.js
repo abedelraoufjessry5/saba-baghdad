@@ -4,7 +4,7 @@
    Filters are kept in the address (?cat=&q=&set=) so "back" from a product
    returns to exactly the same list. A "set" is a fixed product group
    (home cards, banners, category tree) defined in data/sets.js. */
-import { h, money, debounce, hideOnError } from "../dom.js";
+import { h, money, debounce, hideOnError, percentOff } from "../dom.js";
 import { t, pickLang } from "../i18n.js";
 import { setTitle } from "../data/content.js";
 import { api, loadCategories } from "../api.js";
@@ -24,7 +24,8 @@ export function productCard(p) {
   const open = () => navigate("/product/" + p.id, { child: true });
   return h("div", { class: "s-card" },
     h("button", { class: "open", type: "button", onClick: open, "aria-label": p.name },
-      hideOnError(h("img", { src: p.image, alt: "", loading: "lazy", decoding: "async" }))),
+      hideOnError(h("img", { src: p.image, alt: "", loading: "lazy", decoding: "async" })),
+      p.onSale ? h("span", { class: "seal" }, percentOff(p.price, p.comparePrice)) : null),
     h("div", { class: "b" },
       h("div", { class: "n clamp-2", role: "link", tabindex: "0", onClick: open, onKeydown: (e) => { if (e.key === "Enter") open(); } }, p.name),
       h("div", { class: "d clamp-2" }, p.excerpt || ""),
@@ -37,6 +38,7 @@ export function productsView({ query }) {
     cat: query.cat ? Number(query.cat) || null : null,
     q: query.q || "",
     set: query.set || query.concern || "", // "concern" = links from the previous version
+    sale: query.sale === "1",
     loaded: 0,
     total: 0,
     request: 0
@@ -64,6 +66,7 @@ export function productsView({ query }) {
     if (state.cat) s.set("cat", state.cat);
     if (state.q) s.set("q", state.q);
     if (state.set) s.set("set", state.set);
+    if (state.sale) s.set("sale", "1");
     const url = "/products" + (s.toString() ? "?" + s : "");
     history.replaceState({ ...(history.state || {}), loaded: state.loaded }, "", url);
   }
@@ -84,6 +87,7 @@ export function productsView({ query }) {
       const d = await api.products({
         category_id: state.cat,
         set: state.set || null,
+        on_sale: state.sale ? 1 : null,
         q: state.set ? null : state.q,
         limit, offset: state.loaded
       });
@@ -93,7 +97,7 @@ export function productsView({ query }) {
       state.loaded += items.length;
       grid.append(...items.map(productCard));
       msg.hidden = state.loaded > 0;
-      if (!state.loaded) msg.textContent = t("empty");
+      if (!state.loaded) msg.textContent = state.sale ? t("offers.empty") : t("empty");
       more.hidden = state.loaded >= state.total || items.length === 0;
       syncUrl();
       if (reset) restoreScroll();
@@ -131,10 +135,11 @@ export function productsView({ query }) {
   }
 
   // typing a search replaces the product group
-  const title = h("h1", null, (state.set && pickLang(setTitle(state.set))) || t("tab.products"));
+  const title = h("h1", null, (state.set && pickLang(setTitle(state.set))) || (state.sale && t("offers.page")) || t("tab.products"));
   function leaveSet() {
-    if (!state.set) return;
+    if (!state.set && !state.sale) return;
     state.set = "";
+    state.sale = false;
     title.textContent = t("tab.products");
   }
 

@@ -41,6 +41,13 @@ export function money(n) {
   return Math.round(v).toLocaleString("en-US") + " " + t("currency");
 }
 
+// "-15%" for a product on offer (old price -> new price), or "".
+export function percentOff(price, was) {
+  const p = Number(price), w = Number(was);
+  if (!(w > p && p > 0)) return "";
+  return "-" + Math.max(1, Math.round(((w - p) / w) * 100)) + "%";
+}
+
 // Hides a broken image instead of showing the browser's broken-image icon.
 export function hideOnError(img, mode = "hidden") {
   img.addEventListener("error", () => {

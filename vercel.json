@@ -19,12 +19,12 @@
     },
     {
       "source": "/offers",
-      "destination": "/",
+      "destination": "/products?sale=1",
       "permanent": false
     },
     {
       "source": "/offers.html",
-      "destination": "/",
+      "destination": "/products?sale=1",
       "permanent": false
     }
   ],

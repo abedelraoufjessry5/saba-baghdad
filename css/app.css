@@ -503,3 +503,63 @@ main.page { padding-bottom: 2.5rem; }
 .totals .grand { border-top: 1px dashed var(--line); padding-top: .5rem; margin-top: .15rem; font-weight: 700; font-size: 1.02rem; color: #2b1620; }
 .totals .grand span:last-child { color: var(--rose); }
 .more-loading { text-align: center; color: #8a6b76; font-size: .85rem; padding: .6rem 0; }
+
+/* ------------------------------------------------------------- offers */
+[dir="ltr"] .ltr-flip { transform: scaleX(-1); }
+.offers { padding: 1.5rem 1rem 0; }
+.offers-box {
+  position: relative; overflow: hidden; border-radius: 1.5rem; padding: 1.15rem 0 1rem;
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(210, 164, 105, .28), transparent 55%),
+    radial-gradient(90% 70% at 0% 100%, rgba(142, 45, 70, .55), transparent 60%),
+    linear-gradient(160deg, #6b0f1f, var(--plum) 55%, #3f0710);
+  box-shadow: 0 14px 30px -18px rgba(92, 10, 22, .65);
+}
+.offers-box::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  border: 1px solid rgba(210, 164, 105, .28);
+}
+.offers-head { display: flex; align-items: flex-end; justify-content: space-between; gap: .75rem; padding: 0 1.15rem .9rem; }
+.offers-head .label-en { color: var(--gold); margin-bottom: .2rem; }
+.offers-head h2 { color: var(--white); font-size: 1.55rem; line-height: 1.2; }
+.offers-head .sub { color: rgba(248, 187, 208, .75); font-size: .76rem; margin-top: .2rem; }
+.offers-all {
+  flex-shrink: 0; display: inline-flex; align-items: center; gap: .2rem; white-space: nowrap;
+  background: var(--gold); color: var(--plum); font-family: var(--font-ui); font-weight: 700;
+  font-size: .74rem; padding: .4rem .55rem .4rem .75rem; border-radius: 999px;
+}
+.offers-rail { padding: 0 1.15rem .15rem; gap: .65rem; }
+.o-card {
+  flex-shrink: 0; width: 9.75rem; background: var(--white); border-radius: 1.1rem; overflow: hidden;
+  display: flex; flex-direction: column; text-align: start; font-family: var(--font-ui);
+}
+.o-card .pic { position: relative; display: block; aspect-ratio: 1 / 1; background: var(--shell); }
+.o-card .pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: .7rem; }
+.seal {
+  position: absolute; top: .5rem; inset-inline-start: .5rem; z-index: 1; direction: ltr;
+  min-width: 2.6rem; height: 2.6rem; padding: 0 .3rem; border-radius: 999px; display: grid; place-items: center;
+  background: radial-gradient(circle at 30% 25%, #f1d3a2, var(--gold) 55%, var(--gold-deep));
+  color: var(--plum); font-family: system-ui, sans-serif; font-weight: 800; font-size: .74rem; letter-spacing: -.02em;
+  box-shadow: 0 4px 10px -3px rgba(92, 10, 22, .45), inset 0 0 0 2px rgba(255, 255, 255, .45);
+}
+.o-card .body { padding: .6rem .65rem .7rem; display: flex; flex-direction: column; gap: .3rem; flex: 1; }
+.o-card .name { font-size: .72rem; color: rgba(58, 21, 32, .85); line-height: 1.375; flex: 1; }
+.o-card .prices { display: flex; align-items: baseline; flex-wrap: wrap; gap: .1rem .4rem; }
+.o-card .now { color: var(--rose); font-weight: 800; font-size: .9rem; }
+.o-card .was { color: #b39aa4; font-size: .7rem; }
+.o-card .save {
+  align-self: flex-start; font-size: .64rem; font-weight: 700; color: var(--ok);
+  background: var(--ok-bg); padding: .1rem .45rem; border-radius: 999px;
+}
+.s-card .open { position: relative; }
+.s-card .seal { min-width: 2.35rem; height: 2.35rem; font-size: .68rem; }
+.pd-price { display: flex; align-items: baseline; flex-wrap: wrap; gap: .5rem; }
+.pd-price .was { color: #b39aa4; font-weight: 400; font-size: .9rem; }
+.pd-price .off {
+  direction: ltr; background: var(--gold); color: var(--plum); font-family: system-ui, sans-serif;
+  font-weight: 800; font-size: .75rem; padding: .1rem .5rem; border-radius: 999px; align-self: center;
+}
+.pd-save {
+  display: inline-block; margin: -.4rem 0 .8rem; font-size: .76rem; font-weight: 700; color: var(--ok);
+  background: var(--ok-bg); padding: .15rem .6rem; border-radius: 999px;
+}

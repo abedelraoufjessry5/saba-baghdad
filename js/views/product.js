@@ -1,5 +1,5 @@
 /* One product: picture, price, description, quantity, add to cart. */
-import { h, money, safeHtml, hideOnError } from "../dom.js";
+import { h, money, safeHtml, hideOnError, percentOff } from "../dom.js";
 import { t } from "../i18n.js";
 import { api } from "../api.js";
 import { addToCart } from "../store.js";
@@ -21,7 +21,10 @@ export function productView({ params }) {
         hideOnError(h("img", { class: "hero-img", src: p.image, alt: p.name })),
         h("div", { class: "pad" },
           h("h2", { class: "pd-name" }, p.name),
-          h("div", { class: "pd-price" }, money(p.price)),
+          h("div", { class: "pd-price" }, money(p.price),
+            p.onSale ? h("s", { class: "was" }, money(p.comparePrice)) : null,
+            p.onSale ? h("span", { class: "off" }, percentOff(p.price, p.comparePrice)) : null),
+          p.onSale ? h("div", { class: "pd-save" }, t("offers.save") + " " + money(p.comparePrice - p.price)) : null,
           p.description ? desc : null,
           h("div", { class: "stepper", style: { margin: "1rem 0" }, "aria-label": t("shop.qty") },
             h("button", { type: "button", "aria-label": "-", onClick: () => { qty = Math.max(1, qty - 1); qtyEl.textContent = qty; } }, "−"),

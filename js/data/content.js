@@ -878,7 +878,7 @@ export const TRENDING = [
     "brand": "COSRX",
     "name": "COSRX Advanced Snail 96 Mucin Essence — خلاصة الحلزون ٩٦",
     "price": 16000,
-    "badge": "رائج",
+    "badge": "جديد",
     "image": "https://saba-baghdad.odoo.com/web/image/product.template/165/image_512"
   },
   {
@@ -914,7 +914,7 @@ export const TRENDING = [
     "brand": "MEDICUBE",
     "name": "Medicube Glutathione Glow Serum — سيروم الجلوتاثيون للإشراقة",
     "price": 26000,
-    "badge": "رائج",
+    "badge": "جديد",
     "image": "https://saba-baghdad.odoo.com/web/image/product.template/1733/image_512"
   },
   {
@@ -968,7 +968,7 @@ export const TRENDING = [
     "brand": "MEDICUBE",
     "name": "Medicube PDRN Pink Collagen Exosome Shot — سيروم الكولاجين",
     "price": 25000,
-    "badge": "رائج",
+    "badge": "جديد",
     "image": "https://saba-baghdad.odoo.com/web/image/product.template/1714/image_512"
   },
   {

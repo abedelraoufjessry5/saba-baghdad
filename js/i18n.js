@@ -15,7 +15,7 @@ const ar = {
   "tab.cart": "سلتي",
   "tab.account": "الحساب",
 
-  "search.placeholder": "ابحثوا عن منتج أو ماركة…",
+  "search.placeholder": "بحث عن منتج أو ماركة…",
   "search.empty": "لا توجد نتائج بهذا الاسم",
   "search.all": "كل النتائج",
 
@@ -36,8 +36,16 @@ const ar = {
   "products.range": "عرض التشكيلة",
 
 
-  "trend.label": "الأكثر طلباً",
-  "trend.title": "الأكثر رواجاً",
+  "trend.label": "من كوريا",
+  "trend.title": "الأكثر مبيعاً",
+
+  "offers.label": "SABA OFFERS",
+  "offers.title": "عروض صبا",
+  "offers.sub": "خصومات حقيقية على منتجات أصلية، لفترة محدودة",
+  "offers.all": "كل العروض",
+  "offers.page": "العروض",
+  "offers.save": "توفير",
+  "offers.empty": "لا توجد عروض حالياً، تابعونا قريباً",
   "trend.sub": "منتجات كورية أصلية، وصلت حديثاً",
 
 
@@ -165,8 +173,16 @@ const en = {
   "products.label": "Selected",
   "products.title": "Featured products",
   "products.range": "See the range",
-  "trend.label": "Most wanted",
-  "trend.title": "Trending products",
+  "trend.label": "From Korea",
+  "trend.title": "Best sellers",
+
+  "offers.label": "SABA OFFERS",
+  "offers.title": "Saba offers",
+  "offers.sub": "Real discounts on authentic products, for a limited time",
+  "offers.all": "All offers",
+  "offers.page": "Offers",
+  "offers.save": "You save",
+  "offers.empty": "No offers right now, check back soon",
   "trend.sub": "Korean and authentic, just arrived",
   "trust.title": "Why buy from Saba Baghdad",
   "trust.price": "Best price in Iraq",
@@ -284,8 +300,16 @@ const ku = {
   "brands.sub": "ئەسڵی و هاوردەکراو",
   "products.label": "هەڵبژاردە",
   "products.title": "بەرهەمی تایبەت",
-  "trend.label": "زۆرترین داواکاری",
-  "trend.title": "بەرهەمە باوەکان",
+  "trend.label": "لە کۆریاوە",
+  "trend.title": "زۆرترین فرۆشراو",
+
+  "offers.label": "SABA OFFERS",
+  "offers.title": "ئۆفەرەکانی سەبا",
+  "offers.sub": "داشکاندنی ڕاستەقینە لەسەر بەرهەمی ڕەسەن، بۆ ماوەیەکی سنووردار",
+  "offers.all": "هەموو ئۆفەرەکان",
+  "offers.page": "ئۆفەرەکان",
+  "offers.save": "پاشەکەوت",
+  "offers.empty": "ئێستا هیچ ئۆفەرێک نییە",
   "trend.sub": "کۆری و ڕەسەن، تازە گەیشتوون",
   "trust.title": "بۆچی لە سەبا بەغدا بکڕە",
   "trust.price": "باشترین نرخ لە عێراق",
