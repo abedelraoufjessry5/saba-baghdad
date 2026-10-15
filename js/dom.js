@@ -45,7 +45,10 @@ export function money(n) {
 export function percentOff(price, was) {
   const p = Number(price), w = Number(was);
   if (!(w > p && p > 0)) return "";
-  return "-" + Math.max(1, Math.round(((w - p) / w) * 100)) + "%";
+  // shown in round steps (10%, 15%, 20%...) as shops do; the exact saving
+  // in dinars is shown next to it
+  const pct = ((w - p) / w) * 100;
+  return "-" + Math.max(5, Math.round(pct / 5) * 5) + "%";
 }
 
 // Hides a broken image instead of showing the browser's broken-image icon.

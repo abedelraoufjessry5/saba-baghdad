@@ -9,8 +9,9 @@
    Example: { id: 580, price: 45000, was: 50000, until: "2026-11-30" } */
 
 export const OFFERS = [
-  { id: 580, price: 45000, was: 50000 }, // Vichy Liftactiv B3 Serum 30ml
-  { id: 351, price: 30000, was: 33000 }, // La Roche-Posay Effaclar Micro-Peeling Gel 200ml
-  { id: 199, price: 50000, was: 55000 }, // Perfect Image Gly + Sal Body Lotion 240ml
-  { id: 291, price: 50000, was: 55000 }  // Perfect Image Gly + Sal Body Lotion 240ml (2nd listing)
+  { id: 2041, price: 20000, was: 25000 }, // Soskin HydraWear Gel-Crème 60ml
+  { id: 199, price: 55000, was: 65000 },  // Perfect Image Gly + Sal Body Lotion 240ml
+  { id: 372, price: 37000, was: 42000 },  // La Roche-Posay Mela B3 Gel Micro-Peeling 200ml
+  { id: 580, price: 45000, was: 50000 },  // Vichy Liftactiv B3 Serum 30ml
+  { id: 351, price: 30000, was: 33000 }   // La Roche-Posay Effaclar Micro-Peeling Gel 200ml
 ];
