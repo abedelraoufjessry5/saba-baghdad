@@ -3,6 +3,7 @@
 import { execute, existingFields } from "./odoo.js";
 import { orDomain } from "./text.js";
 import { SETS, NOT_SUPPLEMENT } from "../../js/data/sets.js";
+import { HIDDEN } from "../../js/data/hidden.js";
 
 // The shop description has different names; Saba fills the eCommerce one.
 const DESC_CANDIDATES = ["description_ecommerce", "website_description", "description_sale"];
@@ -55,10 +56,12 @@ export async function templatesWithPhoto() {
 //  default                 only products published on the website
 //  CATALOG_MODE=ready      also unpublished ones that are ready to sell:
 //                          sellable, with a price and a photo
+//  js/data/hidden.js       products never shown, whatever the mode
 export async function catalogDomain() {
-  if (process.env.CATALOG_MODE !== "ready") return [PUBLISHED];
+  const hidden = HIDDEN.length ? [["id", "not in", HIDDEN]] : [];
+  if (process.env.CATALOG_MODE !== "ready") return [PUBLISHED, ...hidden];
   const withPhoto = await templatesWithPhoto();
-  return ["|", PUBLISHED, "&", "&", "&", ["id", "in", withPhoto], ...SELLABLE];
+  return ["|", PUBLISHED, "&", "&", "&", ["id", "in", withPhoto], ...SELLABLE, ...hidden];
 }
 export const APP_ORIGIN = "Saba Baghdad App";
 
