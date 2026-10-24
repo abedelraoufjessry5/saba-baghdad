@@ -37,7 +37,7 @@ export function searchBox() {
       panel = h("div", { class: "suggest", role: "listbox" });
       wrap.appendChild(panel);
     }
-    clear(panel).append(...content);
+    clear(panel).append(...content.filter(Boolean));
   }
 
   const run = debounce(async (q) => {
@@ -53,6 +53,7 @@ export function searchBox() {
         return;
       }
       showPanel([
+        d.related ? h("div", { class: "note" }, t("search.related")) : null,
         ...items.map((p) =>
           h("button", {
             class: "item", type: "button",

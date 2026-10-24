@@ -153,6 +153,8 @@ main.page { padding-bottom: 2.5rem; }
 .suggest .p { font-size: .74rem; font-weight: 700; color: var(--rose); white-space: nowrap; }
 .suggest .all { width: 100%; background: var(--shell); padding: .65rem; color: var(--rose); font-weight: 700; font-size: .8rem; text-align: center; }
 .suggest .msg { padding: .9rem; text-align: center; color: #8a6b76; font-size: .82rem; }
+.suggest .note, .list-note { padding: .55rem .9rem; color: #8a6b76; font-size: .74rem; background: var(--shell); line-height: 1.5; }
+.list-note { margin: .25rem 1rem .5rem; border-radius: .75rem; border: 1px solid var(--line); }
 
 /* ------------------------------------------------------------- sections */
 .section { padding-top: 1.5rem; }
