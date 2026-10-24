@@ -11,6 +11,7 @@ import { api, loadCategories } from "../api.js";
 import { addToCart } from "../store.js";
 import { navigate, restoreScroll } from "../router.js";
 import { screenBar } from "../components/layout.js";
+import { whatsappUrl } from "../config.js";
 
 const PAGE = 24;
 
@@ -50,6 +51,14 @@ export function productsView({ query }) {
   const chips = h("div", { class: "chips" });
   const grid = h("div", { class: "grid-2" });
   const msg = h("div", { class: "msg" }, t("loading"));
+  const note = h("div", { class: "list-note", hidden: true });
+  // nothing found (or only close results): ask the pharmacy on WhatsApp
+  const ask = h("a", { class: "btn ghost", target: "_blank", rel: "noopener" }, t("search.ask"));
+  const askRow = h("div", { class: "pad ask-row", hidden: true }, ask);
+  function paintAsk(show) {
+    askRow.hidden = !show;
+    if (show) ask.href = whatsappUrl(t("search.askMsg") + " " + state.q);
+  }
   const auto = typeof IntersectionObserver === "function";
   const moreBtn = h("button", { class: "btn ghost", type: "button", hidden: auto, onClick: () => load(false) }, t("loadMore"));
   const moreNote = h("div", { class: "more-loading", hidden: !auto }, t("loading"));
@@ -92,6 +101,23 @@ export function productsView({ query }) {
         limit, offset: state.loaded
       });
       if (my !== state.request) return;
+      // a search inside a category that finds nothing: search everything
+      const typed = state.typed;
+      state.typed = false;
+      if (typed && reset && state.cat && state.q && !state.set && !state.sale && !d.total) {
+        state.cat = null;
+        if (lastCategories) paintChips(lastCategories);
+        busy = false;
+        await load(true, limit);
+        note.textContent = t("search.everywhere");
+        note.hidden = false;
+        return;
+      }
+      if (reset) {
+        note.hidden = !d.related;
+        if (d.related) note.textContent = t("search.related");
+        paintAsk(!!state.q && !state.set && (!d.total || !!d.related));
+      }
       const items = d.products || [];
       state.total = d.total || 0;
       state.loaded += items.length;
@@ -119,7 +145,9 @@ export function productsView({ query }) {
     }
   }
 
+  let lastCategories = null;
   function paintChips(categories) {
+    lastCategories = categories;
     const top = categories.filter((c) => !c.parentId);
     const list = [{ id: null, name: t("all") }, ...top];
     // a brand/sub-category that isn't in the top row still gets its chip
@@ -148,11 +176,12 @@ export function productsView({ query }) {
     const v = input.value.trim();
     if (v.length === 1) return; // from the 2nd letter; empty = everything
     state.q = v;
+    state.typed = true;
     leaveSet();
     search();
   });
   input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") { e.preventDefault(); input.blur(); search.cancel(); state.q = input.value.trim(); leaveSet(); load(true); }
+    if (e.key === "Enter") { e.preventDefault(); input.blur(); search.cancel(); state.q = input.value.trim(); state.typed = true; leaveSet(); load(true); }
   });
 
   loadCategories().then(paintChips).catch(() => chips.replaceChildren());
@@ -162,7 +191,7 @@ export function productsView({ query }) {
     el: h("div", { class: "screen" },
       screenBar(title),
       h("div", { class: "pad", style: { paddingBottom: "0" } }, input),
-      chips, msg, grid, more),
+      chips, note, msg, askRow, grid, more),
     destroy() { search.cancel(); state.request++; if (watcher) watcher.disconnect(); }
   };
 }

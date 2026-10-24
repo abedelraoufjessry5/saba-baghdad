@@ -39,7 +39,8 @@ function match(pathname) {
     const m = pathname.match(r.re);
     if (m) {
       const params = {};
-      r.keys.forEach((k, i) => (params[k] = decodeURIComponent(m[i + 1])));
+      // a broken link ("%E0%A4%A") must not stop the app
+      r.keys.forEach((k, i) => { try { params[k] = decodeURIComponent(m[i + 1]); } catch (e) { params[k] = m[i + 1]; } });
       return { route: r, params };
     }
   }

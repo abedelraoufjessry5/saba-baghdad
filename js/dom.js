@@ -79,7 +79,7 @@ export function westernDigits(s) {
 
 // Iraqi mobile number -> "07XXXXXXXXX", or null if it isn't one.
 export function normalizePhone(raw) {
-  let s = westernDigits(raw).replace(/[\s\-().]/g, "");
+  let s = westernDigits(raw).replace(/[^\d+]/g, ""); // also the invisible marks phones paste
   if (s.startsWith("+")) s = s.slice(1);
   if (s.startsWith("00")) s = s.slice(2);
   if (s.startsWith("964")) s = "0" + s.slice(3);

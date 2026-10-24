@@ -195,43 +195,43 @@ export const CONCERNS = [
 export const CATEGORIES = [
   {
     "id": "womens-care",
-    "name": "العناية بالمرأة",
+    "name": {"ar": "العناية بالمرأة", "en": "Women's care", "ku": "چاودێری ئافرەت"},
     "icon": "👩",
     "image": "portrait-cheerful-attractive-young-lady-holding-tampon-sanitary-napkin(1).jpg",
     "subs": [
       {
         "id": "sensitive",
-        "name": "العناية بالمناطق الحساسة",
+        "name": {"ar": "العناية بالمناطق الحساسة", "en": "Intimate care", "ku": "چاودێری ناوچە هەستیارەکان"},
         "image": "portrait-cheerful-attractive-young-lady-holding-tampon-sanitary-napkin(1).jpg",
         "set": "sensitive"
       },
       {
         "id": "womens-vitamins-w",
-        "name": "فيتامينات ومكملات المرأة",
+        "name": {"ar": "فيتامينات ومكملات المرأة", "en": "Women's vitamins & supplements", "ku": "ڤیتامین و تەواوکەرەکانی ئافرەت"},
         "image": "front-view-young-woman-posing.jpg",
         "set": "womens-vitamins"
       },
       {
         "id": "anti-wrinkle",
-        "name": "مكافحة التجاعيد",
+        "name": {"ar": "مكافحة التجاعيد", "en": "Anti-wrinkle", "ku": "دژە چرچی"},
         "image": "8610838.jpg",
         "set": "anti-aging"
       },
       {
         "id": "brightening",
-        "name": "تفتيح وتوحيد لون البشرة",
+        "name": {"ar": "تفتيح وتوحيد لون البشرة", "en": "Brightening & even skin tone", "ku": "ڕووناککردنەوە و یەکسانکردنی ڕەنگی پێست"},
         "image": "woman-doing-her-selfcare-ritual.jpg",
         "set": "pigmentation"
       },
       {
         "id": "stretch-marks-women",
-        "name": "علامات التمدد",
+        "name": {"ar": "علامات التمدد", "en": "Stretch marks", "ku": "هێڵەکانی کشانی پێست"},
         "image": "high-angle-hand-holding-cream-container.jpg",
         "set": "stretch-marks"
       },
       {
         "id": "hair-removal-women",
-        "name": "إزالة الشعر",
+        "name": {"ar": "إزالة الشعر", "en": "Hair removal", "ku": "لابردنی موو"},
         "image": "front-view-young-female-with-clock-towel-her-head-pink-background.jpg",
         "set": "hair-removal"
       }
@@ -239,103 +239,103 @@ export const CATEGORIES = [
   },
   {
     "id": "skincare",
-    "name": "العناية بالبشرة",
+    "name": {"ar": "العناية بالبشرة", "en": "Skin care", "ku": "چاودێری پێست"},
     "icon": "🧴",
     "image": "woman-applying-face-cream-front-view.jpg",
     "subs": [
       {
         "id": "eye-care",
-        "name": "حول العين",
+        "name": {"ar": "حول العين", "en": "Eye area", "ku": "دەوروبەری چاو"},
         "image": "woman-posing-with-avocado-front-view.jpg",
         "set": "dark-circles"
       },
       {
         "id": "face-toner",
-        "name": "تونر وجه",
+        "name": {"ar": "تونر وجه", "en": "Face toner", "ku": "تۆنەری دەموچاو"},
         "image": "young-female-pink-bathrobe-holding-make-up-flasks-blue(1).jpg",
         "set": "face-toner"
       },
       {
         "id": "thermal-water",
-        "name": "مياه حرارية",
+        "name": {"ar": "مياه حرارية", "en": "Thermal water", "ku": "ئاوی تێرماڵ"},
         "image": "front-view-young-beautiful-lady-bathrobe-smiles-cleans-away-all-make-up(1).jpg",
         "set": "thermal-water"
       },
       {
         "id": "face-soap",
-        "name": "صابون للوجه",
+        "name": {"ar": "صابون للوجه", "en": "Face soap", "ku": "سابوونی دەموچاو"},
         "image": "young-woman-taking-care-herself-home(1).jpg",
         "set": "face-soap"
       },
       {
         "id": "face-wash",
-        "name": "غسول وجه",
+        "name": {"ar": "غسول وجه", "en": "Face wash", "ku": "پاککەرەوەی دەموچاو"},
         "image": "beautiful-woman-delicately-moisturizes-skin-with-cosmetic-tonic-portrait-lady-with-healthy-skin-without-makeup-isolated-wall(1).jpg",
         "set": "face-wash"
       },
       {
         "id": "face-serum",
-        "name": "سيروم وجه",
+        "name": {"ar": "سيروم وجه", "en": "Face serum", "ku": "سیرۆمی دەموچاو"},
         "image": "woman-applying-serum-her-face(1).jpg",
         "set": "face-serum"
       },
       {
         "id": "sunscreen",
-        "name": "واقي شمس",
+        "name": {"ar": "واقي شمس", "en": "Sunscreen", "ku": "پارێزەری خۆر"},
         "image": "woman-applying-sunscreen-beach-summer-skincare(1).jpg",
         "set": "sun"
       },
       {
         "id": "face-mask",
-        "name": "ماسك وجه",
+        "name": {"ar": "ماسك وجه", "en": "Face mask", "ku": "ماسکی دەموچاو"},
         "image": "woman-wearing-bathrobe-towel-with-facemask(1).jpg",
         "set": "face-mask"
       },
       {
         "id": "lip-care",
-        "name": "العناية بالشفاه",
+        "name": {"ar": "العناية بالشفاه", "en": "Lip care", "ku": "چاودێری لێو"},
         "image": "woman-using-lip-gloss-front-view.jpg",
         "set": "lip-care"
       },
       {
         "id": "face-repair",
-        "name": "مرمم للوجه",
+        "name": {"ar": "مرمم للوجه", "en": "Repairing care", "ku": "چاککەرەوەی پێستی دەموچاو"},
         "image": "woman-looking-away-from-camera.jpg",
         "set": "face-repair"
       },
       {
         "id": "face-moisturizer",
-        "name": "مرطب وجه",
+        "name": {"ar": "مرطب وجه", "en": "Face moisturizer", "ku": "شێدارکەرەوەی دەموچاو"},
         "image": "woman-applying-face-cream-front-view.jpg",
         "set": "face-moisturizer"
       },
       {
         "id": "face-exfoliants",
-        "name": "مقشرات الوجه",
+        "name": {"ar": "مقشرات الوجه", "en": "Face exfoliants", "ku": "توێکڵکەرەوەی دەموچاو"},
         "image": "woman-doing-her-selfcare-ritual.jpg",
         "set": "face-exfoliants"
       },
       {
         "id": "treatment-gel",
-        "name": "علاجات موضعية للحبوب",
+        "name": {"ar": "علاجات موضعية للحبوب", "en": "Spot treatments for acne", "ku": "چارەسەری شوێنیی دانەی لاوان"},
         "image": "clear-gel-being-poured-onto-finger.jpg",
         "set": "treatment-gel"
       },
       {
         "id": "mesotherapy",
-        "name": "بوسترات وشوتات مركّزة",
+        "name": {"ar": "بوسترات وشوتات مركّزة", "en": "Boosters & concentrated shots", "ku": "بووستەر و شۆتی چڕ"},
         "image": "cosmetologist-makes-beauty-injection-woman-s-face-clinic.jpg",
         "set": "mesotherapy"
       },
       {
         "id": "acne-patches",
-        "name": "لاصقات حب الشباب",
+        "name": {"ar": "لاصقات حب الشباب", "en": "Acne patches", "ku": "لکێنەری دانەی لاوان"},
         "image": "1681037440058434300.jpg.webp",
         "set": "acne-patches"
       },
       {
         "id": "beauty-tools",
-        "name": "أدوات العناية بالبشرة",
+        "name": {"ar": "أدوات العناية بالبشرة", "en": "Skin care tools", "ku": "ئامرازەکانی چاودێری پێست"},
         "image": "young-female-pajamas-sleep-mask-holding-spray-pink(1).jpg",
         "set": "beauty-tools"
       }
@@ -343,43 +343,43 @@ export const CATEGORIES = [
   },
   {
     "id": "makeup",
-    "name": "المكياج ومستحضرات التجميل",
+    "name": {"ar": "المكياج ومستحضرات التجميل", "en": "Makeup & cosmetics", "ku": "مەیکئەپ و جوانکاری"},
     "icon": "💄",
     "image": "front-view-young-attractive-female-doing-her-make-up-with-mascara-dark-pink-wall-model-color-female-young-girl(1).jpg",
     "subs": [
       {
         "id": "lipstick",
-        "name": "أحمر وملمع الشفاه",
+        "name": {"ar": "أحمر وملمع الشفاه", "en": "Lipstick & lip gloss", "ku": "سووراو و بریقەی لێو"},
         "image": "woman-using-lip-gloss-front-view.jpg",
         "set": "lipstick"
       },
       {
         "id": "foundation",
-        "name": "فاونديشن وكونسيلر",
+        "name": {"ar": "فاونديشن وكونسيلر", "en": "Foundation & concealer", "ku": "فاوندەیشن و کۆنسیلەر"},
         "image": "young-female-pink-bathrobe-holding-make-up-flasks-blue(1).jpg",
         "set": "foundation"
       },
       {
         "id": "blush",
-        "name": "بلاشر",
+        "name": {"ar": "بلاشر", "en": "Blush", "ku": "بلاشەر"},
         "image": "front-view-young-attractive-female-doing-her-make-up-with-mascara-dark-pink-wall-model-color-female-young-girl(1).jpg",
         "set": "blush"
       },
       {
         "id": "primer",
-        "name": "برايمر ومثبت المكياج",
+        "name": {"ar": "برايمر ومثبت المكياج", "en": "Primer & setting spray", "ku": "پرایمەر و جێگیرکەری مەیکئەپ"},
         "image": "beautiful-woman-delicately-moisturizes-skin-with-cosmetic-tonic-portrait-lady-with-healthy-skin-without-makeup-isolated-wall(1).jpg",
         "set": "primer"
       },
       {
         "id": "lashes-brows",
-        "name": "الرموش والحواجب",
+        "name": {"ar": "الرموش والحواجب", "en": "Lashes & brows", "ku": "برژانگ و برۆ"},
         "image": "front-view-young-attractive-female-doing-her-make-up-with-mascara-dark-pink-wall-model-color-female-young-girl(1).jpg",
         "set": "lashes-brows"
       },
       {
         "id": "makeup-remover-mk",
-        "name": "مزيل المكياج",
+        "name": {"ar": "مزيل المكياج", "en": "Makeup remover", "ku": "لابەری مەیکئەپ"},
         "image": "front-view-young-beautiful-lady-bathrobe-smiles-cleans-away-all-make-up(1).jpg",
         "set": "makeup-remover"
       }
@@ -387,43 +387,43 @@ export const CATEGORIES = [
   },
   {
     "id": "haircare",
-    "name": "العناية بالشعر",
+    "name": {"ar": "العناية بالشعر", "en": "Hair care", "ku": "چاودێری قژ"},
     "icon": "💇‍♀️",
     "image": "Screenshot-2026-02-02-at-14-36-48-Woman-brushing-hair-after-washing-it-Free-Photo.png",
     "subs": [
       {
         "id": "shampoo",
-        "name": "شامبو",
+        "name": {"ar": "شامبو", "en": "Shampoo", "ku": "شامپۆ"},
         "image": "young-woman-applying-anti-dandruff-product.jpg",
         "set": "shampoo"
       },
       {
         "id": "conditioner",
-        "name": "بلسم",
+        "name": {"ar": "بلسم", "en": "Conditioner", "ku": "بەلسەم"},
         "image": "Screenshot-2026-02-02-at-14-36-48-Woman-brushing-hair-after-washing-it-Free-Photo.png",
         "set": "conditioner"
       },
       {
         "id": "hair-serum-oil",
-        "name": "سيروم وزيوت للشعر",
+        "name": {"ar": "سيروم وزيوت للشعر", "en": "Hair serums & oils", "ku": "سیرۆم و ڕۆنی قژ"},
         "image": "medium-shot-young-woman-using-serum.jpg",
         "set": "hair-serum-oil"
       },
       {
         "id": "hair-mask",
-        "name": "ماسك شعر",
+        "name": {"ar": "ماسك شعر", "en": "Hair mask", "ku": "ماسکی قژ"},
         "image": "Screenshot-2026-02-02-at-14-38-19-Young-woman-applying-anti-dandruff-product-Free-Photo.png",
         "set": "hair-mask"
       },
       {
         "id": "leave-in-cream",
-        "name": "ليف إن وتصفيف الشعر",
+        "name": {"ar": "ليف إن وتصفيف الشعر", "en": "Leave-in & styling", "ku": "لیڤ-ئین و ڕێکخستنی قژ"},
         "image": "young-woman-applying-anti-dandruff-product.jpg",
         "set": "leave-in-cream"
       },
       {
         "id": "hair-loss-treatment",
-        "name": "علاج تساقط الشعر",
+        "name": {"ar": "علاج تساقط الشعر", "en": "Hair loss treatment", "ku": "چارەسەری وەرینی قژ"},
         "image": "Screenshot-2026-02-02-at-14-41-12-Woman-doing-herself-a-scalp-massage-Free-Photo.png",
         "set": "hair-loss-treatment"
       }
@@ -431,37 +431,37 @@ export const CATEGORIES = [
   },
   {
     "id": "footcare",
-    "name": "العناية بالقدم",
+    "name": {"ar": "العناية بالقدم", "en": "Foot care", "ku": "چاودێری پێ"},
     "icon": "🦶",
     "image": "woman-having-foot-treatment.jpg",
     "subs": [
       {
         "id": "foot-cream",
-        "name": "كريم قدم",
+        "name": {"ar": "كريم قدم", "en": "Foot cream", "ku": "کرێمی پێ"},
         "image": "https://saba-baghdad.odoo.com/web/image/7791-efa132b4/128701.webp",
         "set": "foot-cream"
       },
       {
         "id": "heel-cracks",
-        "name": "تشققات الكعب",
+        "name": {"ar": "تشققات الكعب", "en": "Cracked heels", "ku": "درزی پاژنە"},
         "image": "https://saba-baghdad.odoo.com/web/image/7792-545ac3f6/woman-cracked-heels-with-white-background-foot-healthy-concept.webp",
         "set": "heel-cracks"
       },
       {
         "id": "dead-skin",
-        "name": "الجلد الميت ومسمار القدم",
+        "name": {"ar": "الجلد الميت ومسمار القدم", "en": "Dead skin & corns", "ku": "پێستی مردوو و بزمارەی پێ"},
         "image": "https://saba-baghdad.odoo.com/web/image/7791-efa132b4/128701.webp",
         "set": "dead-skin"
       },
       {
         "id": "foot-odor",
-        "name": "رائحة وتعرق القدم",
+        "name": {"ar": "رائحة وتعرق القدم", "en": "Foot odor & sweat", "ku": "بۆن و ئارەقی پێ"},
         "image": "https://saba-baghdad.odoo.com/web/image/7789-47e8f03b/92672761_10004424.webp",
         "set": "foot-odor"
       },
       {
         "id": "foot-insoles",
-        "name": "دبانات ومساند القدم",
+        "name": {"ar": "دبانات ومساند القدم", "en": "Insoles & foot supports", "ku": "ناوپێڵاو و پشتگیری پێ"},
         "image": "https://saba-baghdad.odoo.com/web/image/7793-f21ee788/acupressure-big-toe-pad-foot-reflexology-session.webp",
         "set": "foot-insoles"
       }
@@ -469,37 +469,37 @@ export const CATEGORIES = [
   },
   {
     "id": "mens-care",
-    "name": "العناية للرجال",
+    "name": {"ar": "العناية للرجال", "en": "Men's care", "ku": "چاودێری پیاوان"},
     "icon": "🧔‍♂️",
     "image": "side-view-smiley-man-with-skin-problems(1).jpg",
     "subs": [
       {
         "id": "aftershave",
-        "name": "الحلاقة وما بعد الحلاقة",
+        "name": {"ar": "الحلاقة وما بعد الحلاقة", "en": "Shaving & aftershave", "ku": "تاشین و دوای تاشین"},
         "image": "https://saba-baghdad.odoo.com/web/image/7812-ab96ed87/2148883824.webp",
         "set": "aftershave"
       },
       {
         "id": "mens-hair-loss",
-        "name": "شعر الرجال والتساقط",
+        "name": {"ar": "شعر الرجال والتساقط", "en": "Men's hair & hair loss", "ku": "قژی پیاوان و وەرین"},
         "image": "https://images.unsplash.com/photo-1585751119414-ef2636f8aede?w=400&h=400&fit=crop",
         "set": "mens-hair-loss"
       },
       {
         "id": "mens-deodorant",
-        "name": "مزيلات العرق للرجال",
+        "name": {"ar": "مزيلات العرق للرجال", "en": "Men's deodorants", "ku": "بۆنلابەری پیاوان"},
         "image": "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=400&h=400&fit=crop",
         "set": "mens-deodorant"
       },
       {
         "id": "mens-body-care",
-        "name": "العناية الشخصية للرجال",
+        "name": {"ar": "العناية الشخصية للرجال", "en": "Men's personal care", "ku": "چاودێری کەسیی پیاوان"},
         "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
         "set": "mens-body-care"
       },
       {
         "id": "mens-vitamins-m",
-        "name": "فيتامينات الرجال",
+        "name": {"ar": "فيتامينات الرجال", "en": "Men's vitamins", "ku": "ڤیتامینی پیاوان"},
         "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop",
         "set": "mens-vitamins"
       }
@@ -507,37 +507,37 @@ export const CATEGORIES = [
   },
   {
     "id": "mom-baby",
-    "name": "العناية بالأم والطفل",
+    "name": {"ar": "العناية بالأم والطفل", "en": "Mother & baby", "ku": "دایک و منداڵ"},
     "icon": "👶",
     "image": "front-view-young-female-with-clock-towel-her-head-pink-background.jpg",
     "subs": [
       {
         "id": "pregnancy-followup",
-        "name": "الحمل والخصوبة",
+        "name": {"ar": "الحمل والخصوبة", "en": "Pregnancy & fertility", "ku": "دووگیانی و بەپیتی"},
         "image": "https://images.unsplash.com/photo-1544126592-807ade215a0b?w=400&h=400&fit=crop",
         "set": "pregnancy-followup"
       },
       {
         "id": "sleep-breastfeeding",
-        "name": "الرضاعة",
+        "name": {"ar": "الرضاعة", "en": "Breastfeeding", "ku": "شیردان"},
         "image": "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=400&h=400&fit=crop",
         "set": "sleep-breastfeeding"
       },
       {
         "id": "baby-skin",
-        "name": "العناية ببشرة الطفل",
+        "name": {"ar": "العناية ببشرة الطفل", "en": "Baby skin care", "ku": "چاودێری پێستی منداڵ"},
         "image": "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop",
         "set": "baby-skin"
       },
       {
         "id": "kids-vitamins-m",
-        "name": "فيتامينات وتغذية الأطفال",
+        "name": {"ar": "فيتامينات وتغذية الأطفال", "en": "Kids' vitamins & nutrition", "ku": "ڤیتامین و خۆراکی منداڵان"},
         "image": "https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=400&h=400&fit=crop",
         "set": "kids-vitamins"
       },
       {
         "id": "child-health",
-        "name": "صحة الطفل",
+        "name": {"ar": "صحة الطفل", "en": "Child health", "ku": "تەندروستی منداڵ"},
         "image": "https://images.unsplash.com/photo-1489710437720-ebb67ec84dd2?w=400&h=400&fit=crop",
         "set": "child-health"
       }
@@ -545,19 +545,19 @@ export const CATEGORIES = [
   },
   {
     "id": "nail-care",
-    "name": "العناية بالأظافر واليدين",
+    "name": {"ar": "العناية بالأظافر واليدين", "en": "Nails & hands", "ku": "نینۆک و دەست"},
     "icon": "💅",
     "image": "front-view-working-woman-holding-cup-coffee-desk.jpg",
     "subs": [
       {
         "id": "nail-strengtheners",
-        "name": "مقويات الأظافر",
+        "name": {"ar": "مقويات الأظافر", "en": "Nail strengtheners", "ku": "بەهێزکەری نینۆک"},
         "image": "https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400&h=400&fit=crop",
         "set": "nail-strengtheners"
       },
       {
         "id": "hand-care",
-        "name": "كريمات اليدين",
+        "name": {"ar": "كريمات اليدين", "en": "Hand creams", "ku": "کرێمی دەست"},
         "image": "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop",
         "set": "hand-care"
       }
@@ -565,31 +565,31 @@ export const CATEGORIES = [
   },
   {
     "id": "body-care",
-    "name": "العناية بالجسم",
+    "name": {"ar": "العناية بالجسم", "en": "Body care", "ku": "چاودێری لەش"},
     "icon": "🧼",
     "image": "close-up-woman-applying-deodorant-arm(1).jpg",
     "subs": [
       {
         "id": "body-lightening",
-        "name": "تفتيح وتقشير",
+        "name": {"ar": "تفتيح وتقشير", "en": "Brightening & exfoliating", "ku": "ڕووناککردنەوە و توێکڵکردن"},
         "image": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&h=400&fit=crop",
         "set": "body-lightening"
       },
       {
         "id": "body-moisturizer",
-        "name": "ترطيب الجسم",
+        "name": {"ar": "ترطيب الجسم", "en": "Body moisturizer", "ku": "شێدارکەرەوەی لەش"},
         "image": "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&h=400&fit=crop",
         "set": "body-moisturizer"
       },
       {
         "id": "body-wash",
-        "name": "غسول الجسم",
+        "name": {"ar": "غسول الجسم", "en": "Body wash", "ku": "شامپۆی لەش"},
         "image": "https://plain-eeur-prod-public.komododecks.com/202603/25/84ZGv22cWibwwqDNI73R/image.png",
         "set": "body-wash"
       },
       {
         "id": "body-oil",
-        "name": "زيت للجسم",
+        "name": {"ar": "زيت للجسم", "en": "Body oil", "ku": "ڕۆنی لەش"},
         "image": "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop",
         "set": "body-oil"
       }
@@ -597,31 +597,31 @@ export const CATEGORIES = [
   },
   {
     "id": "oral-care",
-    "name": "العناية بالفم",
+    "name": {"ar": "العناية بالفم", "en": "Oral care", "ku": "چاودێری دەم"},
     "icon": "🦷",
     "image": "front-view-young-woman-posing.jpg",
     "subs": [
       {
         "id": "toothpaste",
-        "name": "معجون أسنان",
+        "name": {"ar": "معجون أسنان", "en": "Toothpaste", "ku": "هەویری ددان"},
         "image": "https://images.unsplash.com/photo-1579154341098-e4e158cc7f55?w=400&h=400&fit=crop",
         "set": "toothpaste"
       },
       {
         "id": "toothbrush",
-        "name": "فرشاة أسنان",
+        "name": {"ar": "فرشاة أسنان", "en": "Toothbrush", "ku": "فڵچەی ددان"},
         "image": "https://images.unsplash.com/photo-1559131397-f94da358f7ca?w=400&h=400&fit=crop",
         "set": "toothbrush"
       },
       {
         "id": "mouthwash",
-        "name": "غسول الفم",
+        "name": {"ar": "غسول الفم", "en": "Mouthwash", "ku": "دەمشۆر"},
         "image": "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=400&h=400&fit=crop",
         "set": "mouthwash"
       },
       {
         "id": "breath-strips",
-        "name": "معطرات الفم ومثبت الأطقم",
+        "name": {"ar": "معطرات الفم ومثبت الأطقم", "en": "Breath fresheners & denture fixatives", "ku": "بۆنخۆشکەری دەم و جێگیرکەری ددانی دەستکرد"},
         "image": "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=400&h=400&fit=crop",
         "set": "breath-strips"
       }
@@ -629,91 +629,91 @@ export const CATEGORIES = [
   },
   {
     "id": "vitamins",
-    "name": "الفيتامينات",
+    "name": {"ar": "الفيتامينات", "en": "Vitamins", "ku": "ڤیتامینەکان"},
     "icon": "🍊",
     "image": "woman-posing-with-avocado-front-view.jpg",
     "subs": [
       {
         "id": "energy-activity-vitamins",
-        "name": "فيتامينات الطاقة والنشاط",
+        "name": {"ar": "فيتامينات الطاقة والنشاط", "en": "Energy & vitality", "ku": "وزە و چالاکی"},
         "image": "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=400&fit=crop",
         "set": "energy-activity-vitamins"
       },
       {
         "id": "immunity-vitamins",
-        "name": "فيتامينات المناعة",
+        "name": {"ar": "فيتامينات المناعة", "en": "Immunity", "ku": "بەرگری لەش"},
         "image": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop",
         "set": "immunity-vitamins"
       },
       {
         "id": "skin-beauty-vitamins",
-        "name": "فيتامينات البشرة والجمال",
+        "name": {"ar": "فيتامينات البشرة والجمال", "en": "Skin & beauty", "ku": "پێست و جوانی"},
         "image": "https://images.unsplash.com/photo-1612817288484-6f916006741a?w=400&h=400&fit=crop",
         "set": "skin-beauty-vitamins"
       },
       {
         "id": "hair-nails-vitamins",
-        "name": "فيتامينات الشعر والأظافر",
+        "name": {"ar": "فيتامينات الشعر والأظافر", "en": "Hair & nails", "ku": "قژ و نینۆک"},
         "image": "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=400&fit=crop",
         "set": "hair-nails-vitamins"
       },
       {
         "id": "bones-joints-vitamins",
-        "name": "فيتامينات العظام والمفاصل",
+        "name": {"ar": "فيتامينات العظام والمفاصل", "en": "Bones & joints", "ku": "ئێسک و جومگە"},
         "image": "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&h=400&fit=crop",
         "set": "bones-joints-vitamins"
       },
       {
         "id": "heart-circulation-vitamins",
-        "name": "فيتامينات القلب والدورة الدموية",
+        "name": {"ar": "فيتامينات القلب والدورة الدموية", "en": "Heart & circulation", "ku": "دڵ و سووڕی خوێن"},
         "image": "https://images.unsplash.com/photo-1628348070889-cb656235b4eb?w=400&h=400&fit=crop",
         "set": "heart-circulation-vitamins"
       },
       {
         "id": "focus-memory-vitamins",
-        "name": "فيتامينات التركيز والذاكرة",
+        "name": {"ar": "فيتامينات التركيز والذاكرة", "en": "Focus & memory", "ku": "سەرنج و یادەوەری"},
         "image": "https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=400&h=400&fit=crop",
         "set": "focus-memory-vitamins"
       },
       {
         "id": "sleep-relaxation-vitamins",
-        "name": "فيتامينات النوم والراحة",
+        "name": {"ar": "فيتامينات النوم والراحة", "en": "Sleep & relaxation", "ku": "خەو و پشوو"},
         "image": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=400&h=400&fit=crop",
         "set": "sleep-relaxation-vitamins"
       },
       {
         "id": "general-supplements",
-        "name": "مكملات غذائية عامة",
+        "name": {"ar": "مكملات غذائية عامة", "en": "General supplements", "ku": "تەواوکەری خۆراکی گشتی"},
         "image": "https://images.unsplash.com/photo-1550572017-edd951aa8f72?w=400&h=400&fit=crop",
         "set": "general-supplements"
       },
       {
         "id": "antioxidants",
-        "name": "مضادات الأكسدة",
+        "name": {"ar": "مضادات الأكسدة", "en": "Antioxidants", "ku": "دژەئۆکسانەکان"},
         "image": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=400&h=400&fit=crop",
         "set": "antioxidants"
       },
       {
         "id": "probiotics-digestive",
-        "name": "البروبيوتيك وصحة الجهاز الهضمي",
+        "name": {"ar": "البروبيوتيك وصحة الجهاز الهضمي", "en": "Probiotics & digestion", "ku": "پرۆبایۆتیک و هەرس"},
         "image": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop",
         "set": "probiotics-digestive"
       },
       {
         "id": "mineral-deficiency-vitamins",
-        "name": "فيتامينات نقص العناصر",
+        "name": {"ar": "فيتامينات نقص العناصر", "en": "Mineral deficiency", "ku": "کەمیی کانزاکان"},
         "image": "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400&h=400&fit=crop",
         "set": "mineral-deficiency-vitamins"
       },
       {
         "id": "diabetes-vitamins",
-        "name": "فيتامينات لمرضى السكري",
+        "name": {"ar": "فيتامينات لمرضى السكري", "en": "For people with diabetes", "ku": "بۆ نەخۆشانی شەکرە"},
         "image": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&h=400&fit=crop",
         "set": "diabetes-vitamins"
       },
       {
         "id": "weight-loss",
-        "name": "التنحيف وإدارة الوزن",
+        "name": {"ar": "التنحيف وإدارة الوزن", "en": "Weight management", "ku": "کۆنترۆڵی کێش"},
         "image": "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=400&fit=crop",
         "set": "weight-loss"
       }
@@ -721,43 +721,43 @@ export const CATEGORIES = [
   },
   {
     "id": "medical-supplies",
-    "name": "المستلزمات الطبية",
+    "name": {"ar": "المستلزمات الطبية", "en": "Medical supplies", "ku": "پێداویستییە پزیشکییەکان"},
     "icon": "🩺",
     "image": "cosmetologist-makes-beauty-injection-woman-s-face-clinic.jpg",
     "subs": [
       {
         "id": "glucose-monitors",
-        "name": "أجهزة وشرائط فحص السكر",
+        "name": {"ar": "أجهزة وشرائط فحص السكر", "en": "Glucose meters & strips", "ku": "ئامێر و شریتی پشکنینی شەکرە"},
         "image": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&h=400&fit=crop",
         "set": "glucose-monitors"
       },
       {
         "id": "blood-pressure-monitors",
-        "name": "أجهزة فحص الضغط",
+        "name": {"ar": "أجهزة فحص الضغط", "en": "Blood pressure monitors", "ku": "ئامێری پشکنینی پەستانی خوێن"},
         "image": "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=400&h=400&fit=crop",
         "set": "blood-pressure-monitors"
       },
       {
         "id": "thermometers",
-        "name": "مقياس حرارة",
+        "name": {"ar": "مقياس حرارة", "en": "Thermometers", "ku": "گەرمیپێو"},
         "image": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop",
         "set": "thermometers"
       },
       {
         "id": "first-aid",
-        "name": "الإسعافات الأولية والضمادات",
+        "name": {"ar": "الإسعافات الأولية والضمادات", "en": "First aid & dressings", "ku": "فریاکەوتنی سەرەتایی و پێچانەوە"},
         "image": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=400&h=400&fit=crop",
         "set": "first-aid"
       },
       {
         "id": "support-braces",
-        "name": "مشدات ومساند طبية",
+        "name": {"ar": "مشدات ومساند طبية", "en": "Medical braces & supports", "ku": "پشتێن و پاڵپشتی پزیشکی"},
         "image": "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=400&h=400&fit=crop",
         "set": "support-braces"
       },
       {
         "id": "catheters",
-        "name": "كيترات الركبة والكاحل",
+        "name": {"ar": "كيترات الركبة والكاحل", "en": "Knee & ankle supports", "ku": "پشتگیری ئەژنۆ و قولەپێ"},
         "image": "https://images.unsplash.com/photo-1583912267550-d974311a9a6e?w=400&h=400&fit=crop",
         "set": "catheters"
       }
@@ -1053,7 +1053,7 @@ export const FEATURED = [
     "name": "La Roche-Posay Hyalu B5 — سيروم علاج التجاعيد ٣٠ مل",
     "price": 69000,
     "badge": "الأكثر مبيعاً",
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/25/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/25/image_512"
   },
   {
     "id": 11,
@@ -1062,7 +1062,7 @@ export const FEATURED = [
     "name": "Sesderma K-VIT — سيروم الهالات السوداء",
     "price": 50000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/11/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/11/image_512"
   },
   {
     "id": 10,
@@ -1071,7 +1071,7 @@ export const FEATURED = [
     "name": "Sesderma SES Vitamin-C — فلويد فيتامين سي للنضارة",
     "price": 44000,
     "badge": "موصى به",
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/10/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/10/image_512"
   },
   {
     "id": 16,
@@ -1080,7 +1080,7 @@ export const FEATURED = [
     "name": "BIODERMA Sebium H2O — مايسلر للبشرة الدهنية ٢٥٠ مل",
     "price": 16000,
     "badge": "أرخص سعر",
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/16/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/16/image_512"
   },
   {
     "id": 15,
@@ -1089,7 +1089,7 @@ export const FEATURED = [
     "name": "BIODERMA Sébium Pore Refiner — لعلاج المسامات ٣٠ مل",
     "price": 27000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/15/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/15/image_512"
   },
   {
     "id": 17,
@@ -1098,7 +1098,7 @@ export const FEATURED = [
     "name": "BIODERMA Sensibio — جل رغوي للبشرة الحساسة ٥٠٠ مل",
     "price": 26000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/17/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/17/image_512"
   },
   {
     "id": 18,
@@ -1107,7 +1107,7 @@ export const FEATURED = [
     "name": "BIODERMA Sébium Gel Moussant — غسول للبشرة الدهنية ٥٠٠ مل",
     "price": 25000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/18/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/18/image_512"
   },
   {
     "id": 24,
@@ -1116,7 +1116,7 @@ export const FEATURED = [
     "name": "La Roche-Posay Anthelios Kids SPF50+ — واقي شمس للأطفال",
     "price": 39000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/24/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/24/image_512"
   },
   {
     "id": 12,
@@ -1125,7 +1125,7 @@ export const FEATURED = [
     "name": "Sesderma Repaskin Dry Touch — واقي شمس دراي تاتش",
     "price": 23000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/12/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/12/image_512"
   },
   {
     "id": 9,
@@ -1134,7 +1134,7 @@ export const FEATURED = [
     "name": "Sesderma Silkses — كريم مرطب ومرمم للبشرة",
     "price": 32000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/9/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/9/image_512"
   },
   {
     "id": 13,
@@ -1143,7 +1143,7 @@ export const FEATURED = [
     "name": "Sesderma Hidraven — غسول رغوي خالٍ من الصابون",
     "price": 24000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/13/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/13/image_512"
   },
   {
     "id": 14,
@@ -1152,7 +1152,7 @@ export const FEATURED = [
     "name": "Sesderma Seskavel Growth — لوشن مضاد لتساقط الشعر",
     "price": 30000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/14/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/14/image_512"
   },
   {
     "id": 3361,
@@ -1170,7 +1170,7 @@ export const FEATURED = [
     "name": "SVR Topialyse — غسول للبشرة الجافة والحساسة ٤٠٠ مل",
     "price": 28500,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/21/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/21/image_512"
   },
   {
     "id": 3369,
@@ -1188,7 +1188,7 @@ export const FEATURED = [
     "name": "The INKEY List Retinol Serum — سيروم الريتينول ٣٠ مل",
     "price": 23000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/29/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/29/image_512"
   },
   {
     "id": 30,
@@ -1197,7 +1197,7 @@ export const FEATURED = [
     "name": "The INKEY List — كريم ريتينول حول العين",
     "price": 30000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/30/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/30/image_512"
   },
   {
     "id": 2970,
@@ -1215,7 +1215,7 @@ export const FEATURED = [
     "name": "Foltène Pharma — شامبو نسائي لتقوية الشعر",
     "price": 22000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/2/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/2/image_512"
   },
   {
     "id": 7,
@@ -1224,7 +1224,7 @@ export const FEATURED = [
     "name": "Foltène Pharma — علاج الشعر وفروة الرأس للرجال",
     "price": 45000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/7/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/7/image_512"
   }
 ];
 

@@ -30,6 +30,8 @@ export const KEYS = {
   cart: "saba.cart.v1",
   auth: "saba.auth.v2",
   zone: "saba.zone",
+  pending: "saba.pending", // the key of an order being sent (no duplicates after a reload)
+  draft: "saba.draft", // name/phone/address typed in the cart, until the order is placed
   orders: "saba.orders.v2",
   legacyOrders: "saba.orders.v1",
   legacy: ["saba.addr", "saba.auth.v1"] // removed on start-up

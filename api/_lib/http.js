@@ -2,17 +2,21 @@
 
 export class HttpError extends Error {
   // expose: the message is safe to show to the customer
-  constructor(status, message, { expose = true } = {}) {
+  // data: extra fields sent with the error (e.g. which products)
+  constructor(status, message, { expose = true, data = null } = {}) {
     super(message);
     this.status = status;
     this.expose = expose;
+    this.data = data;
   }
 }
 
 export function send(res, data, cacheSeconds = 0) {
   if (cacheSeconds > 0) {
     // Vercel's edge keeps the answer, so repeat visitors don't wait for Odoo.
-    res.setHeader("Cache-Control", `s-maxage=${cacheSeconds}, stale-while-revalidate=${cacheSeconds * 10}`);
+    // A short stale window: a changed price or an ended offer shows within
+    // a couple of minutes, not an hour later.
+    res.setHeader("Cache-Control", `s-maxage=${cacheSeconds}, stale-while-revalidate=${Math.min(cacheSeconds, 120)}`);
   } else {
     res.setHeader("Cache-Control", "no-store");
   }
@@ -62,7 +66,7 @@ export function handler(methods, fn) {
     } catch (err) {
       if (err instanceof HttpError) {
         if (err.status >= 500) console.error(err);
-        res.status(err.status).json({ error: err.expose ? err.message : "Server error" });
+        res.status(err.status).json({ error: err.expose ? err.message : "Server error", ...(err.expose && err.data ? err.data : {}) });
       } else {
         console.error(err);
         res.status(502).json({ error: "تعذّر الاتصال بالمتجر، يرجى المحاولة بعد قليل" });

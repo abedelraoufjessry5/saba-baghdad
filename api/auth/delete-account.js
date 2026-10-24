@@ -18,7 +18,8 @@ export default handler(["POST"], async (req, res) => {
   if (!user) throw new HttpError(401, "انتهت الجلسة، سجّلوا الدخول مرة ثانية");
   if (!user.share) throw new HttpError(403, "لا يمكن حذف هذا الحساب من التطبيق"); // never staff accounts
   const uid = await authenticateUser(user.login, password);
-  if (uid !== session.uid) throw new HttpError(401, "كلمة المرور غير صحيحة");
+  // 403, not 401: a 401 makes the app sign the customer out
+  if (uid !== session.uid) throw new HttpError(403, "كلمة المرور غير صحيحة");
 
   const pid = user.partner_id[0];
   // free the email (so it can sign up again later) and close the account

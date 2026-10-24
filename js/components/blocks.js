@@ -138,11 +138,17 @@ export function matchCategory(categories, name) {
   return hit ? hit.id : null;
 }
 
+// The brand's category in Odoo (only categories with products are listed);
+// no category: search the brand's name.
 async function openBrand(b) {
   let cat = null;
-  try { cat = matchCategory(await loadCategories(), b.name); } catch (e) { /* offline: use the fallback */ }
+  try {
+    const cats = await loadCategories();
+    cat = matchCategory(cats, b.name) || (cats.some((c) => c.id === b.cat) ? b.cat : null);
+  } catch (e) {
+    cat = b.cat || null; // offline: the saved category
+  }
   if (cat) navigate("/products?cat=" + cat);
-  else if (b.cat) navigate("/products?cat=" + b.cat);
   else navigate("/products?q=" + encodeURIComponent(b.q || b.name));
 }
 
@@ -199,11 +205,11 @@ export function categoryList() {
       c.subs.map((s) =>
         h("a", { class: "cat-sub press", href: linkFor(s) },
           s.image ? hideOnError(h("img", { src: contentImage(s.image), alt: "", loading: "lazy", decoding: "async" })) : null,
-          h("span", null, s.name))));
+          h("span", null, pickLang(s.name)))));
     const head = h("button", { class: "cat-head press", type: "button", "aria-expanded": "false" },
       iconBox,
       h("span", { class: "cat-txt" },
-        h("span", { class: "n truncate" }, c.name),
+        h("span", { class: "n truncate" }, pickLang(c.name)),
         h("span", { class: "c" }, c.subs.length + " " + t("cats.count"))),
       chevron);
     return { c, head, subs, chevron, el: h("div", { class: "cat" }, head, subs) };
