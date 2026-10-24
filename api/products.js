@@ -73,8 +73,9 @@ export default handler(["GET"], async (req, res) => {
     domain.push(...set.domain);
   }
 
-  // free search: word by word
+  // free search: word by word (only marks or one letter: nothing to look for)
   const groups = !set && q ? parseQuery(q) : [];
+  if (!set && q && String(q).trim() && !groups.length) return send(res, { products: [], total: 0 }, 120);
   const codeFields = groups.length ? await existingFields("product.template", ["default_code", "barcode"]).catch(() => []) : [];
   if (groups.length && on_sale === "1") domain.push(...wordsDomain(groups, ["name", ...descFields], codeFields));
 

@@ -205,11 +205,11 @@ export function categoryList() {
       c.subs.map((s) =>
         h("a", { class: "cat-sub press", href: linkFor(s) },
           s.image ? hideOnError(h("img", { src: contentImage(s.image), alt: "", loading: "lazy", decoding: "async" })) : null,
-          h("span", null, s.name))));
+          h("span", null, pickLang(s.name)))));
     const head = h("button", { class: "cat-head press", type: "button", "aria-expanded": "false" },
       iconBox,
       h("span", { class: "cat-txt" },
-        h("span", { class: "n truncate" }, c.name),
+        h("span", { class: "n truncate" }, pickLang(c.name)),
         h("span", { class: "c" }, c.subs.length + " " + t("cats.count"))),
       chevron);
     return { c, head, subs, chevron, el: h("div", { class: "cat" }, head, subs) };

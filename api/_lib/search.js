@@ -103,7 +103,9 @@ export const SYNONYMS = {
   "كي 18": "k18",
   // product words
   "ريتينول": "retinol", "نياسيناميد": "niacinamide", "نياسينامايد": "niacinamide",
-  "فيتامين سي": "vitamin c", "فيتامين": "vitamin", "هيالورونيك": "hyaluronic", "هيالورون": "hyaluron",
+  "فيتامين سي": "vitamin c", "فيتامين c": "vitamin c", "فيتامين د": "vitamin d", "فيتامين دي": "vitamin d",
+  "فيتامين ب": "vitamin b", "فيتامين بي": "vitamin b", "فيتامين اي": "vitamin e", "فيتامين ا": "vitamin a",
+  "اوميغا 3": "omega 3", "اوميجا 3": "omega 3", "فيتامين": "vitamin", "هيالورونيك": "hyaluronic", "هيالورون": "hyaluron",
   "كولاجين": "collagen", "بيوتين": "biotin", "زنك": "zinc", "اوميغا": "omega", "اوميجا": "omega",
   "مغنيسيوم": "magnesium", "كالسيوم": "calcium", "حديد": "iron",
   "واقي شمس": "sun", "واقي الشمس": "sun", "واقي": "sun", "صن بلوك": "sun", "صن سكرين": "sun",
@@ -138,8 +140,8 @@ export function cleanQuery(q) {
     .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
     .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
     .replace(/[یێ]/g, "ي").replace(/ک/g, "ك").replace(/ە/g, "ه").replace(/ۆ/g, "و").replace(/ڵ/g, "ل").replace(/ڕ/g, "ر")
-    .normalize("NFD").replace(/[̀-ͯ]/g, "") // é -> e
-    .replace(/[ً-ٰٟـ]/g, "") // Arabic diacritics, tatweel
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "").normalize("NFC") // é -> e (ئ and ؤ stay)
+    .replace(/[\u064B-\u0652\u0670\u0640]/g, "") // Arabic diacritics, tatweel
     .toLowerCase()
     .replace(/[^\p{L}\p{N}]+/gu, " ") // punctuation, % and _ too
     .trim();
@@ -155,8 +157,11 @@ function splitMixed(word) {
 export function pattern(word) {
   if (AR.test(word)) {
     // (an alef at the very end stays: "التيا" must not find "التي ...")
-    const p = normalizeAr(word)
+    // hamza seats (ئ ؤ ء) and the Persian/Kurdish گ چ ڤ may be written
+    // several ways, so they match any letter; پ is written ب
+    const p = normalizeAr(word.replace(/پ/g, "ب"))
       .replace(/ا(?!$| )/g, "_")
+      .replace(/[ئؤءگچڤ]/g, "_")
       .replace(/[يه](?=$| )/g, "_");
     const letters = p.replace(/[_ ]/g, "").length;
     return letters >= 2 && letters * 2 >= p.replace(/ /g, "").length ? p : normalizeAr(word);
@@ -189,8 +194,15 @@ const synOf = (w) => SYN.get(normalizeAr(w)) || [];
 
 // The words of a query, each with the patterns that may stand for it.
 // [{ word, alts: ["patt1", "patt2"] }]
+const MAX_WORDS = 6;
+
 export function parseQuery(q) {
-  let words = cleanQuery(q).split(" ").filter(Boolean).flatMap(splitMixed);
+  const words = [];
+  for (const w of cleanQuery(q).split(" ").filter(Boolean).flatMap(splitMixed)) {
+    // a single letter belongs to the word before: "vitamin d", "فيتامين د"
+    if (w.length === 1 && !/\d/.test(w) && words.length) words[words.length - 1] += " " + w;
+    else words.push(w);
+  }
   const groups = [];
   for (let i = 0; i < words.length; i++) {
     // two/three-word names first: "لا روش", "سوم باي مي", "فيتامين سي"
@@ -210,7 +222,7 @@ export function parseQuery(q) {
     groups.push(hit);
   }
   const useful = groups.filter((g) => !FILLER.has(normalizeAr(g.word)) && (g.word.length > 1 || /\d/.test(g.word)));
-  return useful.length ? useful : groups.filter((g) => g.word.length > 1).slice(0, 1);
+  return (useful.length ? useful : groups.filter((g) => g.word.length > 1).slice(0, 1)).slice(0, MAX_WORDS);
 }
 
 const or = (conds) => (conds.length <= 1 ? conds : new Array(conds.length - 1).fill("|").concat(conds));

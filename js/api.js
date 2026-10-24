@@ -7,9 +7,10 @@ import { getAuth, setAuth } from "./store.js";
 const TIMEOUT_MS = 20000;
 
 export class ApiError extends Error {
-  constructor(message, status) {
+  constructor(message, status, data) {
     super(message);
     this.status = status;
+    this.data = data || {};
   }
 }
 
@@ -40,7 +41,7 @@ async function request(path, { method = "GET", body, auth = false } = {}) {
   if (!res.ok) {
     // An expired or revoked sign-in: forget it so the account screen asks again.
     if (res.status === 401 && auth && session) setAuth(null);
-    throw new ApiError((data && data.error) || t("err"), res.status);
+    throw new ApiError((data && data.error) || t("err"), res.status, data);
   }
   return data || {};
 }

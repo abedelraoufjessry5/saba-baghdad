@@ -17,6 +17,11 @@ function write(key, value) {
   memory.set(key, JSON.stringify(value));
   try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* storage full or blocked */ }
 }
+// a list that was saved broken (another app version, a manual edit) reads as empty
+function list(key) {
+  const v = read(key, []);
+  return Array.isArray(v) ? v : [];
+}
 function remove(key) {
   memory.delete(key);
   try { localStorage.removeItem(key); } catch (e) { /* ignore */ }
@@ -45,7 +50,7 @@ function cleanItem(i) {
   return { id, name: String(i.name || ""), price: Number(i.price) || 0, image: String(i.image || ""), qty };
 }
 
-let cart = (read(KEYS.cart, []) || []).map(cleanItem).filter(Boolean);
+let cart = list(KEYS.cart).map(cleanItem).filter(Boolean);
 
 export function getCart() {
   return cart.slice();
@@ -75,6 +80,26 @@ export function clearCart() {
   cart = [];
   saveCart();
 }
+// Current prices from the shop (the cart may be days old, or come from
+// "order again"). prices: [{ id, price }]; an item missing from it is no
+// longer sold. Returns the ids that are gone.
+export function refreshCart(prices) {
+  const now = new Map(prices.map((p) => [Number(p.id), Number(p.price)]));
+  let changed = false;
+  const gone = [];
+  cart = cart.map((i) => {
+    if (!now.has(i.id)) { gone.push(i.id); return i; }
+    if (now.get(i.id) !== i.price) { changed = true; return { ...i, price: now.get(i.id) }; }
+    return i;
+  });
+  if (changed) saveCart();
+  return gone;
+}
+export function removeFromCart(ids) {
+  const drop = new Set(ids.map(Number));
+  cart = cart.filter((i) => !drop.has(i.id));
+  saveCart();
+}
 function saveCart() {
   write(KEYS.cart, cart);
   emit("cart");
@@ -92,9 +117,18 @@ export function getAuth() {
   return auth;
 }
 export function setAuth(value) {
+  const was = auth;
   auth = value;
   if (value) write(KEYS.auth, value);
-  else remove(KEYS.auth);
+  else {
+    remove(KEYS.auth);
+    // signing out: the account's orders leave this phone too (they come back
+    // from the server on the next sign-in); guest orders stay
+    if (was && was.email) {
+      const mine = String(was.email).toLowerCase();
+      write(KEYS.orders, getOrders().filter((o) => !o.account || o.account !== mine));
+    }
+  }
   emit("auth");
 }
 
@@ -102,12 +136,13 @@ export function setAuth(value) {
 // Orders placed from this device: { id, ref, token, at, items }.
 // The token proves to /api/orders that this device placed the order.
 export function getOrders() {
-  return read(KEYS.orders, []);
+  return list(KEYS.orders).filter((o) => o && typeof o === "object");
 }
 export function rememberOrder(order) {
-  const list = getOrders().filter((o) => o.id !== order.id);
-  list.unshift(order);
-  write(KEYS.orders, list.slice(0, 30));
+  const saved = getOrders().filter((o) => o.id !== order.id);
+  // placed while signed in: tagged with the account, see setAuth()
+  saved.unshift({ ...order, account: auth && auth.email ? String(auth.email).toLowerCase() : null });
+  write(KEYS.orders, saved.slice(0, 30));
   emit("orders");
 }
 // Orders saved by the previous build carry no token; they are still listed

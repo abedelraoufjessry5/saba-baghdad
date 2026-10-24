@@ -34,7 +34,7 @@ function readOrder(req) {
   if (!phone) throw new HttpError(400, "يرجى كتابة رقم موبايل عراقي صحيح، مثل 07701234567");
   if (address.length < 3) throw new HttpError(400, "العنوان مطلوب");
   const zone = String(b.zone || "");
-  if (!ZONES[zone]) throw new HttpError(400, "اختاروا منطقة التوصيل");
+  if (!Object.prototype.hasOwnProperty.call(ZONES, zone)) throw new HttpError(400, "اختاروا منطقة التوصيل");
 
   // merge duplicates, clamp quantities
   const qtyById = new Map();
@@ -117,7 +117,7 @@ export default handler(["POST"], async (req, res) => {
     if (!variantOf[tid]) variantOf[tid] = v.id;
   }
   const missing = tmplIds.filter((id) => !variantOf[id]);
-  if (missing.length) throw new HttpError(400, "بعض المنتجات لم تعد متوفرة، احذفوها من السلة وحاولوا مرة أخرى");
+  if (missing.length) throw new HttpError(409, "بعض المنتجات لم تعد متوفرة، احذفوها من السلة وحاولوا مرة أخرى", { data: { missing } });
 
   const offers = activeOffers();
   const customer = await findOrCreateCustomer(order, session);

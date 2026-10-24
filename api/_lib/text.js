@@ -105,7 +105,7 @@ export function normalizePhone(raw) {
   let s = String(raw || "")
     .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
     .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
-    .replace(/[\s\-().]/g, "");
+    .replace(/[^\d+]/g, ""); // spaces, dashes and the invisible direction marks phones paste
   if (s.startsWith("+")) s = s.slice(1);
   if (s.startsWith("00")) s = s.slice(2);
   if (s.startsWith("964")) s = "0" + s.slice(3);
