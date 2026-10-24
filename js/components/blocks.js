@@ -138,11 +138,17 @@ export function matchCategory(categories, name) {
   return hit ? hit.id : null;
 }
 
+// The brand's category in Odoo (only categories with products are listed);
+// no category: search the brand's name.
 async function openBrand(b) {
   let cat = null;
-  try { cat = matchCategory(await loadCategories(), b.name); } catch (e) { /* offline: use the fallback */ }
+  try {
+    const cats = await loadCategories();
+    cat = matchCategory(cats, b.name) || (cats.some((c) => c.id === b.cat) ? b.cat : null);
+  } catch (e) {
+    cat = b.cat || null; // offline: the saved category
+  }
   if (cat) navigate("/products?cat=" + cat);
-  else if (b.cat) navigate("/products?cat=" + b.cat);
   else navigate("/products?q=" + encodeURIComponent(b.q || b.name));
 }
 

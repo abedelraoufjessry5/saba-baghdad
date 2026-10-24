@@ -154,8 +154,9 @@ function splitMixed(word) {
 // One word -> the pattern Odoo is given ("_" = any one letter).
 export function pattern(word) {
   if (AR.test(word)) {
+    // (an alef at the very end stays: "التيا" must not find "التي ...")
     const p = normalizeAr(word)
-      .replace(/ا/g, "_")
+      .replace(/ا(?!$| )/g, "_")
       .replace(/[يه](?=$| )/g, "_");
     const letters = p.replace(/[_ ]/g, "").length;
     return letters >= 2 && letters * 2 >= p.replace(/ /g, "").length ? p : normalizeAr(word);
@@ -170,10 +171,10 @@ function stems(word) {
   const out = [word];
   if (AR.test(word)) {
     const n = normalizeAr(word);
-    // a short rest only when it has no wildcard ("الشعر" -> "شعر", but not
-    // "الثيا" -> "ثي_", which would also find "كثيف")
+    // a 3-letter rest only when it is a known word ("الشعر" -> "شعر", but
+    // not "التيا" -> "تيا", which would also find "اختيار")
     const pre = ["وال", "بال", "كال", "فال", "لل", "ال"].find((p) => n.startsWith(p) &&
-      (n.length - p.length >= 4 || (n.length - p.length === 3 && !pattern(n.slice(p.length)).includes("_"))));
+      (n.length - p.length >= 4 || (n.length - p.length === 3 && SYN.has(n.slice(p.length)))));
     const base = pre ? n.slice(pre.length) : n;
     if (pre) out.push(base);
     if (base.endsWith("ات") && base.length >= 5) out.push(base.slice(0, -2));
@@ -225,16 +226,19 @@ export function wordsDomain(groups, fields, codeFields = []) {
   return domain;
 }
 
-// Best first: whole query in the name, then the name starts with the first
-// word, then the rest (alphabetical).
-export function rankByName(rows, q) {
-  const phrase = cleanQuery(q);
-  const first = phrase.split(" ")[0] || "";
-  const plain = (s) => cleanQuery(s);
+// Best first: the name starts with the first word, then names where every
+// word starts a word of the name ("nivea" before "Genevia"), then the rest;
+// alphabetical inside each.
+const toRe = (alt, atStart) => new RegExp((atStart ? "^" : "(?:^| )") +
+  normalizeAr(alt).split("").map((c) => (c === "_" ? "." : c.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))).join(""));
+
+export function rankByName(rows, groups) {
+  const first = (groups[0] ? groups[0].alts : []).map((a) => toRe(a, true));
+  const each = groups.map((g) => g.alts.map((a) => toRe(a, false)));
   const score = (r) => {
-    const n = plain(r.name);
-    if (phrase && n.includes(phrase)) return 0;
-    if (first && n.startsWith(first)) return 1;
+    const n = normalizeAr(cleanQuery(r.name));
+    if (first.some((re) => re.test(n))) return 0;
+    if (each.every((alts) => alts.some((re) => re.test(n)))) return 1;
     return 2;
   };
   return rows

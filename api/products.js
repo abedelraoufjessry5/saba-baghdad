@@ -23,7 +23,7 @@ async function matchIds(base, groups, q, descFields, codeFields) {
     execute("product.template", "search", [[...base, ...wordsDomain(groups, ["name", ...descFields], codeFields)]],
       { order: "name, id", limit: MAX_HITS })
   ]);
-  const first = nameRows.length <= 800 ? rankByName(nameRows, q) : nameRows.map((r) => r.id);
+  const first = nameRows.length <= 800 ? rankByName(nameRows, groups) : nameRows.map((r) => r.id);
   const seen = new Set(first);
   return [...first, ...anyIds.filter((id) => !seen.has(id))];
 }

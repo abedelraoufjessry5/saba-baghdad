@@ -1053,7 +1053,7 @@ export const FEATURED = [
     "name": "La Roche-Posay Hyalu B5 — سيروم علاج التجاعيد ٣٠ مل",
     "price": 69000,
     "badge": "الأكثر مبيعاً",
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/25/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/25/image_512"
   },
   {
     "id": 11,
@@ -1062,7 +1062,7 @@ export const FEATURED = [
     "name": "Sesderma K-VIT — سيروم الهالات السوداء",
     "price": 50000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/11/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/11/image_512"
   },
   {
     "id": 10,
@@ -1071,7 +1071,7 @@ export const FEATURED = [
     "name": "Sesderma SES Vitamin-C — فلويد فيتامين سي للنضارة",
     "price": 44000,
     "badge": "موصى به",
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/10/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/10/image_512"
   },
   {
     "id": 16,
@@ -1080,7 +1080,7 @@ export const FEATURED = [
     "name": "BIODERMA Sebium H2O — مايسلر للبشرة الدهنية ٢٥٠ مل",
     "price": 16000,
     "badge": "أرخص سعر",
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/16/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/16/image_512"
   },
   {
     "id": 15,
@@ -1089,7 +1089,7 @@ export const FEATURED = [
     "name": "BIODERMA Sébium Pore Refiner — لعلاج المسامات ٣٠ مل",
     "price": 27000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/15/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/15/image_512"
   },
   {
     "id": 17,
@@ -1098,7 +1098,7 @@ export const FEATURED = [
     "name": "BIODERMA Sensibio — جل رغوي للبشرة الحساسة ٥٠٠ مل",
     "price": 26000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/17/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/17/image_512"
   },
   {
     "id": 18,
@@ -1107,7 +1107,7 @@ export const FEATURED = [
     "name": "BIODERMA Sébium Gel Moussant — غسول للبشرة الدهنية ٥٠٠ مل",
     "price": 25000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/18/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/18/image_512"
   },
   {
     "id": 24,
@@ -1116,7 +1116,7 @@ export const FEATURED = [
     "name": "La Roche-Posay Anthelios Kids SPF50+ — واقي شمس للأطفال",
     "price": 39000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/24/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/24/image_512"
   },
   {
     "id": 12,
@@ -1125,7 +1125,7 @@ export const FEATURED = [
     "name": "Sesderma Repaskin Dry Touch — واقي شمس دراي تاتش",
     "price": 23000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/12/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/12/image_512"
   },
   {
     "id": 9,
@@ -1134,7 +1134,7 @@ export const FEATURED = [
     "name": "Sesderma Silkses — كريم مرطب ومرمم للبشرة",
     "price": 32000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/9/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/9/image_512"
   },
   {
     "id": 13,
@@ -1143,7 +1143,7 @@ export const FEATURED = [
     "name": "Sesderma Hidraven — غسول رغوي خالٍ من الصابون",
     "price": 24000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/13/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/13/image_512"
   },
   {
     "id": 14,
@@ -1152,7 +1152,7 @@ export const FEATURED = [
     "name": "Sesderma Seskavel Growth — لوشن مضاد لتساقط الشعر",
     "price": 30000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/14/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/14/image_512"
   },
   {
     "id": 3361,
@@ -1170,7 +1170,7 @@ export const FEATURED = [
     "name": "SVR Topialyse — غسول للبشرة الجافة والحساسة ٤٠٠ مل",
     "price": 28500,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/21/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/21/image_512"
   },
   {
     "id": 3369,
@@ -1188,7 +1188,7 @@ export const FEATURED = [
     "name": "The INKEY List Retinol Serum — سيروم الريتينول ٣٠ مل",
     "price": 23000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/29/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/29/image_512"
   },
   {
     "id": 30,
@@ -1197,7 +1197,7 @@ export const FEATURED = [
     "name": "The INKEY List — كريم ريتينول حول العين",
     "price": 30000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/30/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/30/image_512"
   },
   {
     "id": 2970,
@@ -1215,7 +1215,7 @@ export const FEATURED = [
     "name": "Foltène Pharma — شامبو نسائي لتقوية الشعر",
     "price": 22000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/2/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/2/image_512"
   },
   {
     "id": 7,
@@ -1224,7 +1224,7 @@ export const FEATURED = [
     "name": "Foltène Pharma — علاج الشعر وفروة الرأس للرجال",
     "price": 45000,
     "badge": null,
-    "image": "https://saba-baghdad.odoo.com/web/image/product.product/7/image_512"
+    "image": "https://saba-baghdad.odoo.com/web/image/product.template/7/image_512"
   }
 ];
 
